@@ -312,12 +312,18 @@ Explicitly excluded. Documented to prevent scope creep and to defend against rep
 | COACH-01..04 | Phase 3 | Pending |
 
 **Coverage:**
-- v1 requirements: 142 total
-- Mapped to phases: 142
+- v1 requirements: 179 total
+  - Phase 0 (Legal Foundation): 13 — LEGAL-01..13
+  - Phase 1 (Community Foundation): 16 — COMM-01..16
+  - Phase 2 (Platform MVP): 111 — ARCH(10) + AUTH(12) + CNST(14) + PROF(14) + EVNT(14) + CHLG(12) + WEAR(12) + CONT(7) + DBOT(7) + A11Y(9)
+  - Phase 3 (Revenue + Data): 39 — B2BD(14) + MONY(6) + CLUB(7) + MODR(8) + COACH(4)
+- Mapped to phases: 179
 - Unmapped: 0 ✓
 
-(v2 requirements deferred to Phase 4 — not in initial roadmap commit.)
+**Roadmap reference:** See `.planning/ROADMAP.md` for phase goals, dependencies, success criteria, and the Phase 2 step-order build sequence (Step 0 architecture lockdown → Step 1 Auth+Discord → Step 2 Consent → Step 3 Profiles+Gamification → Step 4 Events+QR → Step 5 Challenges manual-first → Step 6 Wearables last; do NOT rearrange).
+
+(v2 requirements deferred to Phase 4 — not in initial roadmap commit. Phase 4 v2 set: GEO-01..05, B2BS-01..05, MOBL-01..02, INSU-01.)
 
 ---
 *Requirements defined: 2026-04-27*
-*Last updated: 2026-04-27 after initial definition (auto mode from `StartData/output/project-definition.md` + research/SUMMARY.md)*
+*Last updated: 2026-04-27 after roadmap creation (4 active phases — Phase 0/1/2/3 — committed; Phase 4 deferred to v2)*
