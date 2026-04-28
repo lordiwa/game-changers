@@ -1,10 +1,12 @@
 ---
 phase: 2
 slug: platform-mvp
-status: draft
+status: approved
 shadcn_initialized: false
 preset: not applicable (Vue 3 stack — shadcn CLI is React-only; Vue equivalent is shadcn-vue 1.9.x layered on reka-ui 2.6)
 created: 2026-04-27
+reviewed_at: 2026-04-28
+checker_verdict: APPROVED (5 PASS / 1 FLAG — typography 700-weight wordmark-only exception documented, non-blocking)
 ---
 
 # Phase 2 — UI Design Contract
