@@ -16,3 +16,5 @@ export { discordExchange } from './discordExchange.js';
 export { anonUpgrade } from './anonUpgrade.js';
 export { verifyAge } from './ageGate.js';
 export { unlinkDiscord } from './unlinkDiscord.js';
+// Plan 02-03: bot-callable endpoint
+export { botGenerateLinkToken } from './botEndpoints.js';
