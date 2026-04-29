@@ -4,12 +4,16 @@ import {
   ConsentDocSchema,
   ChallengeProgressSchema,
   EventSchema,
+  DiscordIdentitySchema,
+  AuthStateSchema,
 } from '../schemas/index.js';
 
 export type ConsentCategory = z.infer<typeof ConsentCategorySchema>;
 export type ConsentDoc = z.infer<typeof ConsentDocSchema>;
 export type ChallengeProgress = z.infer<typeof ChallengeProgressSchema>;
 export type Event = z.infer<typeof EventSchema>;
+export type DiscordIdentity = z.infer<typeof DiscordIdentitySchema>;
+export type AuthState = z.infer<typeof AuthStateSchema>;
 
 // Bitmap key map (single-letter custom-claim keys per RESEARCH §1).
 // Duplicated in functions/shared/ConsentEnforcement.ts — Plan 04 unifies if duplication

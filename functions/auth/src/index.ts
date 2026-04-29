@@ -1,7 +1,18 @@
-// TODO(Plan 02-02 AUTH): Discord OAuth bridge, account linking, anonymous→full upgrade.
-// This codebase ships scaffolding only — Plan 02 wires the actual endpoints.
-import { onRequest } from 'firebase-functions/v2/https';
+/*
+ * Plan 02-02 — auth codebase entry point.
+ * Exports the four AUTH-* Cloud Functions deployed to southamerica-east1.
+ *
+ * passwordReset is the standard Firebase Auth flow (sendPasswordResetEmail) — handled
+ * client-side via the PWA. No Function exists here for it; the action handler URL
+ * is configured via Firebase Auth + Resend templates.
+ */
+import { initializeApp, getApps } from 'firebase-admin/app';
 
-export const ping = onRequest({ region: 'southamerica-east1' }, (_req, res) => {
-  res.status(200).send('ok');
-});
+if (getApps().length === 0) {
+  initializeApp();
+}
+
+export { discordExchange } from './discordExchange.js';
+export { anonUpgrade } from './anonUpgrade.js';
+export { verifyAge } from './ageGate.js';
+export { unlinkDiscord } from './unlinkDiscord.js';

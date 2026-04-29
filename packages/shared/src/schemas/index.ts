@@ -37,3 +37,25 @@ export const EventSchema = z.object({
   startsAt: z.date(),
   capacity: z.number().int().positive(),
 });
+
+// Plan 02-02 — Discord identity persisted in /users/{uid}/private/discord.
+// Refresh token is KMS-encrypted (see functions/shared/kms.ts).
+export const DiscordIdentitySchema = z.object({
+  discordId: z.string().regex(/^\d{17,20}$/),
+  username: z.string(),
+  globalName: z.string().optional(),
+  avatar: z.string().optional(),
+  email: z.string().email().optional(),
+  guildRoles: z.array(z.string()).optional(),
+});
+
+// Plan 02-02 — derived auth state surfaced to the PWA composable / Pinia store.
+export const AuthStateSchema = z.object({
+  uid: z.string(),
+  isAnonymous: z.boolean(),
+  email: z.string().email().optional(),
+  phone: z.string().optional(),
+  hasDiscord: z.boolean(),
+  ageVerified: z.boolean(),
+  isMinor: z.boolean(),
+});
