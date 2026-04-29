@@ -2,6 +2,7 @@ import type { z } from 'zod';
 import {
   ConsentCategorySchema,
   ConsentDocSchema,
+  ConsentLedgerEntrySchema,
   ChallengeProgressSchema,
   EventSchema,
   DiscordIdentitySchema,
@@ -10,6 +11,7 @@ import {
 
 export type ConsentCategory = z.infer<typeof ConsentCategorySchema>;
 export type ConsentDoc = z.infer<typeof ConsentDocSchema>;
+export type ConsentLedgerEntry = z.infer<typeof ConsentLedgerEntrySchema>;
 export type ChallengeProgress = z.infer<typeof ChallengeProgressSchema>;
 export type Event = z.infer<typeof EventSchema>;
 export type DiscordIdentity = z.infer<typeof DiscordIdentitySchema>;
@@ -30,4 +32,14 @@ export const CLAIM_BITMAP_KEYS: Record<ConsentCategory, string> = {
   b2b_brands: 'r',
   cross_border: 'x',
   research: 's',
+};
+
+// Progressive consent layers 0-4 (mirrors functions/consent/src/grant.ts LAYER_TO_CATEGORIES).
+// Kept in shared so the PWA can render the correct layer without importing firebase-admin.
+export const LAYER_TO_CATEGORIES: Record<number, ConsentCategory[]> = {
+  0: ['basic_profile'],
+  1: ['event_participation', 'gaming_habits'],
+  2: ['health_self_reports'],
+  3: ['wearable_data'],
+  4: ['b2b_insurers', 'b2b_healthcare', 'b2b_brands', 'cross_border', 'research'],
 };

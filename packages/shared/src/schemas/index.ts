@@ -22,6 +22,21 @@ export const ConsentDocSchema = z.object({
   expiresAt: z.date().nullable(),
 });
 
+// Immutable hash-chain ledger entry written by consentGrant / consentRevoke / expirySweeper.
+// prevHash = '0'.repeat(64) for the genesis entry per user per category.
+// hash = sha256(prevHash + JSON.stringify(payload) + uid + timestampMs).
+export const ConsentLedgerEntrySchema = z.object({
+  uid: z.string(),
+  category: ConsentCategorySchema,
+  action: z.enum(['grant', 'revoke', 'expire']),
+  version: z.string(),
+  textHash: z.string(),
+  timestampMs: z.number().int(),
+  prevHash: z.string().length(64),
+  hash: z.string().length(64),
+  source: z.enum(['user', 'expiry-sweeper', 'dpo-admin']).optional(),
+});
+
 // Phase 2 downstream plans will expand these stubs as they ship the actual schemas.
 // Locked here so the public surface is stable across PWA, Functions, and bot.
 export const ChallengeProgressSchema = z.object({
