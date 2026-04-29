@@ -10,6 +10,18 @@ const AgeGate = () => import('../views/auth/AgeGate.vue');
 const DiscordInit = () => import('../views/auth/DiscordInit.vue');
 const DiscordCallback = () => import('../views/auth/DiscordCallback.vue');
 
+// Plan 02-04 — Consent funnel layers (lazy-loaded; only shown at value moments).
+const Layer0 = () => import('../views/consent/Layer0.vue');
+const Layer1 = () => import('../views/consent/Layer1.vue');
+const Layer2 = () => import('../views/consent/Layer2.vue');
+const Layer3 = () => import('../views/consent/Layer3.vue');
+// Layer4 is not a funnel route — only accessible from /me/consent settings page.
+// Plan 02-04 — Consent management views.
+const ConsentSettings = () => import('../views/consent/ConsentSettings.vue');
+const ConsentHistory = () => import('../views/consent/ConsentHistory.vue');
+const DataExport = () => import('../views/consent/DataExport.vue');
+const AccountDeletion = () => import('../views/consent/AccountDeletion.vue');
+
 // Route meta type extension.
 declare module 'vue-router' {
   interface RouteMeta {
@@ -58,6 +70,52 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/me',
     redirect: '/',
+  },
+  // Plan 02-04 — Progressive consent funnel layers.
+  // Layer 0: basic_profile — shown immediately after age gate or anon→email upgrade.
+  {
+    path: '/consent/layer-0',
+    component: Layer0,
+    meta: { requiresAuth: true, requiresAge: true },
+  },
+  // Layer 1: event_participation + gaming_habits — shown before first event RSVP or challenge.
+  {
+    path: '/consent/layer-1',
+    component: Layer1,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  // Layer 2: health_self_reports — shown before first manual health log or challenge enrollment.
+  {
+    path: '/consent/layer-2',
+    component: Layer2,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  // Layer 3: wearable_data — shown from /me/wearables when connecting a device.
+  {
+    path: '/consent/layer-3',
+    component: Layer3,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  // Plan 02-04 — Consent management views (all require full auth + age verification).
+  {
+    path: '/me/consent',
+    component: ConsentSettings,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  {
+    path: '/me/consent/history',
+    component: ConsentHistory,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  {
+    path: '/me/consent/dsar',
+    component: DataExport,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  {
+    path: '/me/consent/erase',
+    component: AccountDeletion,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
   },
 ];
 

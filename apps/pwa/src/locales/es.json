@@ -60,7 +60,156 @@
   "consent": {
     "cta": {
       "accept": "Acepto y continúo",
-      "save": "Guardar cambios"
+      "save": "Guardar cambios",
+      "skip": "Ahora no"
+    },
+    "layer": {
+      "step": "Paso {current} de {total}"
+    },
+    "layer0": { "heading": "Sin esto no podemos crear tu perfil" },
+    "layer1": { "heading": "Para sumarte a eventos y desafíos" },
+    "layer2": { "heading": "Para que veas tu personaje en color" },
+    "layer3": { "heading": "Conecta tu pulsera (opcional)" },
+    "layer4": { "heading": "Compartir con socios (opcional, nunca individual)" },
+    "minor": {
+      "blocked": "Necesitamos consentimiento de tu papá/mamá/tutor para activar este permiso."
+    },
+    "row": {
+      "expand": "¿Por qué? ¿Qué pasa si lo activo? ¿Qué pasa si lo desactivo?",
+      "version_stamp": "v{version} — actualizado {date}"
+    },
+    "action": {
+      "grant": "activado",
+      "revoke": "desactivado",
+      "expire": "expirado"
+    },
+    "settings": {
+      "heading": "Mis permisos de datos",
+      "body": "Controlas qué datos compartís y cuándo. Puedes cambiar esto en cualquier momento."
+    },
+    "history": {
+      "heading": "Tu historial de consentimiento",
+      "empty": "Aún no tenés cambios de consentimiento registrados."
+    },
+    "dsar": {
+      "cta": "Exportar mis datos",
+      "description": "Recibirás un archivo ZIP con toda tu información en un plazo de 30 días. Te avisamos por correo cuando esté listo.",
+      "requesting": "Solicitando...",
+      "processing_heading": "Preparando tu archivo",
+      "processing": "Estamos preparando tu archivo. Te enviaremos un correo cuando esté listo (hasta 30 días).",
+      "ready": "Tu archivo está listo. El enlace expira en 7 días.",
+      "download": "Descargar mis datos",
+      "expires": "Enlace válido hasta: {date}",
+      "error": "Ocurrió un error al preparar tu archivo. Intenta de nuevo."
+    },
+    "erase": {
+      "cta": "Eliminar mi cuenta",
+      "modal": {
+        "title": "Eliminar mi cuenta",
+        "body": "Esta acción es definitiva. Borraremos tu perfil, XP, badges, historial de eventos y datos de salud en 72 horas. El registro de auditoría LOPDP se conserva por obligación legal."
+      },
+      "confirm": {
+        "label": "Escribe ELIMINAR para confirmar",
+        "placeholder": "ELIMINAR"
+      },
+      "submit": "Eliminar definitivamente",
+      "submitting": "Eliminando...",
+      "legal_note": "El registro de auditoría de consentimiento se pseudonimiza y se retiene por obligación legal (LOPDP Art. 26)."
+    },
+    "basic_profile": {
+      "v3": {
+        "label": "Perfil básico",
+        "purpose": "Guardamos tu nombre, avatar y ciudad para mostrarte en la comunidad.",
+        "scope": "Nombre, avatar, ciudad y juegos favoritos que ingreses al registro.",
+        "retention": "Mientras tengas cuenta activa. Se elimina dentro de 72 horas si solicitas el borrado.",
+        "share": "Tu perfil público es visible para otros miembros de la comunidad."
+      }
+    },
+    "event_participation": {
+      "v3": {
+        "label": "Eventos",
+        "purpose": "Guardamos tus inscripciones y asistencia para enviarte recordatorios y acreditar tu XP.",
+        "scope": "Eventos en los que te inscribas, fecha y lugar de asistencia confirmada.",
+        "retention": "12 meses desde el evento. Puedes revocar en cualquier momento.",
+        "share": "Los organizadores del evento ven tu nombre en la lista de asistentes."
+      }
+    },
+    "health_self_reports": {
+      "v3": {
+        "label": "Registros de salud",
+        "purpose": "Guardamos lo que ingresás manualmente: pasos, horas de sueño, ánimo y fotos de desafíos.",
+        "scope": "Solo lo que tú escribís o fotografiás. No accedemos a sensores sin tu permiso explícito.",
+        "retention": "90 días para registros detallados; resúmenes diarios mientras tengas cuenta.",
+        "share": "Solo tú ves tus datos de salud. Resúmenes anónimos en estudios agregados (k≥50) si activás los permisos B2B."
+      }
+    },
+    "wearable_data": {
+      "v3": {
+        "label": "Pulsera / wearable",
+        "purpose": "Conectamos tu dispositivo para contar pasos, ritmo cardíaco, sueño y calorías en tu personaje.",
+        "scope": "Datos que tu dispositivo envíe a través de Open Wearables (Garmin, Fitbit, Polar, Whoop, Oura). No accedemos a tu cuenta directamente.",
+        "retention": "Muestras: 90 días. Resúmenes diarios mientras tengas cuenta. Si revocás, dejamos de recibir datos al instante.",
+        "share": "Solo tú ves tus datos detallados. Resúmenes anónimos en estudios agregados (k≥50) si activás los permisos B2B."
+      }
+    },
+    "gaming_habits": {
+      "v3": {
+        "label": "Hábitos de gaming",
+        "purpose": "Analizamos qué jugás y con qué frecuencia para conectarte con gamers afines y personalizar desafíos.",
+        "scope": "Títulos que declares, plataformas y frecuencia de juego. No leemos tu historial de Steam ni consolas.",
+        "retention": "12 meses desde la última actualización.",
+        "share": "Nunca individual. Solo resúmenes anónimos de segmentos (k≥50) para B2B si activás ese permiso."
+      }
+    },
+    "b2b_insurers": {
+      "v3": {
+        "label": "Aseguradoras de salud",
+        "purpose": "Compartimos resúmenes anónimos de actividad con aseguradoras para estudios de bienestar.",
+        "scope": "Segmentos agregados: nivel de actividad, frecuencia de eventos. Nunca datos individuales. k≥50 mínimo.",
+        "retention": "Solo mientras este permiso esté activo. Si lo revocás, dejamos de incluirte.",
+        "share": "Solo aseguradoras con acuerdo de tratamiento vigente y k≥50 garantizado.",
+        "minor_blocked": "Permiso no disponible para menores de 18 años."
+      }
+    },
+    "b2b_healthcare": {
+      "v3": {
+        "label": "Proveedores de salud",
+        "purpose": "Compartimos resúmenes anónimos con clínicas y hospitales para investigación de hábitos.",
+        "scope": "Segmentos de actividad y bienestar agregados (k≥50). Sin identificación individual.",
+        "retention": "Solo mientras este permiso esté activo.",
+        "share": "Solo proveedores con acuerdo vigente. k≥50 garantizado.",
+        "minor_blocked": "Permiso no disponible para menores de 18 años."
+      }
+    },
+    "b2b_brands": {
+      "v3": {
+        "label": "Marcas y sponsors",
+        "purpose": "Compartimos resúmenes anónimos con marcas de consumo y telecomunicaciones para mejorar sus ofertas a gamers.",
+        "scope": "Segmentos de hábitos y preferencias agregados (k≥50). Sin datos de salud.",
+        "retention": "Solo mientras este permiso esté activo.",
+        "share": "Solo marcas con acuerdo vigente. k≥50 garantizado. Nunca datos de salud.",
+        "minor_blocked": "Permiso no disponible para menores de 18 años."
+      }
+    },
+    "cross_border": {
+      "v3": {
+        "label": "Procesamiento fuera de Ecuador",
+        "purpose": "Tus datos se procesan en servidores de Google en São Paulo, Brasil. Firebase no tiene región en Ecuador.",
+        "scope": "Todos tus datos de la plataforma pasan por servidores en Brasil (southamerica-east1). Esto está documentado en nuestra DPIA.",
+        "retention": "Mientras tengas cuenta. Al eliminarla, los datos se borran del servidor en 72 horas.",
+        "share": "Google Cloud Platform (proveedor de infraestructura). Sin acceso de Google a tus datos de contenido.",
+        "minor_blocked": "Permiso no disponible para menores de 18 años."
+      }
+    },
+    "research": {
+      "v3": {
+        "label": "Investigación académica",
+        "purpose": "Participás en estudios académicos aprobados por comité de ética (IRB) sobre bienestar y gaming.",
+        "scope": "Resúmenes anónimos de actividad y hábitos (k≥50). Solo estudios con aprobación IRB verificada.",
+        "retention": "Por el período del estudio, máximo 24 meses. Se informa antes de cada estudio.",
+        "share": "Solo investigadores del estudio con aprobación institucional.",
+        "minor_blocked": "Permiso no disponible para menores de 18 años."
+      }
     }
   },
   "events": {

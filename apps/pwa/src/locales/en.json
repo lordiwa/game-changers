@@ -60,7 +60,156 @@
   "consent": {
     "cta": {
       "accept": "I accept and continue",
-      "save": "Save changes"
+      "save": "Save changes",
+      "skip": "Not now"
+    },
+    "layer": {
+      "step": "Step {current} of {total}"
+    },
+    "layer0": { "heading": "We need this to create your profile" },
+    "layer1": { "heading": "To join events and challenges" },
+    "layer2": { "heading": "To bring your character to life" },
+    "layer3": { "heading": "Connect your wearable (optional)" },
+    "layer4": { "heading": "Share with partners (optional, never individual)" },
+    "minor": {
+      "blocked": "We need consent from your parent/guardian to activate this permission."
+    },
+    "row": {
+      "expand": "Why? What happens if I enable / disable this?",
+      "version_stamp": "v{version} — updated {date}"
+    },
+    "action": {
+      "grant": "enabled",
+      "revoke": "disabled",
+      "expire": "expired"
+    },
+    "settings": {
+      "heading": "My data permissions",
+      "body": "You control what data you share and when. You can change this at any time."
+    },
+    "history": {
+      "heading": "Your consent history",
+      "empty": "No consent changes recorded yet."
+    },
+    "dsar": {
+      "cta": "Export my data",
+      "description": "You will receive a ZIP file with all your information within 30 days. We will email you when it is ready.",
+      "requesting": "Requesting...",
+      "processing_heading": "Preparing your file",
+      "processing": "We are preparing your file. We will send you an email when it is ready (up to 30 days).",
+      "ready": "Your file is ready. The link expires in 7 days.",
+      "download": "Download my data",
+      "expires": "Link valid until: {date}",
+      "error": "An error occurred while preparing your file. Please try again."
+    },
+    "erase": {
+      "cta": "Delete my account",
+      "modal": {
+        "title": "Delete my account",
+        "body": "This action is permanent. We will delete your profile, XP, badges, event history and health data within 72 hours. The LOPDP audit log is retained by legal obligation."
+      },
+      "confirm": {
+        "label": "Type ELIMINAR to confirm",
+        "placeholder": "ELIMINAR"
+      },
+      "submit": "Delete permanently",
+      "submitting": "Deleting...",
+      "legal_note": "The consent audit log is pseudonymized and retained by legal obligation (LOPDP Art. 26)."
+    },
+    "basic_profile": {
+      "v3": {
+        "label": "Basic profile",
+        "purpose": "We store your name, avatar and city to show you in the community.",
+        "scope": "Name, avatar, city and favorite games you enter at registration.",
+        "retention": "While your account is active. Deleted within 72 hours if you request erasure.",
+        "share": "Your public profile is visible to other community members."
+      }
+    },
+    "event_participation": {
+      "v3": {
+        "label": "Events",
+        "purpose": "We store your registrations and attendance to send reminders and credit your XP.",
+        "scope": "Events you register for, date and location of confirmed attendance.",
+        "retention": "12 months from the event. You can revoke at any time.",
+        "share": "Event organizers see your name on the attendee list."
+      }
+    },
+    "health_self_reports": {
+      "v3": {
+        "label": "Health logs",
+        "purpose": "We store what you manually enter: steps, sleep hours, mood and challenge photos.",
+        "scope": "Only what you write or photograph. We do not access sensors without explicit permission.",
+        "retention": "90 days for detailed logs; daily summaries while your account is active.",
+        "share": "Only you see your health data. Anonymous summaries in aggregate studies (k≥50) if you enable B2B permissions."
+      }
+    },
+    "wearable_data": {
+      "v3": {
+        "label": "Wearable / tracker",
+        "purpose": "We connect your device to count steps, heart rate, sleep and calories in your character.",
+        "scope": "Data your device sends via Open Wearables (Garmin, Fitbit, Polar, Whoop, Oura). We do not access your account directly.",
+        "retention": "Samples: 90 days. Daily summaries while your account is active. Revoking stops data immediately.",
+        "share": "Only you see your detailed data. Anonymous summaries in aggregate studies (k≥50) if you enable B2B permissions."
+      }
+    },
+    "gaming_habits": {
+      "v3": {
+        "label": "Gaming habits",
+        "purpose": "We analyze what you play and how often to connect you with like-minded gamers and personalize challenges.",
+        "scope": "Titles you declare, platforms and play frequency. We do not read your Steam or console history.",
+        "retention": "12 months from last update.",
+        "share": "Never individual. Only anonymous segment summaries (k≥50) for B2B if you enable that permission."
+      }
+    },
+    "b2b_insurers": {
+      "v3": {
+        "label": "Health insurers",
+        "purpose": "We share anonymous activity summaries with insurers for wellness studies.",
+        "scope": "Aggregate segments: activity level, event frequency. Never individual data. k≥50 minimum.",
+        "retention": "Only while this permission is active. Revoking removes you immediately.",
+        "share": "Only insurers with an active processing agreement and k≥50 guaranteed.",
+        "minor_blocked": "Permission not available for users under 18."
+      }
+    },
+    "b2b_healthcare": {
+      "v3": {
+        "label": "Healthcare providers",
+        "purpose": "We share anonymous summaries with clinics and hospitals for habits research.",
+        "scope": "Aggregated activity and wellness segments (k≥50). No individual identification.",
+        "retention": "Only while this permission is active.",
+        "share": "Only providers with an active agreement. k≥50 guaranteed.",
+        "minor_blocked": "Permission not available for users under 18."
+      }
+    },
+    "b2b_brands": {
+      "v3": {
+        "label": "Brands and sponsors",
+        "purpose": "We share anonymous summaries with consumer brands and telcos to improve their offers to gamers.",
+        "scope": "Aggregated habit and preference segments (k≥50). No health data.",
+        "retention": "Only while this permission is active.",
+        "share": "Only brands with an active agreement. k≥50 guaranteed. No health data ever.",
+        "minor_blocked": "Permission not available for users under 18."
+      }
+    },
+    "cross_border": {
+      "v3": {
+        "label": "Processing outside Ecuador",
+        "purpose": "Your data is processed on Google servers in São Paulo, Brazil. Firebase has no Ecuador region.",
+        "scope": "All your platform data passes through servers in Brazil (southamerica-east1). Documented in our DPIA.",
+        "retention": "While your account is active. Deleted from the server within 72 hours upon account deletion.",
+        "share": "Google Cloud Platform (infrastructure provider). Google has no access to your content data.",
+        "minor_blocked": "Permission not available for users under 18."
+      }
+    },
+    "research": {
+      "v3": {
+        "label": "Academic research",
+        "purpose": "You participate in ethics-board-approved (IRB) academic studies on wellness and gaming.",
+        "scope": "Anonymous activity and habit summaries (k≥50). Only IRB-verified studies.",
+        "retention": "For the study period, maximum 24 months. Informed before each study.",
+        "share": "Only study researchers with institutional approval.",
+        "minor_blocked": "Permission not available for users under 18."
+      }
     }
   },
   "events": {
