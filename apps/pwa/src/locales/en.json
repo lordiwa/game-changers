@@ -1,10 +1,60 @@
 {
   "app": {
-    "brand": "GameChangers"
+    "brand": "GameChangers",
+    "tagline": "Gamers who move, take care of themselves, and connect."
   },
   "auth": {
     "cta": {
       "create_account": "Create my account"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password"
+    },
+    "signin": {
+      "heading": "Sign in",
+      "cta": "Sign in"
+    },
+    "signup": {
+      "heading": "Create your account",
+      "cta": "Create my account"
+    },
+    "password_reset": {
+      "heading": "Reset your password",
+      "cta": "Send me the link",
+      "link": "Forgot my password",
+      "success": "We sent a link to your email",
+      "error": {
+        "invalid": "That password doesn't match",
+        "help": "Check your email or use the link to reset it."
+      }
+    },
+    "age_gate": {
+      "heading": "We need to know your age",
+      "body": "GameChangers is 16+ under Ecuador's LOPDP law.",
+      "date_label": "Date of birth",
+      "day": "Day",
+      "month": "Month",
+      "year": "Year",
+      "cta": "Confirm my age",
+      "minor_consent_required": "We need consent from your parent/guardian to activate this permission.",
+      "error": {
+        "under_16": "You can't create an account yet",
+        "under_16_body": "GameChangers is for 16+ under the LOPDP law. Come back when you're old enough — the Discord community is open to all ages in teen mode."
+      }
+    },
+    "discord": {
+      "cta": "Link my Discord",
+      "callback": {
+        "heading": "Connecting your Discord..."
+      },
+      "link_expired": "This link has expired",
+      "link_expired_body": "Start the process again from the Discord bot with the /link command.",
+      "error": {
+        "declined": "You didn't complete the Discord link",
+        "declined_body": "Your account is still active. You can link Discord later from Settings.",
+        "id_mismatch": "The Discord account doesn't match the link. Start again from the bot."
+      }
     }
   },
   "consent": {

@@ -1,10 +1,60 @@
 {
   "app": {
-    "brand": "GameChangers"
+    "brand": "GameChangers",
+    "tagline": "Gamers que se mueven, se cuidan y se encuentran."
   },
   "auth": {
     "cta": {
       "create_account": "Crear mi cuenta"
+    },
+    "fields": {
+      "email": "Correo electrónico",
+      "password": "Contraseña"
+    },
+    "signin": {
+      "heading": "Inicia sesión",
+      "cta": "Entrar"
+    },
+    "signup": {
+      "heading": "Crea tu cuenta",
+      "cta": "Crear mi cuenta"
+    },
+    "password_reset": {
+      "heading": "Restablece tu contraseña",
+      "cta": "Enviarme el enlace",
+      "link": "Olvidé mi contraseña",
+      "success": "Te enviamos un enlace a tu correo",
+      "error": {
+        "invalid": "Esa contraseña no coincide",
+        "help": "Verifica tu correo o usa el enlace para restablecerla."
+      }
+    },
+    "age_gate": {
+      "heading": "Necesitamos saber tu edad",
+      "body": "GameChangers es 16+ por la ley LOPDP de Ecuador.",
+      "date_label": "Fecha de nacimiento",
+      "day": "Día",
+      "month": "Mes",
+      "year": "Año",
+      "cta": "Confirmar mi edad",
+      "minor_consent_required": "Necesitamos consentimiento de tu papá/mamá/tutor para activar este permiso.",
+      "error": {
+        "under_16": "Aún no podés crear cuenta",
+        "under_16_body": "GameChangers es para 16+ por la ley LOPDP. Volvé cuando cumplas la edad — la comunidad de Discord está abierta para todos los públicos compatibles con el modo teen."
+      }
+    },
+    "discord": {
+      "cta": "Vincular mi Discord",
+      "callback": {
+        "heading": "Conectando tu Discord..."
+      },
+      "link_expired": "Este enlace ya expiró",
+      "link_expired_body": "Iniciá el proceso de nuevo desde el bot de Discord con el comando /link.",
+      "error": {
+        "declined": "No completaste el vínculo con Discord",
+        "declined_body": "Tu cuenta sigue activa. Puedes vincular Discord más tarde desde Configuración.",
+        "id_mismatch": "La cuenta de Discord no coincide con la del enlace. Iniciá de nuevo desde el bot."
+      }
     }
   },
   "consent": {

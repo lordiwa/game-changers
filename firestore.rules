@@ -55,17 +55,29 @@ service cloud.firestore {
       );
     }
 
+    // Helper: ageVerified custom claim gate (T-02-02-04, T-02-02-06).
+    // The verifyAge Cloud Function sets this claim server-side; clients cannot spoof it.
+    function isAgeVerified() {
+      return isAuthed() && request.auth.token.ageVerified == true;
+    }
+
     // ──────────────────────────────────────────────────────────────────────
-    // /users/{uid}/profile/main — owner R/W gated by basic_profile consent.
-    // Immutable fields: discordId, birthDate, createdAt.
+    // /users/{uid}/profile/main — owner R/W gated by basic_profile consent
+    // AND ageVerified claim (T-02-02-06: under-16 elevation mitigation).
+    // Immutable fields: discordId, createdAt.
+    // NOTE: birthDate MUST NOT be written here — it lives in /private/identity
+    //       per T-02-02-05 (D-14 / LOPDP Art. 24). If present in incoming data,
+    //       the write is rejected so it can never leak to BigQuery.
     // ──────────────────────────────────────────────────────────────────────
     match /users/{uid}/profile/main {
-      allow read: if isOwner(uid) && hasConsentClaim('basic_profile');
-      allow create: if isOwner(uid) && hasConsentClaim('basic_profile');
+      allow read: if isOwner(uid) && hasConsentClaim('basic_profile') && isAgeVerified();
+      allow create: if isOwner(uid) && hasConsentClaim('basic_profile') && isAgeVerified()
+        && !('birthDate' in request.resource.data);
       allow update: if isOwner(uid)
         && hasConsentClaim('basic_profile')
+        && isAgeVerified()
+        && !('birthDate' in request.resource.data)
         && request.resource.data.discordId == resource.data.discordId
-        && request.resource.data.birthDate == resource.data.birthDate
         && request.resource.data.createdAt == resource.data.createdAt;
       allow delete: if false;
     }

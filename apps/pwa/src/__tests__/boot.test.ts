@@ -4,7 +4,24 @@ import { describe, it, expect, vi } from 'vitest';
 vi.mock('firebase/app', () => ({
   initializeApp: vi.fn(() => ({ name: 'test-app' })),
 }));
-vi.mock('@sentry/vue', () => ({ init: vi.fn() }));
+vi.mock('firebase/auth', () => ({
+  getAuth: vi.fn(() => ({})),
+  // signInAnonymously is called in main.ts before mount (AUTH-01).
+  signInAnonymously: vi.fn(async () => ({ user: { uid: 'anon-boot-uid', isAnonymous: true } })),
+  signInWithEmailAndPassword: vi.fn(),
+  createUserWithEmailAndPassword: vi.fn(),
+  linkWithCredential: vi.fn(),
+  EmailAuthProvider: { credential: vi.fn() },
+  sendPasswordResetEmail: vi.fn(),
+  signInWithPhoneNumber: vi.fn(),
+  signInWithCustomToken: vi.fn(),
+  signOut: vi.fn(),
+  RecaptchaVerifier: vi.fn(),
+}));
+vi.mock('@sentry/vue', () => ({
+  init: vi.fn(),
+  captureException: vi.fn(),
+}));
 vi.mock('vuefire', () => ({
   VueFire: { install: vi.fn() },
   VueFireAuth: vi.fn(() => ({})),
