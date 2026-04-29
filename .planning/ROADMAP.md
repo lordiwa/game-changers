@@ -65,7 +65,16 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A user without any wearable device can view a full-color character sheet (HP/Stamina/Mental/Social), join a Bronce/Plata/Oro challenge, log progress manually with native phone pedometer or photo verification, see opt-in leaderboard ranking, and earn badges with provenance — wearable adoption is tracked but never gates a feature
   4. An organizer can run a meetup with 50+ attendees on poor venue connectivity using offline QR check-in (IndexedDB queue + Background Sync), one-tap report-user is available, and a post-event recap card auto-generates while only aggregate stats post to Discord #fotos-y-recaps via the read-only bot
   5. **Platform success gate met**: 1,500+ app users with active consent, 40%+ Discord-to-App conversion (kill criterion if Layer 1 grant rate <60%), 200+ challenge participants, two-tier B2B data architecture (firestore-raw DPO-only → bigquery-anonymized with k≥50 + ε-DP) is deployed and tested even though no B2B partner is connected yet
-**Plans**: TBD
+**Plans**: 9 plans
+- [ ] 02-01-PLAN.md — Architecture lockdown: Firebase project (southamerica-east1), 7 Cloud Function codebases, ConsentEnforcement.ts, deny-all Rules + 90% rules-unit-testing CI, BigQuery export, Sentry/PostHog/UptimeRobot, Budget alerts
+- [ ] 02-02-PLAN.md — Auth + Discord OAuth bridge: Anonymous Auth on boot, email/password, Discord OAuth via custom-token (KMS-encrypted refresh tokens), age gate 16+, anonymous→full preserves uid
+- [ ] 02-03-PLAN.md — Discord bot: discord.js 14.26 on Compute Engine e2-micro, intents Guilds+GuildMembers+GuildMessageReactions ONLY, 6 slash commands, HMAC bot↔Function, quarterly TOS audit
+- [ ] 02-04-PLAN.md — Consent engine: 10 categories, granular UI, progressive Layers 0-4, hash-chained ledger, two-layer enforcement, DSAR + 72h erasure, expiry sweeper (LOPDP gate)
+- [ ] 02-05-PLAN.md — Profiles + gamification: XP logarithmic curve, streaks + shield, multi-progression tracks (HP/Stamina/Mente/Social), badges with provenance, character sheet for ALL users (Pitfall #9), app shell, Discord role sync
+- [ ] 02-06-PLAN.md — Content hub with SEO: vite-ssg, 5 wellness pillars, embedded YouTube/TikTok lazy, wellness assessments (PSS-4), CMS via Markdown commits
+- [ ] 02-07-PLAN.md — Events + QR check-in + accessibility: 3-tier events, RSVP + waitlist auto-promote, signed-JWT QR with offline IDB queue + Background Sync, anonymous report-user, WCAG 2.1 AA via axe-playwright
+- [ ] 02-08-PLAN.md — Manual-first wellness challenges: 5 types × Bronce/Plata/Oro, Web Sensor pedometer, photo + vouching, gaming narratives, leaderboard via aggregate doc (Pitfall #2), seasonal battle pass
+- [ ] 02-09-PLAN.md — Wearables + B2B BigQuery anonymized layer: Open Wearables webhook (HMAC + consent), monthly bucket time-series + daily rollups, 5 BigQuery k≥50 + ε-DP views, Metabase service account scoping (raw access REVOKED)
 **UI hint**: yes
 
 ### Phase 3: Revenue + Data
