@@ -1,7 +1,13 @@
 {
   "app": {
     "brand": "GameChangers",
-    "tagline": "Gamers que se mueven, se cuidan y se encuentran."
+    "tagline": "Gamers que se mueven, se cuidan y se encuentran.",
+    "nav": {
+      "home": "Inicio",
+      "events": "Eventos",
+      "challenges": "Retos",
+      "me": "Yo"
+    }
   },
   "auth": {
     "cta": {
@@ -230,6 +236,58 @@
   "crisis": {
     "cta": {
       "help": "¿Necesitas ayuda?"
+    },
+    "body": "¿Estás en crisis o conoces a alguien que lo está? Estos son contactos confiables en Ecuador, 24/7:"
+  },
+  "offline": {
+    "banner": "Sin señal — guardamos lo que hagas"
+  },
+  "install": {
+    "cta": "Instalar la app"
+  },
+  "lang": {
+    "toggle": {
+      "es": "Español",
+      "en": "English"
     }
+  },
+  "theme": {
+    "toggle": {
+      "dark": "Modo oscuro",
+      "light": "Modo claro"
+    }
+  },
+  "me": {
+    "greeting": "Bienvenido, {displayName}",
+    "back": "Volver",
+    "character": {
+      "cta": "Ver mi personaje completo",
+      "title": "Nivel {level}",
+      "banner": {
+        "connect_more": "Conecta más datos para ver el detalle de tu salud"
+      }
+    }
+  },
+  "stats": {
+    "hp": "Vitalidad (HP)",
+    "stamina": "Stamina",
+    "mente": "Mente",
+    "social": "Social"
+  },
+  "tier": {
+    "noob": "Noob",
+    "iniciado": "Iniciado",
+    "aventurero": "Aventurero",
+    "veterano": "Veterano",
+    "elite": "Élite",
+    "leyenda": "Leyenda",
+    "mitico": "Mítico"
+  },
+  "profile": {
+    "pronouns": {
+      "placeholder": "Tus pronombres (opcional, ej. ella/él/elle)"
+    },
+    "public_toggle": "Mostrar mi perfil públicamente",
+    "privacy_explainer": "Si está activado, otros pueden ver tu nombre, nivel, badges y rachas. Tus datos de salud nunca son visibles."
   }
 }

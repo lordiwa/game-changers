@@ -1,7 +1,13 @@
 {
   "app": {
     "brand": "GameChangers",
-    "tagline": "Gamers who move, take care of themselves, and connect."
+    "tagline": "Gamers who move, take care of themselves, and connect.",
+    "nav": {
+      "home": "Home",
+      "events": "Events",
+      "challenges": "Challenges",
+      "me": "Me"
+    }
   },
   "auth": {
     "cta": {
@@ -230,6 +236,58 @@
   "crisis": {
     "cta": {
       "help": "Need help?"
+    },
+    "body": "Are you in crisis or know someone who is? These are trusted contacts in Ecuador, 24/7:"
+  },
+  "offline": {
+    "banner": "No signal — we'll save what you do"
+  },
+  "install": {
+    "cta": "Install the app"
+  },
+  "lang": {
+    "toggle": {
+      "es": "Español",
+      "en": "English"
     }
+  },
+  "theme": {
+    "toggle": {
+      "dark": "Dark mode",
+      "light": "Light mode"
+    }
+  },
+  "me": {
+    "greeting": "Welcome, {displayName}",
+    "back": "Back",
+    "character": {
+      "cta": "See my full character sheet",
+      "title": "Level {level}",
+      "banner": {
+        "connect_more": "Connect more data to see your health detail"
+      }
+    }
+  },
+  "stats": {
+    "hp": "Vitality (HP)",
+    "stamina": "Stamina",
+    "mente": "Mind",
+    "social": "Social"
+  },
+  "tier": {
+    "noob": "Noob",
+    "iniciado": "Initiated",
+    "aventurero": "Adventurer",
+    "veterano": "Veteran",
+    "elite": "Elite",
+    "leyenda": "Legend",
+    "mitico": "Mythic"
+  },
+  "profile": {
+    "pronouns": {
+      "placeholder": "Your pronouns (optional, e.g. she/he/they)"
+    },
+    "public_toggle": "Show my profile publicly",
+    "privacy_explainer": "If enabled, others can see your name, level, badges and streaks. Your health data is never visible."
   }
 }

@@ -22,6 +22,13 @@ const ConsentHistory = () => import('../views/consent/ConsentHistory.vue');
 const DataExport = () => import('../views/consent/DataExport.vue');
 const AccountDeletion = () => import('../views/consent/AccountDeletion.vue');
 
+// Plan 02-05 — Profile + gamification views.
+const Me = () => import('../views/me/Me.vue');
+const CharacterSheet = () => import('../views/me/CharacterSheet.vue');
+const Profile = () => import('../views/me/Profile.vue');
+const Badges = () => import('../views/me/Badges.vue');
+const PublicProfile = () => import('../views/u/PublicProfile.vue');
+
 // Route meta type extension.
 declare module 'vue-router' {
   interface RouteMeta {
@@ -66,10 +73,31 @@ const routes: RouteRecordRaw[] = [
     path: '/auth/discord/callback',
     component: DiscordCallback,
   },
-  // Plan 05 will add /me — placeholder redirect so age gate and discord callback work now.
+  // Plan 02-05 — Profile + gamification routes.
   {
     path: '/me',
-    redirect: '/',
+    component: Me,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  {
+    path: '/me/character',
+    component: CharacterSheet,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  {
+    path: '/me/profile',
+    component: Profile,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  {
+    path: '/me/badges',
+    component: Badges,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  {
+    path: '/u/:uid',
+    component: PublicProfile,
+    // Public profile is readable by all (incl. anonymous); privacy enforced in component + Rules
   },
   // Plan 02-04 — Progressive consent funnel layers.
   // Layer 0: basic_profile — shown immediately after age gate or anon→email upgrade.
