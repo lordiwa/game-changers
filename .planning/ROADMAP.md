@@ -67,10 +67,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. **Platform success gate met**: 1,500+ app users with active consent, 40%+ Discord-to-App conversion (kill criterion if Layer 1 grant rate <60%), 200+ challenge participants, two-tier B2B data architecture (firestore-raw DPO-only → bigquery-anonymized with k≥50 + ε-DP) is deployed and tested even though no B2B partner is connected yet
 **Plans**: 9 plans
 - [x] 02-01-PLAN.md — Architecture lockdown: Firebase project (southamerica-east1), 7 Cloud Function codebases, ConsentEnforcement.ts, deny-all Rules + 90% rules-unit-testing CI, BigQuery export, Sentry/PostHog/UptimeRobot, Budget alerts
-- [ ] 02-02-PLAN.md — Auth + Discord OAuth bridge: Anonymous Auth on boot, email/password, Discord OAuth via custom-token (KMS-encrypted refresh tokens), age gate 16+, anonymous→full preserves uid
-- [ ] 02-03-PLAN.md — Discord bot: discord.js 14.26 on Compute Engine e2-micro, intents Guilds+GuildMembers+GuildMessageReactions ONLY, 6 slash commands, HMAC bot↔Function, quarterly TOS audit
-- [ ] 02-04-PLAN.md — Consent engine: 10 categories, granular UI, progressive Layers 0-4, hash-chained ledger, two-layer enforcement, DSAR + 72h erasure, expiry sweeper (LOPDP gate)
-- [ ] 02-05-PLAN.md — Profiles + gamification: XP logarithmic curve, streaks + shield, multi-progression tracks (HP/Stamina/Mente/Social), badges with provenance, character sheet for ALL users (Pitfall #9), app shell, Discord role sync
+- [x] 02-02-PLAN.md — Auth + Discord OAuth bridge: Anonymous Auth on boot, email/password, Discord OAuth via custom-token (KMS-encrypted refresh tokens), age gate 16+, anonymous→full preserves uid
+- [x] 02-03-PLAN.md — Discord bot: discord.js 14.26 on Compute Engine e2-micro, intents Guilds+GuildMembers+GuildMessageReactions ONLY, 6 slash commands, HMAC bot↔Function, quarterly TOS audit
+- [x] 02-04-PLAN.md — Consent engine: 10 categories, granular UI, progressive Layers 0-4, hash-chained ledger, two-layer enforcement, DSAR + 72h erasure, expiry sweeper (LOPDP gate)
+- [x] 02-05-PLAN.md — Profiles + gamification: XP logarithmic curve, streaks + shield, multi-progression tracks (HP/Stamina/Mente/Social), badges with provenance, character sheet for ALL users (Pitfall #9), app shell, Discord role sync
 - [ ] 02-06-PLAN.md — Content hub with SEO: vite-ssg, 5 wellness pillars, embedded YouTube/TikTok lazy, wellness assessments (PSS-4), CMS via Markdown commits
 - [ ] 02-07-PLAN.md — Events + QR check-in + accessibility: 3-tier events, RSVP + waitlist auto-promote, signed-JWT QR with offline IDB queue + Background Sync, anonymous report-user, WCAG 2.1 AA via axe-playwright
 - [ ] 02-08-PLAN.md — Manual-first wellness challenges: 5 types × Bronce/Plata/Oro, Web Sensor pedometer, photo + vouching, gaming narratives, leaderboard via aggregate doc (Pitfall #2), seasonal battle pass
