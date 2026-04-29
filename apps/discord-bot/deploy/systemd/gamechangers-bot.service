@@ -1,0 +1,23 @@
+[Unit]
+Description=GameChangers Discord Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=bot
+Group=bot
+WorkingDirectory=/home/bot/gamechangers/apps/discord-bot
+EnvironmentFile=/etc/gamechangers/bot.env
+Environment=GOOGLE_APPLICATION_CREDENTIALS=/etc/gamechangers/service-account.json
+Environment=NODE_ENV=production
+ExecStart=/home/bot/.nvm/versions/node/v22.12.0/bin/node /home/bot/gamechangers/apps/discord-bot/dist/index.js
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/log/gamechangers-bot
+
+[Install]
+WantedBy=multi-user.target

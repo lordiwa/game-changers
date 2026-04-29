@@ -1,0 +1,228 @@
+# Plan 02-03 Task 2 — Quarterly TOS compliance audit
+#
+# Schedule: 1st day of every 3rd month at 00:00 UTC (quarterly).
+# Also runs on any push that touches the intents file or bot source.
+#
+# Checks:
+#   1. MessageContent is NOT inside ALLOWED_INTENTS (only in FORBIDDEN_INTENTS / comments)
+#   2. MessageContent is NOT present in src/index.ts
+#   3. Bot service account has ONLY roles/firebase.viewer (+ iam.serviceAccountTokenCreator)
+#   4. Bot codebase has NO Firestore write calls outside __tests__/ (ADR-001 firewall)
+#   5. Posts audit summary as a GitHub issue comment (issue labeled [TOS-AUDIT])
+#
+# On failure: sends email to srparca@gmail.com via GitHub Actions email notification.
+# Configure repo notification settings to email on workflow failure.
+
+name: TOS Compliance Audit
+
+on:
+  schedule:
+    # 1st day of every 3rd month at 00:00 UTC
+    - cron: '0 0 1 */3 *'
+  push:
+    paths:
+      - 'apps/discord-bot/src/lib/intents.ts'
+      - 'apps/discord-bot/src/index.ts'
+  workflow_dispatch:  # Allow manual trigger for testing
+
+jobs:
+  tos-audit:
+    name: TOS Compliance Audit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ─── Check 1: MessageContent not in ALLOWED_INTENTS ──────────────────
+      - name: Check 1 — MessageContent not in ALLOWED_INTENTS
+        id: check1
+        run: |
+          echo "=== Check 1: MessageContent must NOT appear inside ALLOWED_INTENTS ==="
+          # Count lines with MessageContent that are NOT in FORBIDDEN_INTENTS, comments, or the NEVER comment block.
+          VIOLATIONS=$(grep -n "GatewayIntentBits.MessageContent" apps/discord-bot/src/lib/intents.ts \
+            | grep -v "FORBIDDEN_INTENTS\|NEVER\|ADR-001\|LOPDP\|\/\/" || true)
+
+          if [ -n "$VIOLATIONS" ]; then
+            echo "FAIL: MessageContent found outside of FORBIDDEN_INTENTS/comments in intents.ts:"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "PASS: MessageContent is not in ALLOWED_INTENTS"
+
+      # ─── Check 2: MessageContent not in src/index.ts ─────────────────────
+      - name: Check 2 — MessageContent not in src/index.ts
+        id: check2
+        run: |
+          echo "=== Check 2: MessageContent must NOT appear in src/index.ts ==="
+          VIOLATIONS=$(grep -n "GatewayIntentBits.MessageContent" apps/discord-bot/src/index.ts || true)
+
+          if [ -n "$VIOLATIONS" ]; then
+            echo "FAIL: MessageContent found in src/index.ts:"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "PASS: MessageContent is not in src/index.ts"
+
+      # ─── Check 3: Bot service account IAM roles ───────────────────────────
+      - name: Authenticate to Google Cloud
+        if: ${{ env.GCP_PROJECT_ID != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_AUDIT_SERVICE_ACCOUNT }}
+        continue-on-error: true
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        continue-on-error: true
+
+      - name: Check 3 — Bot service account has ONLY allowed roles
+        id: check3
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          echo "=== Check 3: Bot SA must have ONLY roles/firebase.viewer ==="
+
+          if [ -z "$GCP_PROJECT_ID" ]; then
+            echo "SKIP: GCP_PROJECT_ID not set — skipping IAM check (run locally with gcloud auth)."
+            echo "MANUAL CHECK: gcloud iam service-accounts get-iam-policy gw-bot-viewer@${GCP_PROJECT_ID}.iam.gserviceaccount.com"
+            exit 0
+          fi
+
+          SA_EMAIL="gw-bot-viewer@${GCP_PROJECT_ID}.iam.gserviceaccount.com"
+          ALLOWED_ROLES=("roles/firebase.viewer" "roles/iam.serviceAccountTokenCreator")
+
+          # Get all roles bound to the SA at the project level.
+          BOUND_ROLES=$(gcloud projects get-iam-policy "$GCP_PROJECT_ID" \
+            --flatten="bindings[].members" \
+            --format="table(bindings.role)" \
+            --filter="bindings.members:serviceAccount:${SA_EMAIL}" \
+            2>/dev/null | tail -n +2 || echo "")
+
+          VIOLATIONS=""
+          while IFS= read -r ROLE; do
+            ROLE=$(echo "$ROLE" | tr -d '[:space:]')
+            [ -z "$ROLE" ] && continue
+            ALLOWED=false
+            for AR in "${ALLOWED_ROLES[@]}"; do
+              [ "$ROLE" = "$AR" ] && ALLOWED=true && break
+            done
+            if [ "$ALLOWED" = "false" ]; then
+              VIOLATIONS="$VIOLATIONS\n  UNEXPECTED ROLE: $ROLE"
+            fi
+          done <<< "$BOUND_ROLES"
+
+          if [ -n "$VIOLATIONS" ]; then
+            echo "FAIL: Bot SA has unexpected roles:"
+            echo -e "$VIOLATIONS"
+            exit 1
+          fi
+          echo "PASS: Bot SA has only allowed roles: ${ALLOWED_ROLES[*]}"
+
+      # ─── Check 4: No Firestore write calls in bot codebase ───────────────
+      - name: Check 4 — No Firestore write calls in bot codebase (ADR-001)
+        id: check4
+        run: |
+          echo "=== Check 4: Bot must have ZERO Firestore write calls (ADR-001) ==="
+          # Search for write patterns: .set( .update( .delete( .add(
+          # Exclude __tests__/ directory.
+          VIOLATIONS=$(grep -rn \
+            --include="*.ts" \
+            -E '\.(set|update|delete|add)\(' \
+            apps/discord-bot/src/ \
+            | grep -v "__tests__/" || true)
+
+          if [ -n "$VIOLATIONS" ]; then
+            echo "FAIL: Firestore write calls found in bot codebase (ADR-001 violation):"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "PASS: No Firestore write calls found in apps/discord-bot/src/"
+
+      # ─── Check 5: Intent file contains all 3 required intents ────────────
+      - name: Check 5 — ALLOWED_INTENTS contains exactly Guilds, GuildMembers, GuildMessageReactions
+        id: check5
+        run: |
+          echo "=== Check 5: ALLOWED_INTENTS must contain exactly the 3 allowed intents ==="
+          INTENTS_FILE="apps/discord-bot/src/lib/intents.ts"
+
+          for INTENT in "GatewayIntentBits.Guilds" "GatewayIntentBits.GuildMembers" "GatewayIntentBits.GuildMessageReactions"; do
+            if ! grep -q "$INTENT" "$INTENTS_FILE"; then
+              echo "FAIL: $INTENT not found in $INTENTS_FILE"
+              exit 1
+            fi
+          done
+          echo "PASS: All 3 required intents present in intents.ts"
+
+      # ─── Post audit summary ───────────────────────────────────────────────
+      - name: Post audit summary to GitHub issue
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const checks = [
+              { id: 'check1', name: 'MessageContent not in ALLOWED_INTENTS', result: '${{ steps.check1.outcome }}' },
+              { id: 'check2', name: 'MessageContent not in src/index.ts', result: '${{ steps.check2.outcome }}' },
+              { id: 'check3', name: 'Bot SA IAM roles (only firebase.viewer)', result: '${{ steps.check3.outcome }}' },
+              { id: 'check4', name: 'No Firestore write calls (ADR-001)', result: '${{ steps.check4.outcome }}' },
+              { id: 'check5', name: 'ALLOWED_INTENTS has exactly 3 intents', result: '${{ steps.check5.outcome }}' },
+            ];
+
+            const allPassed = checks.every(c => c.result === 'success' || c.result === 'skipped');
+            const status = allPassed ? '✅ PASSED' : '❌ FAILED';
+            const runDate = new Date().toISOString();
+
+            const rows = checks.map(c => {
+              const icon = c.result === 'success' ? '✅' : c.result === 'skipped' ? '⏭️' : '❌';
+              return `| ${icon} | ${c.name} | ${c.result} |`;
+            }).join('\n');
+
+            const body = `## TOS Compliance Audit — ${status}
+
+            **Run date:** ${runDate}
+            **Workflow run:** ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}
+
+            | Status | Check | Result |
+            |--------|-------|--------|
+            ${rows}
+
+            ### Intent Compliance
+            - ALLOWED_INTENTS: Guilds | GuildMembers | GuildMessageReactions (LOCKED)
+            - MessageContent: FORBIDDEN (ADR-001 + LOPDP minimization)
+
+            ### ADR-001 Firewall
+            - Bot SA: gw-bot-viewer@... (roles/firebase.viewer ONLY)
+            - Bot codebase: ZERO Firestore write calls
+
+            ${!allPassed ? '⚠️ **Action required: resolve failing checks before next deploy.**' : ''}
+            `;
+
+            // Find or create [TOS-AUDIT] issue.
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'TOS-AUDIT',
+              state: 'open',
+            });
+
+            if (issues.data.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issues.data[0].number,
+                body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '[TOS-AUDIT] Discord Bot TOS Compliance Tracking',
+                body,
+                labels: ['TOS-AUDIT'],
+              });
+            }

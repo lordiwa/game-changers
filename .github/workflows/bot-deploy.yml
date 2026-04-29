@@ -1,0 +1,75 @@
+# Plan 02-03 Task 2 — Bot deploy CI workflow
+#
+# Triggers on push to main affecting apps/discord-bot/**
+# Steps:
+#   1. Build TypeScript
+#   2. Run unit tests
+#   3. SSH into VM and run pull-and-restart.sh
+#   4. Register slash commands via deploy-commands.ts
+
+name: Bot Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/discord-bot/**'
+      - 'functions/shared/botAuth.ts'
+      - 'functions/shared/hmac.ts'
+
+jobs:
+  test-and-deploy:
+    name: Test + Deploy Discord Bot
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # Required for workload-identity-federation
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm --filter @gamechangers/discord-bot typecheck
+
+      - name: Run tests
+        run: pnpm --filter @gamechangers/discord-bot test
+
+      - name: Authenticate to Google Cloud (Workload Identity Federation)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT }}
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy to VM (pull + restart)
+        run: |
+          gcloud compute ssh gamechangers-bot \
+            --zone=southamerica-east1-a \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            --command='sudo /home/bot/gamechangers/apps/discord-bot/deploy/pull-and-restart.sh'
+
+      - name: Register slash commands
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+          GUILD_ID: ${{ secrets.DISCORD_GUILD_ID }}
+        run: |
+          cd apps/discord-bot
+          node dist/scripts/deploy-commands.js
