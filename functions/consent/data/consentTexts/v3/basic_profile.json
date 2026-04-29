@@ -1,0 +1,17 @@
+{
+  "version": "v3",
+  "category": "basic_profile",
+  "es": {
+    "purpose": "Crear tu perfil con nombre, avatar, ciudad y juegos favoritos para que la comunidad te conozca.",
+    "scope": "Guardamos tu nombre, avatar, ciudad, plataformas de juego y géneros favoritos. Nada más.",
+    "retention": "Guardamos estos datos mientras tengas cuenta. Los eliminamos en 72h si borras tu cuenta.",
+    "share": "Solo tú y la comunidad ven tu perfil. No lo vendemos ni lo compartimos con socios sin tu permiso adicional."
+  },
+  "en": {
+    "purpose": "Create your profile with name, avatar, city and favorite games so the community can find you.",
+    "scope": "We store your name, avatar, city, gaming platforms and favorite genres. Nothing more.",
+    "retention": "We keep this data while you have an account. We delete it within 72h if you delete your account.",
+    "share": "Only you and the community see your profile. We don't sell it or share it with partners without additional consent."
+  },
+  "publishedAt": "2026-04-29T00:00:00Z"
+}

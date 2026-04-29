@@ -1,0 +1,17 @@
+{
+  "version": "v3",
+  "category": "health_self_reports",
+  "es": {
+    "purpose": "Registrar tus propias entradas de movimiento, check-ins de bienestar mental y fotos en desafíos.",
+    "scope": "Guardamos los datos que vos ingresás manualmente: pasos, estado de ánimo, fotos de evidencia en desafíos. No accedemos a dispositivos ni apps de salud sin tu permiso de wearables.",
+    "retention": "Estos datos se guardan 12 meses activos. Puedes eliminarlos en cualquier momento desde tu perfil.",
+    "share": "Nadie más ve tus entradas individuales. Solo resúmenes anónimos (k≥50 participantes) se usan en estudios agregados."
+  },
+  "en": {
+    "purpose": "Log your own movement entries, mental wellness check-ins and challenge photo evidence.",
+    "scope": "We store data you enter manually: steps, mood, challenge photo evidence. We don't access health apps or devices without wearable consent.",
+    "retention": "This data is kept for 12 active months. You can delete it anytime from your profile.",
+    "share": "Nobody else sees your individual entries. Only anonymous aggregates (k≥50 participants) are used in studies."
+  },
+  "publishedAt": "2026-04-29T00:00:00Z"
+}

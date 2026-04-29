@@ -1,0 +1,17 @@
+{
+  "version": "v3",
+  "category": "b2b_insurers",
+  "es": {
+    "purpose": "Compartir resúmenes anónimos de actividad física con aseguradoras de salud para programas de bienestar.",
+    "scope": "Compartimos solo estadísticas agregadas (mínimo 50 personas). Nunca tu nombre, nunca datos individuales. Las aseguradoras ven tendencias de la comunidad, no tu historial personal.",
+    "retention": "Los datos compartidos son snapshots trimestrales. Si revocás, no se comparten nuevos datos desde ese momento.",
+    "share": "Solo aseguradoras con acuerdos firmados de procesamiento de datos. Siempre en formato anónimo con k≥50."
+  },
+  "en": {
+    "purpose": "Share anonymous activity summaries with health insurers for wellness programs.",
+    "scope": "We share only aggregated statistics (minimum 50 people). Never your name, never individual data. Insurers see community trends, not your personal history.",
+    "retention": "Shared data consists of quarterly snapshots. If you revoke, no new data is shared from that moment.",
+    "share": "Only insurers with signed data processing agreements. Always in anonymous format with k≥50."
+  },
+  "publishedAt": "2026-04-29T00:00:00Z"
+}

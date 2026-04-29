@@ -1,0 +1,17 @@
+{
+  "version": "v3",
+  "category": "wearable_data",
+  "es": {
+    "purpose": "Conectar tu pulsera para que cuente tus pasos, ritmo cardíaco, sueño, calorías y entrenos en tu personaje.",
+    "scope": "Recibimos los datos que tu dispositivo envíe a través de Open Wearables (Garmin, Fitbit, Polar, Whoop, Oura). No accedemos a tu cuenta directamente.",
+    "retention": "Las muestras se guardan 90 días; los resúmenes diarios, mientras tengas la cuenta. Cuando revoques este permiso, dejamos de recibir nuevos datos al instante.",
+    "share": "Solo tú ves tus datos detallados. Resúmenes anónimos pueden aparecer en estudios agregados (k≥50) si tenés permisos B2B activos."
+  },
+  "en": {
+    "purpose": "Connect your wearable so it counts your steps, heart rate, sleep, calories and workouts into your character.",
+    "scope": "We receive data your device sends via Open Wearables (Garmin, Fitbit, Polar, Whoop, Oura). We don't access your account directly.",
+    "retention": "Raw samples are kept 90 days; daily summaries while you have an account. When you revoke this permission, we stop receiving new data instantly.",
+    "share": "Only you see your detailed data. Anonymous summaries may appear in aggregate studies (k≥50) if you have active B2B permissions."
+  },
+  "publishedAt": "2026-04-29T00:00:00Z"
+}

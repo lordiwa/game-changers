@@ -1,0 +1,17 @@
+{
+  "version": "v3",
+  "category": "b2b_brands",
+  "es": {
+    "purpose": "Compartir resúmenes anónimos de tendencias de la comunidad gamer con marcas de consumo y telecomunicaciones.",
+    "scope": "Compartimos estadísticas de tendencias (mínimo 50 personas): géneros de juego populares, horas de actividad, tipos de eventos preferidos. Sin tu nombre ni datos personales.",
+    "retention": "Si revocás, no se comparten nuevos datos. Los históricos quedan anónimos en los reportes ya generados.",
+    "share": "Solo marcas con acuerdos firmados. Nunca para publicidad dirigida. Solo análisis de mercado agregado, k≥50."
+  },
+  "en": {
+    "purpose": "Share anonymous community trend summaries with consumer brands and telecom companies.",
+    "scope": "We share trend statistics (minimum 50 people): popular game genres, activity hours, preferred event types. Without your name or personal data.",
+    "retention": "If you revoke, no new data is shared. Historical data remains anonymous in already-generated reports.",
+    "share": "Only brands with signed agreements. Never for targeted advertising. Only aggregate market analysis, k≥50."
+  },
+  "publishedAt": "2026-04-29T00:00:00Z"
+}

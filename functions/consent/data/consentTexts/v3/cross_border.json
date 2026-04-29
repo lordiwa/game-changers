@@ -1,0 +1,17 @@
+{
+  "version": "v3",
+  "category": "cross_border",
+  "es": {
+    "purpose": "Procesar tus datos fuera de Ecuador en servidores de Google ubicados en Brasil (suroeste de América del Sur).",
+    "scope": "Firebase y BigQuery procesan datos en la región southamerica-east1 (São Paulo, Brasil). Ecuador aún no tiene región propia de Google Cloud. El traslado es técnicamente necesario para el servicio.",
+    "retention": "Aplica la misma retención que los datos originales. Al borrar tu cuenta, eliminamos datos en servidores externos en 72h.",
+    "share": "Google Cloud actúa como procesador bajo acuerdos de procesamiento de datos (DPA). No comparte datos con terceros por cuenta propia."
+  },
+  "en": {
+    "purpose": "Process your data outside Ecuador on Google servers located in Brazil (southwestern South America).",
+    "scope": "Firebase and BigQuery process data in the southamerica-east1 region (São Paulo, Brazil). Ecuador does not yet have its own Google Cloud region. The transfer is technically necessary for the service.",
+    "retention": "Same retention applies as the original data. When you delete your account, we delete data on external servers within 72h.",
+    "share": "Google Cloud acts as a processor under data processing agreements (DPA). It does not share data with third parties on its own account."
+  },
+  "publishedAt": "2026-04-29T00:00:00Z"
+}

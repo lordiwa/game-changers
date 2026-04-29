@@ -1,0 +1,17 @@
+{
+  "version": "v3",
+  "category": "research",
+  "es": {
+    "purpose": "Contribuir con datos anónimos a estudios académicos sobre salud y bienestar gamer aprobados por un comité de ética.",
+    "scope": "Compartimos estadísticas anónimas (mínimo 50 personas) con investigadores de universidades aliadas. Solo estudios con aprobación IRB o comité equivalente.",
+    "retention": "Los datos de investigación son snapshots anónimos. Si revocás, no participás en nuevos estudios. Los publicados ya no pueden retirarse por razones de integridad científica.",
+    "share": "Solo investigadores con protocolos aprobados por comité de ética. Resultados publicados sin identificación individual. k≥50 siempre."
+  },
+  "en": {
+    "purpose": "Contribute anonymous data to ethics-approved academic studies on gamer health and wellness.",
+    "scope": "We share anonymous statistics (minimum 50 people) with allied university researchers. Only studies with IRB approval or equivalent committee.",
+    "retention": "Research data consists of anonymous snapshots. If you revoke, you don't participate in new studies. Already published data cannot be retracted for scientific integrity reasons.",
+    "share": "Only researchers with ethics committee-approved protocols. Results published without individual identification. k≥50 always."
+  },
+  "publishedAt": "2026-04-29T00:00:00Z"
+}

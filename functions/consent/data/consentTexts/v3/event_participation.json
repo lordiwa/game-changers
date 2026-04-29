@@ -1,0 +1,17 @@
+{
+  "version": "v3",
+  "category": "event_participation",
+  "es": {
+    "purpose": "Confirmar tu asistencia a eventos, sumarte a desafíos y aparecer en las listas de participantes.",
+    "scope": "Guardamos tus RSVPs, asistencia confirmada y capturas de registro presencial en eventos.",
+    "retention": "El historial de eventos se guarda mientras tengas cuenta. Lo eliminamos en 72h si borras tu cuenta.",
+    "share": "Los organizadores ven la lista de confirmados. Nunca compartimos tu asistencia con marcas sin tu permiso."
+  },
+  "en": {
+    "purpose": "Confirm your attendance at events, join challenges and appear on participant lists.",
+    "scope": "We store your RSVPs, confirmed attendance and walk-in records at in-person events.",
+    "retention": "Event history is kept while you have an account. We delete it within 72h if you delete your account.",
+    "share": "Organizers see the confirmed list. We never share your attendance with brands without your consent."
+  },
+  "publishedAt": "2026-04-29T00:00:00Z"
+}

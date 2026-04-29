@@ -1,0 +1,17 @@
+{
+  "version": "v3",
+  "category": "b2b_healthcare",
+  "es": {
+    "purpose": "Compartir resúmenes anónimos de bienestar con proveedores de salud para investigación y programas preventivos.",
+    "scope": "Compartimos estadísticas agregadas (mínimo 50 personas) con clínicas y centros de salud aliados. Nunca datos individuales ni tu identidad.",
+    "retention": "Si revocás, no se comparten nuevos datos. Los históricos se desvinculan de tu identidad en 30 días.",
+    "share": "Solo proveedores de salud con acuerdos de tratamiento de datos y fines preventivos. Siempre anónimo, k≥50."
+  },
+  "en": {
+    "purpose": "Share anonymous wellness summaries with healthcare providers for research and preventive programs.",
+    "scope": "We share aggregated statistics (minimum 50 people) with allied clinics and health centers. Never individual data or your identity.",
+    "retention": "If you revoke, no new data is shared. Historical data is dissociated from your identity within 30 days.",
+    "share": "Only healthcare providers with data processing agreements and preventive purposes. Always anonymous, k≥50."
+  },
+  "publishedAt": "2026-04-29T00:00:00Z"
+}

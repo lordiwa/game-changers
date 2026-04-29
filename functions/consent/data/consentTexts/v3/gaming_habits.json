@@ -1,0 +1,17 @@
+{
+  "version": "v3",
+  "category": "gaming_habits",
+  "es": {
+    "purpose": "Registrar qué juegos jugás, con qué frecuencia y con quiénes, para conectarte con jugadores afines.",
+    "scope": "Guardamos los juegos que marcás en tu perfil, las horas aproximadas de juego y si preferís jugar solo o en equipo. No accedemos a tu historial de steam ni APIs externas.",
+    "retention": "Guardamos estos datos mientras tengas cuenta. Los eliminamos en 72h si borras tu cuenta.",
+    "share": "Usamos estos datos para recomendarte jugadores y grupos. Resúmenes anónimos (k≥50) pueden usarse para mejorar la comunidad."
+  },
+  "en": {
+    "purpose": "Record which games you play, how often and with whom, to connect you with like-minded players.",
+    "scope": "We store games you mark on your profile, approximate play hours and whether you prefer solo or team play. We don't access Steam history or external APIs.",
+    "retention": "We keep this data while you have an account. We delete it within 72h if you delete your account.",
+    "share": "We use this data to recommend players and groups. Anonymous summaries (k≥50) may be used to improve the community."
+  },
+  "publishedAt": "2026-04-29T00:00:00Z"
+}
