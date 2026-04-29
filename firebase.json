@@ -1,0 +1,68 @@
+{
+  "functions": [
+    {
+      "codebase": "auth",
+      "source": "functions/auth",
+      "runtime": "nodejs22",
+      "region": "southamerica-east1"
+    },
+    {
+      "codebase": "consent",
+      "source": "functions/consent",
+      "runtime": "nodejs22",
+      "region": "southamerica-east1"
+    },
+    {
+      "codebase": "events",
+      "source": "functions/events",
+      "runtime": "nodejs22",
+      "region": "southamerica-east1"
+    },
+    {
+      "codebase": "challenges",
+      "source": "functions/challenges",
+      "runtime": "nodejs22",
+      "region": "southamerica-east1"
+    },
+    {
+      "codebase": "wearables",
+      "source": "functions/wearables",
+      "runtime": "nodejs22",
+      "region": "southamerica-east1"
+    },
+    {
+      "codebase": "gamification",
+      "source": "functions/gamification",
+      "runtime": "nodejs22",
+      "region": "southamerica-east1"
+    },
+    {
+      "codebase": "b2b",
+      "source": "functions/b2b",
+      "runtime": "nodejs22",
+      "region": "southamerica-east1"
+    }
+  ],
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "hosting": {
+    "site": "gamechangers",
+    "public": "apps/pwa/dist",
+    "rewrites": [
+      { "source": "**", "destination": "/index.html" }
+    ]
+  },
+  "emulators": {
+    "auth": { "port": 9099 },
+    "firestore": { "port": 8080 },
+    "functions": { "port": 5001 },
+    "storage": { "port": 9199 },
+    "hosting": { "port": 5000 },
+    "ui": { "enabled": true }
+  }
+}

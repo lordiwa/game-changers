@@ -1,0 +1,29 @@
+name: test
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '9.15.0'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - name: Vitest (PWA + lint)
+        run: pnpm --filter @gamechangers/pwa exec vitest run && pnpm --filter @gamechangers/tests-lint exec vitest run
+      - name: rules-unit-testing (90% coverage gate)
+        run: |
+          # Firestore emulator must be running for @firebase/rules-unit-testing@5.
+          pnpm --filter @gamechangers/tests-rules exec firebase emulators:exec --only firestore \
+            "pnpm --filter @gamechangers/tests-rules exec vitest run --coverage"
+          node scripts/check-rules-coverage.js

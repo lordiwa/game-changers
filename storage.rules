@@ -1,0 +1,22 @@
+rules_version = '2';
+
+// GameChangers Storage Security Rules — deny-all baseline + Function-only writes.
+// DSAR exports issued via signed URLs at issuance time; clients never read directly.
+service firebase.storage {
+  match /b/{bucket}/o {
+    // DSAR ZIPs: written by the consent Function, read via signed URL only.
+    match /dsar-exports/{uid}/{requestId} {
+      allow read, write: if false;
+    }
+
+    // Avatars (Plan 02 will scope this when AUTH ships).
+    match /avatars/{uid}/{file} {
+      allow read, write: if false;
+    }
+
+    // Default deny.
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

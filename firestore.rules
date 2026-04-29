@@ -1,0 +1,180 @@
+rules_version = '2';
+
+// GameChangers Firestore Security Rules — deny-all baseline + per-collection allow.
+//
+// Two-layer consent enforcement (PITFALLS #1):
+//  - Layer 1 (this file): Rules check request.auth.token.consents.<bitmapKey> first.
+//  - Layer 2 (Functions): functions/shared/ConsentEnforcement.ts consentGate() repeats
+//    the check with a Firestore document fallback + audit log write.
+//
+// Bitmap keys (must mirror functions/shared/ConsentEnforcement.ts CLAIM_BITMAP_KEYS):
+//   b = basic_profile, e = event_participation, h = health_self_reports, w = wearable_data,
+//   g = gaming_habits, i = b2b_insurers, c = b2b_healthcare, r = b2b_brands,
+//   x = cross_border, s = research
+//
+// Rules language note: dynamic key lookup is unsupported, so hasConsentClaim() uses
+// a verbose ternary. Do NOT refactor into a map lookup — Rules will reject it.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ──────────────────────────────────────────────────────────────────────
+    // Helpers
+    // ──────────────────────────────────────────────────────────────────────
+    function isAuthed() {
+      return request.auth != null;
+    }
+    function isOwner(uid) {
+      return isAuthed() && request.auth.uid == uid;
+    }
+    function isDpo() {
+      return isAuthed() && request.auth.token.role == 'dpo';
+    }
+    function isPartner() {
+      return isAuthed()
+        && request.auth.token.partner_id != null
+        && request.auth.token.partner_active == true;
+    }
+    function hasConsents() {
+      return isAuthed() && request.auth.token.consents != null;
+    }
+    // Verbose ternary because Rules language has no dynamic key lookup.
+    function hasConsentClaim(category) {
+      return hasConsents() && (
+        category == 'basic_profile'       ? request.auth.token.consents.b == true :
+        category == 'event_participation' ? request.auth.token.consents.e == true :
+        category == 'health_self_reports' ? request.auth.token.consents.h == true :
+        category == 'wearable_data'       ? request.auth.token.consents.w == true :
+        category == 'gaming_habits'       ? request.auth.token.consents.g == true :
+        category == 'b2b_insurers'        ? request.auth.token.consents.i == true :
+        category == 'b2b_healthcare'      ? request.auth.token.consents.c == true :
+        category == 'b2b_brands'          ? request.auth.token.consents.r == true :
+        category == 'cross_border'        ? request.auth.token.consents.x == true :
+        category == 'research'            ? request.auth.token.consents.s == true :
+        false
+      );
+    }
+
+    // ──────────────────────────────────────────────────────────────────────
+    // /users/{uid}/profile/main — owner R/W gated by basic_profile consent.
+    // Immutable fields: discordId, birthDate, createdAt.
+    // ──────────────────────────────────────────────────────────────────────
+    match /users/{uid}/profile/main {
+      allow read: if isOwner(uid) && hasConsentClaim('basic_profile');
+      allow create: if isOwner(uid) && hasConsentClaim('basic_profile');
+      allow update: if isOwner(uid)
+        && hasConsentClaim('basic_profile')
+        && request.resource.data.discordId == resource.data.discordId
+        && request.resource.data.birthDate == resource.data.birthDate
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if false;
+    }
+
+    // /users/{uid}/private/** — Functions service-account only. Clients deny.
+    match /users/{uid}/private/{document=**} {
+      allow read, write: if false;
+    }
+
+    // /users/{uid}/consents/{category} — owner read; client write DENIED
+    // (Functions service-account writes via consent-grant Function in Plan 04).
+    match /users/{uid}/consents/{category} {
+      allow read: if isOwner(uid);
+      allow write: if false;
+    }
+
+    // /users/{uid}/healthDaily/{date} — owner read if wearable_data; client write DENIED.
+    match /users/{uid}/healthDaily/{date} {
+      allow read: if isOwner(uid) && hasConsentClaim('wearable_data');
+      allow write: if false;
+    }
+
+    // /users/{uid}/healthSamples/{yyyymm}/metrics/{id} — same gate, no client writes.
+    match /users/{uid}/healthSamples/{yyyymm}/metrics/{id} {
+      allow read: if isOwner(uid) && hasConsentClaim('wearable_data');
+      allow write: if false;
+    }
+
+    // /users/{uid}/badges/{badgeId} — owner read if basic_profile; no client writes.
+    match /users/{uid}/badges/{badgeId} {
+      allow read: if isOwner(uid) && hasConsentClaim('basic_profile');
+      allow write: if false;
+    }
+
+    // /users/{uid}/streaks/{trackId} — owner read; no client writes.
+    match /users/{uid}/streaks/{trackId} {
+      allow read: if isOwner(uid);
+      allow write: if false;
+    }
+
+    // /users/{uid}/challengeEnrollments/{id} — owner R/W if event_participation.
+    match /users/{uid}/challengeEnrollments/{id} {
+      allow read, write: if isOwner(uid) && hasConsentClaim('event_participation');
+    }
+
+    // /users/{uid}/challengeProgress/{id} — owner read; Functions only writes.
+    match /users/{uid}/challengeProgress/{id} {
+      allow read: if isOwner(uid);
+      allow write: if false;
+    }
+
+    // /users/{uid}/dsarRequests/{id} — owner read; Functions only writes.
+    match /users/{uid}/dsarRequests/{id} {
+      allow read: if isOwner(uid);
+      allow write: if false;
+    }
+
+    // ──────────────────────────────────────────────────────────────────────
+    // Public + cross-user collections
+    // ──────────────────────────────────────────────────────────────────────
+
+    // /events/{eventId} — public read of event listings; client write DENIED.
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // /events/{eventId}/attendance/{uid} — owner reads own attendance; no client writes.
+    match /events/{eventId}/attendance/{uid} {
+      allow read: if isOwner(uid);
+      allow write: if false;
+    }
+
+    // /leaderboards/{period} — public read (only opted-in users surface in the docs);
+    // client write DENIED.
+    match /leaderboards/{period} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // /auditLog/{id} — DPO read only; client write DENIED.
+    match /auditLog/{id} {
+      allow read: if isDpo();
+      allow write: if false;
+    }
+
+    // /consentLedger/{id} — DPO read OR owner-of-own-entries; client write DENIED.
+    match /consentLedger/{id} {
+      allow read: if isDpo() || (isAuthed() && resource.data.uid == request.auth.uid);
+      allow write: if false;
+    }
+
+    // /consentTexts/{category}/{version} — public read (consent UI renders these);
+    // client write DENIED.
+    match /consentTexts/{category}/{version} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // /partners/** — partner-claim gated R/W (Phase 3 issues claims; Phase 2 ships scaffold).
+    match /partners/{document=**} {
+      allow read, write: if isPartner();
+    }
+
+    // ──────────────────────────────────────────────────────────────────────
+    // Deny-all default (catches anything not explicitly matched above).
+    // ──────────────────────────────────────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
