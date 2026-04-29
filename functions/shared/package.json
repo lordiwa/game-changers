@@ -28,6 +28,7 @@
     "./hmac": "./hmac.ts",
     "./kms": "./kms.ts",
     "./sentry": "./sentry.ts",
-    "./types": "./types.ts"
+    "./types": "./types.ts",
+    "./botAuth": "./botAuth.ts"
   }
 }
