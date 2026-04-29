@@ -16,6 +16,7 @@
     "firebase-functions": "7.2.5",
     "firebase-admin": "13.8.0",
     "@google-cloud/kms": "^5.4.0",
+    "@sentry/node": "10.50.0",
     "@gamechangers/shared": "workspace:*"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     "./ConsentEnforcement": "./ConsentEnforcement.ts",
     "./hmac": "./hmac.ts",
     "./kms": "./kms.ts",
+    "./sentry": "./sentry.ts",
     "./types": "./types.ts"
   }
 }
