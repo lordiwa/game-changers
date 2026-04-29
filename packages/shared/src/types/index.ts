@@ -9,6 +9,61 @@ import {
   AuthStateSchema,
 } from '../schemas/index.js';
 
+// ── ProfileMain — the primary user profile document at /users/{uid}/profile/main ──
+// HP/Stamina/Mente/Social are denormalized here (updated by recomputeStats every 6h).
+// These are game stats (0-100), never raw health metrics — DPO confirmed.
+export interface ProfileMain {
+  displayName: string;
+  avatar?: string;
+  pronouns?: string;       // free-text per D-17; NEVER required
+  city: 'quito' | 'guayaquil' | 'cuenca' | 'other';
+  favGames: string[];
+  gamingPlatforms: ('pc' | 'console' | 'mobile')[];
+  publicVisibility: boolean;
+  theme: 'dark' | 'light';   // default 'dark'
+  locale: 'es' | 'en';
+  dataSaver: boolean;
+  level: number;
+  xp: number;
+  stats: {
+    hp: number;       // 0..100; minimum 1 per Pitfall #9 + PROF-12
+    stamina: number;  // 0..100
+    mente: number;    // 0..100
+    social: number;   // 0..100
+  };
+  createdAt: unknown;  // Firestore Timestamp (typed as unknown for shared/pwa compatibility)
+  updatedAt: unknown;  // Firestore Timestamp
+  deletedAt?: unknown; // Firestore Timestamp — set on soft-delete
+}
+
+// ── Streak — per-track streak entity at /users/{uid}/streaks/{trackId} ──
+export interface Streak {
+  trackId: 'fitness' | 'social' | 'knowledge' | 'leadership';
+  currentDays: number;
+  longestDays: number;
+  lastEventAt: unknown;   // Firestore Timestamp
+  shieldsRemaining: number; // 1 grace per 7-day window per DC-07
+  windowStartedAt: unknown; // Firestore Timestamp — Monday of current shield window
+}
+
+// ── Badge — per-badge doc at /users/{uid}/badges/{badgeId} ──
+export interface Badge {
+  badgeId: string;         // e.g. 'caminata-dota-primera-vez'
+  earnedAt: unknown;       // Firestore Timestamp
+  source: string;          // 'event:abc' | 'challenge:xyz' | 'streak:fitness:30'
+  tier?: 'bronce' | 'plata' | 'oro';
+  signedClaim: string;     // HMAC-SHA256 of {badgeId, uid, source, earnedAt}
+}
+
+// ── XpEventMessage — Pub/Sub message shapes published to xp-events topic ──
+export type XpEventMessage =
+  | { type: 'event_attended'; uid: string; eventId: string; walkIn?: boolean }
+  | { type: 'challenge_progress'; uid: string; challengeId: string; value: number; metric?: string }
+  | { type: 'content_completed'; uid: string; contentId: string; durationSec: number }
+  | { type: 'club_leadership'; uid: string; clubId: string }     // Phase 3 — dormant in Phase 2
+  | { type: 'referral'; uid: string; referredUid: string }
+  | { type: 'wellness_survey_completed'; uid: string; surveyId: string };
+
 export type ConsentCategory = z.infer<typeof ConsentCategorySchema>;
 export type ConsentDoc = z.infer<typeof ConsentDocSchema>;
 export type ConsentLedgerEntry = z.infer<typeof ConsentLedgerEntrySchema>;
