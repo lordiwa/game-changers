@@ -1,0 +1,25 @@
+{
+  "name": "@gamechangers/functions-events",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "lib/index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo 'no tests in scaffolding plan' && exit 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "firebase-functions": "7.2.5",
+    "firebase-admin": "13.8.0",
+    "zod": "4.3.6",
+    "@gamechangers/shared": "workspace:*",
+    "@gamechangers/functions-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

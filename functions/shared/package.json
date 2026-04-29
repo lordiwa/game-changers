@@ -1,0 +1,31 @@
+{
+  "name": "@gamechangers/functions-shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "test": "echo 'shared module — no tests at this layer; rules-unit-testing covers consent helpers' && exit 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "firebase-functions": "7.2.5",
+    "firebase-admin": "13.8.0",
+    "@google-cloud/kms": "^5.4.0",
+    "@gamechangers/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./ConsentEnforcement": "./ConsentEnforcement.ts",
+    "./hmac": "./hmac.ts",
+    "./kms": "./kms.ts",
+    "./types": "./types.ts"
+  }
+}

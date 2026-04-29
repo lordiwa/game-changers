@@ -13,6 +13,7 @@ dist
 dist-ssr
 coverage
 *.local
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*
@@ -24,16 +25,30 @@ coverage
 *.sln
 *.sw?
 
-*.tsbuildinfo
+# Vite
+.vite
+*.timestamp-*-*.mjs
 
-.eslintcache
+# Vitest
+__screenshots__/
 
 # Cypress
 /cypress/videos/
 /cypress/screenshots/
 
-# Vitest
-__screenshots__/
+.eslintcache
 
-# Vite
-*.timestamp-*-*.mjs
+# Firebase
+.firebase
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+*.local
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Fonts: do NOT ignore .woff2 in apps/pwa/public/fonts/ — they are committed
+!apps/pwa/public/fonts/*.woff2

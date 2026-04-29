@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/*
+ * GameChangers design tokens (UI-SPEC §Color).
+ * Dark theme is canonical (gaming-native); light theme tokens follow.
+ */
+@theme {
+  /* Dark theme (default) */
+  --color-surface-0: #0F0F1A;
+  --color-surface-1: #1A1A2E;
+  --color-surface-2: #23233D;
+  --color-surface-3: #2D2D4A;
+  --color-border-subtle: #2D2D4A;
+  --color-text-primary: #F0F0F5;
+  --color-text-muted: #9696B5;
+  --color-accent-xp: #1FE090;
+  --color-reward-amber: #FFB800;
+  --color-destructive: #FF4D5E;
+  --color-crisis: #FF6B7A;
+  --color-info-blue: #5BB8FF;
+  --color-focus-ring: #1FE090;
+
+  /* Typography */
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Light theme — applied via [data-theme="light"] selector */
+[data-theme="light"] {
+  --color-surface-0: #FFFFFF;
+  --color-surface-1: #F5F5FA;
+  --color-surface-2: #EAEAF0;
+  --color-surface-3: #DCDCE8;
+  --color-border-subtle: #DCDCE8;
+  --color-text-primary: #0F0F1A;
+  --color-text-muted: #5A5A78;
+  --color-accent-xp: #00B373;
+  --color-reward-amber: #D89400;
+  --color-destructive: #D23545;
+  --color-crisis: #D2454F;
+  --color-info-blue: #2B7FD2;
+  --color-focus-ring: #00B373;
+}
+
+html {
+  background-color: var(--color-surface-0);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}

@@ -1,0 +1,33 @@
+name: security-audit
+on:
+  pull_request:
+  schedule:
+    - cron: '0 6 * * *'  # daily 06:00 UTC = 01:00 ECT (off-hours for the team)
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '9.15.0'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - name: install (no lifecycle scripts)
+        run: pnpm install --frozen-lockfile 2>&1 | tee install.log
+      - name: audit (HIGH/CRITICAL fails)
+        run: pnpm audit --audit-level=high
+      - name: phantom dep check
+        run: pnpm dedupe --check
+      - name: verify ignore-scripts is active
+        run: |
+          # Two-layer proof that lifecycle scripts cannot run for non-allowlisted packages:
+          # (1) .npmrc must declare `ignore-scripts=true`. (2) pnpm config must report it active.
+          # pnpm 9.x honors the .npmrc setting silently (no per-package `Skipping` lines), so we
+          # assert the configuration directly instead of grepping install.log.
+          # Triggered by PostHog Shai-Hulud 2.0 (2025-11-24) — see .npmrc header for context.
+          grep -q '^ignore-scripts=true$' .npmrc || { echo 'FAIL: .npmrc missing ignore-scripts=true'; exit 1; }
+          test "$(pnpm config get ignore-scripts)" = "true" || { echo 'FAIL: pnpm config ignore-scripts != true'; exit 1; }
+          echo 'OK: ignore-scripts active globally; no lifecycle scripts ran during install.'

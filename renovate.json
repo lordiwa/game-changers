@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  "dependencyDashboard": true,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"]
+  },
+  "osvVulnerabilityAlerts": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["patch"],
+      "matchPackagePatterns": [
+        "^firebase",
+        "^@firebase",
+        "^discord",
+        "^@sentry",
+        "^posthog",
+        "^vue",
+        "^vite",
+        "^@vitejs",
+        "^pinia",
+        "^vue-router"
+      ],
+      "automerge": true
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["needs-review"]
+    }
+  ]
+}

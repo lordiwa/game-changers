@@ -1,0 +1,36 @@
+{
+  "app": {
+    "brand": "GameChangers"
+  },
+  "auth": {
+    "cta": {
+      "create_account": "Crear mi cuenta"
+    }
+  },
+  "consent": {
+    "cta": {
+      "accept": "Acepto y continúo",
+      "save": "Guardar cambios"
+    }
+  },
+  "events": {
+    "cta": {
+      "rsvp": "Confirmar asistencia"
+    }
+  },
+  "challenges": {
+    "cta": {
+      "accept": "Acepto el desafío"
+    }
+  },
+  "wearables": {
+    "cta": {
+      "connect": "Conectar dispositivo"
+    }
+  },
+  "crisis": {
+    "cta": {
+      "help": "¿Necesitas ayuda?"
+    }
+  }
+}

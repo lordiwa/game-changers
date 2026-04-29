@@ -1,0 +1,33 @@
+/*
+ * Self-hosted variable fonts per UI-SPEC font hosting requirement.
+ * Files live in apps/pwa/public/fonts/ and are committed to git (.gitignore whitelist).
+ * Sourced from https://fonts.bunny.net (privacy-respecting alternative to Google Fonts;
+ * GDPR/LOPDP-friendly: no third-party tracking, no IP logging).
+ */
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-variable.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0100-024F, U+1E00-1EFF, U+2000-206F;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/inter-variable.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0100-024F, U+1E00-1EFF, U+2000-206F;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-variable.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0100-024F, U+2000-206F;
+}
