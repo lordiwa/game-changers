@@ -9,11 +9,23 @@
  */
 import { computed, type ComputedRef } from 'vue';
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import { getFirestore, collection, doc, query, where, orderBy } from 'firebase/firestore';
+import { getFirestore, collection, doc, getDoc, query, where, orderBy } from 'firebase/firestore';
 import { useCollection, useCurrentUser } from 'vuefire';
 import { firebaseApp } from '../firebase';
 import { usePosthog } from './usePosthog';
 import type { ConsentCategory, ConsentDoc } from '@gamechangers/shared';
+
+/**
+ * SHA-256 hex digest of a UTF-8 string using Web Crypto.
+ * Matches functions/consent/src/grant.ts `sha256()` output so the server-side
+ * textHash equality check passes (WR-07).
+ */
+async function sha256Hex(s: string): Promise<string> {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
 
 const functions = getFunctions(firebaseApp, 'southamerica-east1');
 const db = getFirestore(firebaseApp);
@@ -84,8 +96,23 @@ export function useConsent() {
     version = 'v3',
     textHash?: string,
   ): Promise<void> {
-    // textHash defaults to a placeholder — the server validates against /consentTexts/{cat}/{version}
-    const hash = textHash ?? 'client-placeholder-will-be-validated-server-side';
+    // WR-07 fix: compute the textHash from the canonical Spanish purpose text in
+    // /consentTexts/{category}/{version}.es.purpose. The previous placeholder
+    // string would fail server-side equality once seedConsentTexts has run.
+    let hash = textHash;
+    if (!hash) {
+      const textsRef = doc(db, 'consentTexts', category, version);
+      const textsSnap = await getDoc(textsRef);
+      const purpose = (
+        textsSnap.data() as { es?: { purpose?: string } } | undefined
+      )?.es?.purpose;
+      if (!purpose) {
+        throw new Error(
+          `useConsent.grant: missing consentTexts/${category}/${version}.es.purpose; cannot compute textHash`,
+        );
+      }
+      hash = await sha256Hex(purpose);
+    }
 
     const callable = getGrantCallable();
     await callable({ category, version, textHash: hash, layer });
