@@ -20,6 +20,9 @@ export { badgeAward } from './badgeAward.js';
 export { discordRoleSync } from './discordRoleSync.js';
 export { recomputeStats } from './recomputeStats.js';
 
+// ── Plan 02-06: content completion → xp-events Pub/Sub ────────────────────
+export { contentCompleted } from './contentCompleted.js';
+
 // ── Plan 02-03: bot-callable endpoints ────────────────────────────────────
 export { botGetProfile } from './botGetProfile.js';
 export { botPostWeeklyDigest } from './botPostWeeklyDigest.js';
