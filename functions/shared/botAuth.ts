@@ -45,14 +45,22 @@ export function withBotAuth(handler: BotHandler) {
     }
 
     // ─── 3. HMAC-SHA256 verification (timing-safe via crypto.timingSafeEqual) ──
+    // WR-11: verify against the raw, exact bytes the client signed. Re-running
+    // JSON.stringify(req.body) on the parsed body is fragile to key ordering,
+    // body-parser quirks, and middleware mutation. Cloud Functions v2 always
+    // exposes the raw bytes as req.rawBody.
     const secret = process.env['BOT_TO_FUNCTION_HMAC'];
     if (!secret) {
       console.error('[withBotAuth] BOT_TO_FUNCTION_HMAC env var is not set');
       res.status(500).json({ ok: false, error: 'SERVER_MISCONFIGURATION' });
       return;
     }
-    const raw = JSON.stringify(req.body);
-    if (!verifyHmacSha256(raw, sig!, secret)) {
+    const rawBody = (req as unknown as { rawBody?: Buffer }).rawBody;
+    if (!rawBody) {
+      res.status(400).json({ ok: false, error: 'MISSING_RAW_BODY' });
+      return;
+    }
+    if (!verifyHmacSha256(rawBody, sig!, secret)) {
       res.status(401).json({ ok: false, error: 'HMAC_VERIFICATION_FAILED' });
       return;
     }
