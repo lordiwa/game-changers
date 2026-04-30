@@ -103,6 +103,10 @@ export async function decodeLinkToken(token: string): Promise<{ discordId: strin
   // Signature verification against bot public key.
   // The JWKS endpoint is served by the PWA's Hosting at /.well-known/bot-link-key.json
   // (seeded by Plan 03 which writes the bot service-account public key there).
+  // WR-12: signature verification is mandatory in ALL environments. The previous
+  // dev-mode bypass made forged tokens pass `decodeLinkToken` silently, which
+  // could mask integration bugs and allowed dev machines to forge tokens that
+  // hit live Functions.
   let publicKey: CryptoKey;
   try {
     const jwksResp = await fetch('/.well-known/bot-link-key.json');
@@ -117,11 +121,7 @@ export async function decodeLinkToken(token: string): Promise<{ discordId: strin
       ['verify'],
     );
   } catch {
-    // If the JWKS endpoint is not available (e.g., Plan 03 not yet deployed),
-    // fall through to payload-only validation so the flow degrades gracefully
-    // in development. In production the JWKS endpoint MUST be present.
-    if (import.meta.env.PROD) throw new Error('JWKS_UNAVAILABLE');
-    return { discordId: payload.discordId };
+    throw new Error('JWKS_UNAVAILABLE');
   }
 
   const signingInput = `${headerB64}.${payloadB64}`;
