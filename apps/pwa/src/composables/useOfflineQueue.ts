@@ -11,6 +11,7 @@
 import { computed, watch } from 'vue';
 import { useIDBKeyval } from '@vueuse/integrations/useIDBKeyval';
 import { useOnline } from '@vueuse/core';
+import { update as idbUpdate } from 'idb-keyval';
 
 export interface OfflineCheckInEntry {
   eventId: string;
@@ -27,13 +28,26 @@ export function useOfflineQueue() {
   const pendingCount = computed(() => (queue.value ?? []).length);
 
   async function enqueue(entry: OfflineCheckInEntry): Promise<void> {
-    const current = queue.value ?? [];
-    await setQueue([...current, entry]);
+    // WR-16: idb-keyval's `update()` runs the mutator inside an IDB transaction
+    // so concurrent enqueue() calls cannot race the read-modify-write. Without
+    // this, two parallel enqueues both read the same `current` and one entry
+    // is silently dropped — losing offline check-in scans.
+    let next: OfflineCheckInEntry[] = [];
+    await idbUpdate<OfflineCheckInEntry[]>(QUEUE_KEY, (current) => {
+      next = [...(current ?? []), entry];
+      return next;
+    });
+    // Sync the reactive ref so the UI's pendingCount updates immediately.
+    await setQueue(next);
   }
 
   async function dequeue(timestamp: number): Promise<void> {
-    const current = queue.value ?? [];
-    await setQueue(current.filter((e) => e.timestamp !== timestamp));
+    let next: OfflineCheckInEntry[] = [];
+    await idbUpdate<OfflineCheckInEntry[]>(QUEUE_KEY, (current) => {
+      next = (current ?? []).filter((e) => e.timestamp !== timestamp);
+      return next;
+    });
+    await setQueue(next);
   }
 
   async function clearAll(): Promise<void> {
