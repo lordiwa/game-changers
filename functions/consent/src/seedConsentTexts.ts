@@ -7,7 +7,7 @@
  * Security: HMAC + admin secret header gate. Run once after deploy.
  */
 import { createRequire } from 'node:module';
-import { createHmac } from 'node:crypto';
+import { createHmac, timingSafeEqual } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { onRequest } from 'firebase-functions/v2/https';
@@ -44,11 +44,24 @@ export const seedConsentTexts = onRequest(
       return;
     }
 
-    // HMAC authentication gate.
-    const adminSecret = process.env['SEED_ADMIN_SECRET'] ?? 'dev-seed-secret';
-    const providedHmac = req.headers['x-admin-hmac'] as string | undefined;
-    const expectedHmac = createHmac('sha256', adminSecret).update('seed-consent-texts').digest('hex');
-    if (!providedHmac || providedHmac !== expectedHmac) {
+    // HMAC authentication gate. Fail closed if the admin secret is not configured —
+    // do NOT fall back to a hardcoded dev secret in any environment (T-02-01-10).
+    const adminSecret = process.env['SEED_ADMIN_SECRET'];
+    if (!adminSecret) {
+      console.error('[seedConsentTexts] SEED_ADMIN_SECRET is not set — refusing to run.');
+      res.status(500).json({ ok: false, error: 'SERVER_MISCONFIGURATION' });
+      return;
+    }
+    const providedHmac = (req.headers['x-admin-hmac'] as string | undefined) ?? '';
+    const expectedHmacHex = createHmac('sha256', adminSecret)
+      .update('seed-consent-texts')
+      .digest('hex');
+    const expectedBuf = Buffer.from(expectedHmacHex, 'utf8');
+    const providedBuf = Buffer.from(providedHmac, 'utf8');
+    if (
+      providedBuf.length !== expectedBuf.length ||
+      !timingSafeEqual(providedBuf, expectedBuf)
+    ) {
       res.status(403).json({ ok: false, error: 'Forbidden' });
       return;
     }
