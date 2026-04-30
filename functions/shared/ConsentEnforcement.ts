@@ -60,11 +60,16 @@ export async function consentGate(uid: string, category: ConsentCategory): Promi
   let allowed = false;
   let source: 'claim' | 'doc' | 'none' = 'none';
   let denyReason: string | null = null;
+  // WR-14: ageVerified is invariant for ANY granted consent — grant() refuses
+  // to issue a consent before age gate. We re-assert it here as a defense-in-
+  // depth gate so a Function gated only by consentGate() cannot let an
+  // un-age-verified caller through if a stale claim/doc pairing exists.
+  let userRecord: Awaited<ReturnType<ReturnType<typeof getAuth>['getUser']>> | null = null;
 
   try {
     if (HOT_PATH_CATEGORIES.includes(category)) {
-      const user = await getAuth().getUser(uid);
-      const consents = (user.customClaims?.['consents'] ?? {}) as Record<string, boolean>;
+      userRecord = await getAuth().getUser(uid);
+      const consents = (userRecord.customClaims?.['consents'] ?? {}) as Record<string, boolean>;
       const key = CLAIM_BITMAP_KEYS[category];
       if (consents[key] === true) {
         allowed = true;
@@ -90,6 +95,18 @@ export async function consentGate(uid: string, category: ConsentCategory): Promi
         denyReason = 'expired';
       }
     }
+
+    // WR-14: when consent passes, also assert ageVerified custom claim. Lazy
+    // getUser fetch only when we haven't already loaded the user above.
+    if (allowed) {
+      if (!userRecord) {
+        userRecord = await getAuth().getUser(uid);
+      }
+      if (userRecord.customClaims?.['ageVerified'] !== true) {
+        allowed = false;
+        denyReason = 'age-not-verified';
+      }
+    }
   } finally {
     await auditRef.set({
       uid,
@@ -103,6 +120,9 @@ export async function consentGate(uid: string, category: ConsentCategory): Promi
   }
 
   if (!allowed) {
+    if (denyReason === 'age-not-verified') {
+      throw new HttpsError('failed-precondition', 'AGE_NOT_VERIFIED');
+    }
     throw new HttpsError('permission-denied', `Consent not granted for ${category}`);
   }
 }
