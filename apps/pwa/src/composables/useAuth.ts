@@ -10,7 +10,7 @@
  *  - verifyAge calls the verifyAge Cloud Function (server-side age enforcement per D-14).
  *  - signInWithPhone returns a ConfirmationResult; confirmPhoneCode completes the flow.
  */
-import { computed, type ComputedRef, type Ref } from 'vue';
+import { computed, ref, watch, type ComputedRef, type Ref } from 'vue';
 import { useCurrentUser } from 'vuefire';
 import {
   getAuth,
@@ -39,22 +39,37 @@ export function useAuth() {
     () => currentUser.value?.isAnonymous ?? false,
   );
 
-  const hasDiscord: ComputedRef<boolean> = computed(() => {
-    const claims = (currentUser.value as (User & { _claims?: Record<string, unknown> }) | null)
-      ?._claims;
-    // Custom claims arrive via the ID token; VueFire exposes them on the decoded token.
-    // In production, access via getIdTokenResult().claims; here we derive from the
-    // raw token on the auth object (set after signInWithCustomToken from discordExchange).
-    return Boolean((auth.currentUser as (User & { customClaims?: Record<string, unknown> }) | null)?.customClaims?.['hasDiscord']);
-  });
+  // Custom claims live on the ID token (not on the User object). We refresh
+  // them whenever currentUser changes so reactive UI bindings stay correct.
+  const claims = ref<Record<string, unknown>>({});
+  watch(
+    currentUser,
+    async (user) => {
+      if (!user) {
+        claims.value = {};
+        return;
+      }
+      try {
+        const tok = await user.getIdTokenResult();
+        claims.value = (tok.claims as unknown as Record<string, unknown>) ?? {};
+      } catch {
+        claims.value = {};
+      }
+    },
+    { immediate: true },
+  );
 
-  const ageVerified: ComputedRef<boolean> = computed(() => {
-    return false; // Updated after verifyAge() resolves and custom claims are refreshed.
-  });
+  const hasDiscord: ComputedRef<boolean> = computed(
+    () => claims.value['hasDiscord'] === true,
+  );
 
-  const isMinor: ComputedRef<boolean> = computed(() => {
-    return false; // Updated after verifyAge() resolves and custom claims are refreshed.
-  });
+  const ageVerified: ComputedRef<boolean> = computed(
+    () => claims.value['ageVerified'] === true,
+  );
+
+  const isMinor: ComputedRef<boolean> = computed(
+    () => claims.value['isMinor'] === true,
+  );
 
   async function signInWithEmail(email: string, password: string): Promise<User> {
     const cred = await signInWithEmailAndPassword(auth, email, password);
@@ -97,8 +112,13 @@ export function useAuth() {
       'verifyAge',
     );
     const result = await verifyAgeFn({ birthDate });
-    // Force token refresh so new custom claims (ageVerified, isMinor) propagate.
-    await auth.currentUser?.getIdToken(true);
+    // Force token refresh so new custom claims (ageVerified, isMinor) propagate,
+    // then re-read claims so the reactive bindings (ageVerified/isMinor) update.
+    if (auth.currentUser) {
+      await auth.currentUser.getIdToken(true);
+      const tok = await auth.currentUser.getIdTokenResult();
+      claims.value = (tok.claims as unknown as Record<string, unknown>) ?? {};
+    }
     return result.data;
   }
 
