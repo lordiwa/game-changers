@@ -94,16 +94,31 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // /users/{uid}/healthDaily/{date} — owner read if wearable_data; client write DENIED.
+    // /users/{uid}/healthDaily/{date} — owner read if wearable_data consent; client write DENIED.
+    // Functions service-account (openWearablesWebhook + aggregateDailyHealth) writes via Admin SDK.
+    // B2B-claim-gated read: a partner with b2b_brands claim may read aggregated healthDaily
+    // only when the user has also granted b2b_brands consent. In practice, healthDaily is
+    // exported to BigQuery (not read directly by partners), so the isPartner path is a
+    // belt-and-braces rule for future Phase 3 partner-scoped Function reads.
     match /users/{uid}/healthDaily/{date} {
       allow read: if isOwner(uid) && hasConsentClaim('wearable_data');
-      allow write: if false;
+      allow write: if false; // Functions Admin SDK only (openWearablesWebhook / aggregateDailyHealth)
     }
 
-    // /users/{uid}/healthSamples/{yyyymm}/metrics/{id} — same gate, no client writes.
+    // /users/{uid}/healthSamples/{yyyymm}/metrics/{id} — DENY ALL client reads and writes.
+    // Raw health samples are NEVER readable by clients (DSAR export is the only path,
+    // via functions/consent/dsarExport — Plan 04). Writes are Functions-only (Admin SDK).
+    // This rule enforces T-02-09-03: raw sample data never leaves the Functions trust boundary.
     match /users/{uid}/healthSamples/{yyyymm}/metrics/{id} {
-      allow read: if isOwner(uid) && hasConsentClaim('wearable_data');
-      allow write: if false;
+      allow read: if false;  // DENIED — no client read; DSAR export uses Admin SDK
+      allow write: if false; // DENIED — openWearablesWebhook uses Admin SDK
+    }
+
+    // /users/{uid}/wearable_connections/{provider} — owner read; Functions write only.
+    // Tracks which providers are connected (set by connectDevice, cleared by disconnectDevice).
+    match /users/{uid}/wearable_connections/{provider} {
+      allow read: if isOwner(uid);
+      allow write: if false; // Functions Admin SDK only (connectDevice / disconnectDevice)
     }
 
     // /users/{uid}/badges/{badgeId} — owner read if basic_profile; no client writes.

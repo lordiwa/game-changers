@@ -366,8 +366,49 @@
     }
   },
   "wearables": {
+    "heading": "Tus dispositivos",
+    "empty": {
+      "heading": "Aún sin dispositivo conectado",
+      "body": "Tu teléfono ya cuenta tus pasos. Si quieres, conecta una pulsera para ver más detalle — totalmente opcional."
+    },
     "cta": {
-      "connect": "Conectar dispositivo"
+      "connect": "Conectar dispositivo",
+      "enable_layer3": "Activar permiso de pulsera"
+    },
+    "consent_required": "Activá Layer 3 (datos de pulsera) para conectar tu dispositivo.",
+    "connect": {
+      "heading": "Conectar dispositivo",
+      "subtitle": "Elige tu pulsera o reloj. Se conecta vía Open Wearables — tus datos solo los ves vos.",
+      "native_sync_deferred": "Sincronización nativa iOS/Android llega en v2."
+    },
+    "status": {
+      "connected": "Conectado",
+      "not_connected": "No conectado"
+    },
+    "disconnect": {
+      "modal": {
+        "title_template": "Desconectar {provider}",
+        "body": "Dejaremos de recibir datos. Elegí qué hacer con lo ya guardado:"
+      },
+      "option": {
+        "retain": "Conservarlo",
+        "delete": "Borrarlo todo"
+      },
+      "cta": "Desconectar"
+    },
+    "last_sync_template": "Última sincronización: {timestamp}",
+    "providers": {
+      "garmin": "Garmin",
+      "fitbit": "Fitbit",
+      "polar": "Polar",
+      "whoop": "WHOOP",
+      "oura": "Oura"
+    },
+    "error": {
+      "oauth_failed": "No conectamos tu dispositivo",
+      "oauth_failed_body": "Probá de nuevo desde la app de tu pulsera, o seguí registrando manualmente — funciona igual.",
+      "load_failed": "Error al cargar los dispositivos. Intentá de nuevo.",
+      "disconnect_failed": "No pudimos desconectar el dispositivo. Intentá de nuevo."
     }
   },
   "crisis": {

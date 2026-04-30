@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { getAuth } from 'firebase/auth';
 
+// Plan 02-09 — Wearables surfaces.
+const Wearables = () => import('../views/wearables/Wearables.vue');
+const ConnectDevice = () => import('../views/wearables/ConnectDevice.vue');
+
 // Plan 02-08 — Challenges surfaces.
 const ChallengeList = () => import('../views/challenges/ChallengeList.vue');
 const ChallengeDetail = () => import('../views/challenges/ChallengeDetail.vue');
@@ -204,6 +208,17 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/consent/layer-3',
     component: Layer3,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  // Plan 02-09 — Wearables surfaces (require full auth + age + wearable_data consent).
+  {
+    path: '/me/wearables',
+    component: Wearables,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  {
+    path: '/me/wearables/connect',
+    component: ConnectDevice,
     meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
   },
   // Plan 02-04 — Consent management views (all require full auth + age verification).

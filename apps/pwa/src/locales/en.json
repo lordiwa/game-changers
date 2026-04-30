@@ -403,8 +403,49 @@
     }
   },
   "wearables": {
+    "heading": "Your devices",
+    "empty": {
+      "heading": "No device connected yet",
+      "body": "Your phone already counts your steps. If you want, connect a tracker for more detail — completely optional."
+    },
     "cta": {
-      "connect": "Connect device"
+      "connect": "Connect device",
+      "enable_layer3": "Enable wearable permission"
+    },
+    "consent_required": "Enable Layer 3 (wearable data) to connect your device.",
+    "connect": {
+      "heading": "Connect a device",
+      "subtitle": "Choose your tracker or watch. Connects via Open Wearables — only you see your data.",
+      "native_sync_deferred": "Native iOS/Android sync coming in v2."
+    },
+    "status": {
+      "connected": "Connected",
+      "not_connected": "Not connected"
+    },
+    "disconnect": {
+      "modal": {
+        "title_template": "Disconnect {provider}",
+        "body": "We'll stop receiving data. Choose what to do with data already saved:"
+      },
+      "option": {
+        "retain": "Keep it",
+        "delete": "Delete everything"
+      },
+      "cta": "Disconnect"
+    },
+    "last_sync_template": "Last sync: {timestamp}",
+    "providers": {
+      "garmin": "Garmin",
+      "fitbit": "Fitbit",
+      "polar": "Polar",
+      "whoop": "WHOOP",
+      "oura": "Oura"
+    },
+    "error": {
+      "oauth_failed": "We couldn't connect your device",
+      "oauth_failed_body": "Try again from your tracker's app, or keep logging manually — it works just the same.",
+      "load_failed": "Error loading devices. Please try again.",
+      "disconnect_failed": "We couldn't disconnect the device. Please try again."
     }
   },
   "crisis": {
