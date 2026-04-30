@@ -74,7 +74,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 02-06-PLAN.md — Content hub with SEO: vite-ssg, 5 wellness pillars, embedded YouTube/TikTok lazy, wellness assessments (PSS-4), CMS via Markdown commits
 - [x] 02-07-PLAN.md — Events + QR check-in + accessibility: 3-tier events, RSVP + waitlist auto-promote, signed-JWT QR with offline IDB queue + Background Sync, anonymous report-user, WCAG 2.1 AA via axe-playwright
 - [x] 02-08-PLAN.md — Manual-first wellness challenges: 5 types × Bronce/Plata/Oro, Web Sensor pedometer, photo + vouching, gaming narratives, leaderboard via aggregate doc (Pitfall #2), seasonal battle pass
-- [ ] 02-09-PLAN.md — Wearables + B2B BigQuery anonymized layer: Open Wearables webhook (HMAC + consent), monthly bucket time-series + daily rollups, 5 BigQuery k≥50 + ε-DP views, Metabase service account scoping (raw access REVOKED)
+- [x] 02-09-PLAN.md — Wearables + B2B BigQuery anonymized layer: Open Wearables webhook (HMAC + consent), monthly bucket time-series + daily rollups, 5 BigQuery k≥50 + ε-DP views, Metabase service account scoping (raw access REVOKED)
 **UI hint**: yes
 
 ### Phase 3: Revenue + Data
