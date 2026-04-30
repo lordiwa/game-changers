@@ -61,16 +61,15 @@ async function recomputeUserStats(
   db: ReturnType<typeof getFirestore>,
   uid: string,
 ): Promise<void> {
-  // ── 1. Count event attendance ─────────────────────────────────────────────
-  // We use the auditLog to count xp_awarded events of type event_attended.
-  // In Plan 09, this will be supplemented by wearable data.
-  const xpAuditSnap = await db
-    .collection('auditLog')
-    .where('uid', '==', uid)
-    .where('action', '==', 'xp_awarded')
-    .where('type', '==', 'event_attended')
-    .get();
-  const eventAttendedCount = xpAuditSnap.size;
+  // ── 1. Read denormalized counters from profile/main ───────────────────────
+  // WR-06 fix: previously we scanned the unbounded auditLog collection twice
+  // per user every 6 hours (O(B) reads at scale). xpAward now maintains
+  // `eventAttendedTotal` and `contentCompletedTotal` counters on profile/main
+  // via FieldValue.increment(), which we read here.
+  const profileSnap = await db.doc(`users/${uid}/profile/main`).get();
+  const profile = profileSnap.exists ? profileSnap.data() ?? {} : {};
+  const eventAttendedCount: number =
+    (profile['eventAttendedTotal'] as number | undefined) ?? 0;
 
   // ── 2. Read streak data ───────────────────────────────────────────────────
   const streaksSnap = await db.collection(`users/${uid}/streaks`).get();
@@ -87,14 +86,9 @@ async function recomputeUserStats(
     }
   }
 
-  // ── 3. Count content completion ───────────────────────────────────────────
-  const contentSnap = await db
-    .collection('auditLog')
-    .where('uid', '==', uid)
-    .where('action', '==', 'xp_awarded')
-    .where('type', '==', 'content_completed')
-    .get();
-  const contentCompletedCount = contentSnap.size;
+  // ── 3. Read content-completed count from the same denormalized counter ────
+  const contentCompletedCount: number =
+    (profile['contentCompletedTotal'] as number | undefined) ?? 0;
 
   // ── 4. Read healthDaily last 7 days (Plan 09 additive extension) ──────────
   // If the user has wearable_data connected, healthDaily contributes additive

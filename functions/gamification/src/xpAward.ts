@@ -161,15 +161,20 @@ export const xpAward = onMessagePublished(
       const newXp = oldXp + delta;
       const newLevel = levelForXp(newXp);
 
-      tx.set(
-        profileRef,
-        {
-          xp: newXp,
-          level: newLevel,
-          updatedAt: FieldValue.serverTimestamp(),
-        },
-        { merge: true },
-      );
+      // WR-06: maintain denormalized event/content counters on profile/main so
+      // recomputeStats can read them in O(1) instead of scanning auditLog.
+      const profileUpdate: Record<string, unknown> = {
+        xp: newXp,
+        level: newLevel,
+        updatedAt: FieldValue.serverTimestamp(),
+      };
+      if (msg.type === 'event_attended') {
+        profileUpdate['eventAttendedTotal'] = FieldValue.increment(1);
+      } else if (msg.type === 'content_completed') {
+        profileUpdate['contentCompletedTotal'] = FieldValue.increment(1);
+      }
+
+      tx.set(profileRef, profileUpdate, { merge: true });
 
       return { oldXp, newXp, oldLevel, newLevel };
     });
