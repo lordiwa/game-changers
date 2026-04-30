@@ -17,6 +17,7 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
 import { verifyHmacSha256 } from '@gamechangers/functions-shared/hmac';
 import { z } from 'zod';
+import { createHmac } from 'node:crypto';
 
 const PostRecapSchema = z.object({ eventId: z.string().min(1) });
 
@@ -26,10 +27,7 @@ const PostRecapSchema = z.object({ eventId: z.string().min(1) });
  */
 function buildBotAuthHeader(body: string, secret: string): string {
   const ts = Math.floor(Date.now() / 1000);
-  const sig = require('node:crypto')
-    .createHmac('sha256', secret)
-    .update(body)
-    .digest('hex') as string;
+  const sig = createHmac('sha256', secret).update(body).digest('hex');
   return `HMAC-SHA256 t=${ts} sig=${sig}`;
 }
 

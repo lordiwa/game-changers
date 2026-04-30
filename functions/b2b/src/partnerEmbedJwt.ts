@@ -26,7 +26,7 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { defineSecret } from 'firebase-functions/params';
 import { z } from 'zod';
-import { createHmac, randomUUID } from 'node:crypto';
+import { createHmac, randomUUID, timingSafeEqual } from 'node:crypto';
 
 const PARTNER_EMBED_SIGNING_KEY = defineSecret('PARTNER_EMBED_SIGNING_KEY');
 
@@ -102,7 +102,7 @@ export function verifyEmbedJwt(
   const actual = Buffer.from(signatureB64 ?? '');
   if (
     expected.length !== actual.length ||
-    !require('node:crypto').timingSafeEqual(expected, actual)
+    !timingSafeEqual(expected, actual)
   ) {
     throw new Error('Invalid signature');
   }
