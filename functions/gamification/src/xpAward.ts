@@ -25,10 +25,18 @@
 import { onMessagePublished } from 'firebase-functions/v2/pubsub';
 import { defineSecret } from 'firebase-functions/params';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { PubSub } from '@google-cloud/pubsub';
 import { z } from 'zod';
 import { consentGate } from '@gamechangers/functions-shared';
 import { levelForXp, totalXpForLevel } from '@gamechangers/shared';
 import { withinAntiCheatBounds } from './antiCheat.js';
+
+// Lazy PubSub client — instantiated on first use to keep cold start cheap.
+let pubsubClient: PubSub | null = null;
+function getPubSub(): PubSub {
+  if (!pubsubClient) pubsubClient = new PubSub();
+  return pubsubClient;
+}
 
 // ── Zod schema for XpEventMessage ─────────────────────────────────────────────
 const XpEventMessageSchema = z.discriminatedUnion('type', [
@@ -144,7 +152,7 @@ export const xpAward = onMessagePublished(
     // ── 5. Firestore transaction: update XP + level ─────────────────────────
     const profileRef = db.doc(`users/${uid}/profile/main`);
 
-    await db.runTransaction(async (tx) => {
+    const txResult = await db.runTransaction(async (tx) => {
       const snap = await tx.get(profileRef);
       const data = snap.data() ?? {};
       const oldXp: number = (data['xp'] as number) ?? 0;
@@ -163,35 +171,37 @@ export const xpAward = onMessagePublished(
         { merge: true },
       );
 
-      // ── 6. Publish level-up event if level increased ───────────────────────
-      if (newLevel > oldLevel) {
-        // Write to a special doc that triggers the level-up-events Pub/Sub via another Function.
-        // Alternatively, use the Google Cloud PubSub client directly.
-        // We write an audit entry that discordRoleSync reads; the discordRoleSync function
-        // is subscribed to level-up-events topic which xpAward publishes to.
-        // Since we can't import @google-cloud/pubsub easily here, we publish via a trigger doc.
-        // NOTE: In production, use PubSub client. For testability, we write a levelUpQueue doc.
-        await db.collection('levelUpQueue').doc().set({
-          uid,
-          oldLevel,
-          newLevel,
-          timestamp: FieldValue.serverTimestamp(),
-        });
-      }
+      return { oldXp, newXp, oldLevel, newLevel };
+    });
 
-      // ── 7. Audit log ─────────────────────────────────────────────────────
-      await db.collection('auditLog').doc().set({
-        action: 'xp_awarded',
-        uid,
-        type: msg.type,
-        delta,
-        oldXp,
-        newXp,
-        oldLevel,
-        newLevel,
-        levelUp: newLevel > oldLevel,
-        timestamp: FieldValue.serverTimestamp(),
-      });
+    const { oldXp, newXp, oldLevel, newLevel } = txResult;
+
+    // ── 6. Publish level-up event if level increased (post-transaction) ─────
+    // Pub/Sub publish is the source of truth for discordRoleSync; the legacy
+    // levelUpQueue collection is intentionally not written anymore.
+    if (newLevel > oldLevel) {
+      try {
+        await getPubSub()
+          .topic('level-up-events')
+          .publishMessage({ json: { uid, oldLevel, newLevel } });
+      } catch (err) {
+        console.error('[xpAward] Failed to publish level-up event:', err);
+        // Do not throw — the XP award already committed; log and move on.
+      }
+    }
+
+    // ── 7. Audit log (post-transaction; duplicates on retry are tolerable) ──
+    await db.collection('auditLog').doc().set({
+      action: 'xp_awarded',
+      uid,
+      type: msg.type,
+      delta,
+      oldXp,
+      newXp,
+      oldLevel,
+      newLevel,
+      levelUp: newLevel > oldLevel,
+      timestamp: FieldValue.serverTimestamp(),
     });
 
     console.log(`[xpAward] Awarded ${delta} XP to uid=${uid} (type=${msg.type})`);
