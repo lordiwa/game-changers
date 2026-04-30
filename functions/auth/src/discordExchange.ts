@@ -70,10 +70,18 @@ export const discordExchange = onCall(
   },
   async (req) => {
     const { code, state, pkceVerifier, firebaseIdToken, pendingDiscordId } = Body.parse(req.data);
-    // State cookie verification is layered on at the HTTPS edge; PKCE verifier round-trip
-    // covers CSRF defense-in-depth (T-02-02-03). The state value is included in the
-    // OAuth URL and re-checked on this side as a sanity gate; if needed, downstream
-    // plans can wire a signed-cookie verifier here.
+    // NOTE (T-02-02-03): server-side state verification is NOT implemented here.
+    // The PWA performs sessionStorage-based state comparison in
+    // useDiscordLink.handleDiscordCallback before invoking this callable, but that is
+    // client-side and does not protect a malicious caller invoking the callable directly.
+    // CSRF protection on this Function relies on:
+    //   (a) PKCE — the OAuth code is unredeemable without code_verifier we hold,
+    //   (b) The OAuth-returned discordUser.id check vs pendingDiscordId (T-02-02-11),
+    //   (c) Firebase Auth callable's built-in caller authentication.
+    // A future hardening pass (tracked separately) should bind `state` to a server-side
+    // discordOauthState/{nonce} doc minted at flow initiation and asserted single-use here.
+    // We accept `state` here purely so the PWA-side comparison can take place; we do NOT
+    // attempt server-side equality because there is no server-side counterpart yet.
     void state;
 
     const clientId = process.env['DISCORD_CLIENT_ID'] ?? '';
