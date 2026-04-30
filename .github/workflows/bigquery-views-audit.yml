@@ -1,0 +1,155 @@
+name: BigQuery Views Audit
+
+# Quarterly audit of B2B anonymized views (T-02-09-11 mitigation).
+# Also triggered on any change to bigquery/views/ or bigquery/setup/ to catch regressions.
+#
+# This workflow:
+#   1. Runs revoke-raw-access.sh (idempotent) — reverts any privilege escalation on gw_analytics.
+#   2. Asserts all 5 B2B views have k>=50 HAVING clause + is_minor=FALSE + epsilon=1.0 in SQL source.
+#   3. Notifies srparca@gmail.com on failure via GitHub email notification (automatic for watchers).
+#
+# On failure:
+#   - Step 1 failure means metabase-readonly gained unexpected gw_analytics access. ALERT DPO.
+#   - Step 2 failure means a view was modified to weaken anonymization. BLOCK DEPLOY. ALERT DPO.
+
+on:
+  schedule:
+    # Quarterly: 1st of Jan, Apr, Jul, Oct at midnight UTC
+    - cron: '0 0 1 1,4,7,10 *'
+  push:
+    paths:
+      - 'bigquery/views/**'
+      - 'bigquery/setup/**'
+  workflow_dispatch:
+    inputs:
+      project:
+        description: 'Firebase project ID (default: gamechangers-prod)'
+        required: false
+        default: 'gamechangers-prod'
+
+env:
+  FIREBASE_PROJECT_ID: ${{ github.event.inputs.project || 'gamechangers-prod' }}
+
+jobs:
+  bigquery-views-audit:
+    name: BigQuery anonymized views compliance check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # For Workload Identity Federation (OIDC auth to GCP)
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_AUDIT_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Install bq CLI (included in Cloud SDK)
+        run: gcloud components install bq --quiet || true
+
+      # ── Step 1: Revoke raw access (T-02-09-11) ─────────────────────────────
+      - name: Revoke metabase-readonly gw_analytics access (idempotent)
+        id: revoke-raw
+        run: |
+          bash bigquery/setup/revoke-raw-access.sh
+        env:
+          FIREBASE_PROJECT_ID: ${{ env.FIREBASE_PROJECT_ID }}
+
+      - name: Alert on unexpected raw access (DPO notification)
+        if: failure() && steps.revoke-raw.outcome == 'failure'
+        run: |
+          echo "::error::SECURITY ALERT: metabase-readonly had unexpected access to gw_analytics raw mirror."
+          echo "::error::The access was revoked. DPO (srparca@gmail.com) must investigate how it was granted."
+          echo "::error::Check IAM audit logs in GCP Console > IAM > Audit Logs for the event."
+          exit 1
+
+      # ── Step 2: Assert view SQL source has required privacy clauses ─────────
+      - name: Assert all 5 views have k>=50 HAVING clause
+        run: |
+          count=$(grep -c "HAVING COUNT(DISTINCT user_id) >= 50" bigquery/views/*.sql)
+          echo "Views with HAVING COUNT(DISTINCT user_id) >= 50: $count"
+          if [ "$count" -lt 5 ]; then
+            echo "::error::FAIL: Expected >=5 views with k>=50 clause, found $count"
+            exit 1
+          fi
+          echo "PASS: All $count views have k>=50 enforcement"
+
+      - name: Assert all 5 views exclude minors (is_minor = FALSE)
+        run: |
+          count=$(grep -c "is_minor = FALSE" bigquery/views/*.sql)
+          echo "Views with is_minor = FALSE: $count"
+          if [ "$count" -lt 5 ]; then
+            echo "::error::FAIL: Expected >=5 views with is_minor = FALSE, found $count"
+            echo "::error::D-14 minor exclusion is broken. This is a LOPDP compliance failure."
+            exit 1
+          fi
+          echo "PASS: All $count views exclude minors"
+
+      - name: Assert all 5 views have epsilon=1.0 DP
+        run: |
+          count=$(grep -c "epsilon = 1.0" bigquery/views/*.sql)
+          echo "Views with epsilon = 1.0: $count"
+          if [ "$count" -lt 5 ]; then
+            echo "::error::FAIL: Expected >=5 views with epsilon=1.0, found $count"
+            exit 1
+          fi
+          echo "PASS: All $count views have epsilon=1.0 differential privacy"
+
+      - name: Assert all 5 views exclude post-erasure records
+        run: |
+          count=$(grep -c "_change_type != 'DELETE'" bigquery/views/*.sql)
+          echo "Views with _change_type != DELETE: $count"
+          if [ "$count" -lt 5 ]; then
+            echo "::error::FAIL: Expected >=5 views filtering deleted records, found $count"
+            echo "::error::Post-erasure exclusion is broken. This is a LOPDP Art.17 compliance failure."
+            exit 1
+          fi
+          echo "PASS: All $count views exclude post-erasure records"
+
+      # ── Step 3: Verify permission boundary via BigQuery (live check) ────────
+      - name: Verify metabase-readonly service account key exists in secrets
+        run: |
+          if [ -z "${{ secrets.METABASE_READONLY_KEY_JSON }}" ]; then
+            echo "::warning::METABASE_READONLY_KEY_JSON secret not set — skipping live permission boundary check."
+            echo "Add the service account key to GitHub secrets to enable live BigQuery permission tests."
+          else
+            echo "Service account key found — will run live permission boundary check."
+          fi
+
+      - name: Live permission boundary check (metabase-readonly cannot access gw_analytics)
+        if: ${{ secrets.METABASE_READONLY_KEY_JSON != '' }}
+        run: |
+          echo "${{ secrets.METABASE_READONLY_KEY_JSON }}" > /tmp/metabase-readonly-key.json
+          # Activate metabase-readonly service account
+          gcloud auth activate-service-account --key-file=/tmp/metabase-readonly-key.json
+
+          # This query MUST fail (exit code != 0 = permission denied)
+          if bq query --use_legacy_sql=false \
+            "SELECT COUNT(*) FROM \`${FIREBASE_PROJECT_ID}.gw_analytics.profiles_changelog\` LIMIT 1" \
+            2>/dev/null; then
+            echo "::error::CRITICAL SECURITY FAILURE: metabase-readonly can SELECT from gw_analytics!"
+            echo "::error::Run bigquery/setup/revoke-raw-access.sh immediately and alert DPO."
+            rm /tmp/metabase-readonly-key.json
+            exit 1
+          else
+            echo "PASS: metabase-readonly correctly denied access to gw_analytics"
+          fi
+          rm /tmp/metabase-readonly-key.json
+
+      - name: Audit summary
+        if: always()
+        run: |
+          echo "=== BigQuery Views Audit Summary ==="
+          echo "Date: $(date -u)"
+          echo "Project: $FIREBASE_PROJECT_ID"
+          echo "Views checked: active_movers_by_city, social_connectors_by_age_band,"
+          echo "               competitive_core_by_cluster, new_recruits, at_risk_segment"
+          echo ""
+          echo "If any step failed, alert DPO (srparca@gmail.com) and open a P0 incident."

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "echo 'no tests in scaffolding plan' && exit 0",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "@gamechangers/functions-shared": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "4.1.5"
   }
 }
