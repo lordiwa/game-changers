@@ -67,36 +67,48 @@ export const reportUser = onCall(
     const db = getFirestore();
 
     // ── Rate limiting: 5 reports per day per reporter ─────────────────────────
+    // Read-check-increment must be atomic; otherwise N parallel calls all see
+    // todayCount=0 and bypass the gate (T-02-07-06). We wrap the rate-limit
+    // gate and the report-doc create in a single Firestore transaction.
     const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
     const rateLimitRef = db.doc(`users/${uid}/private/reportRateLimit`);
-    const rateLimitSnap = await rateLimitRef.get();
-    const rateLimitData = rateLimitSnap.data() ?? {};
-    const todayCount: number = rateLimitData[today] ?? 0;
-
-    if (todayCount >= RATE_LIMIT_PER_DAY) {
-      throw new HttpsError(
-        'resource-exhausted',
-        'RATE_LIMIT_EXCEEDED: Maximum 5 reports per day',
-      );
-    }
-
+    const reportRef = db.collection('reports').doc();
     const severity = deriveSeverity(reason);
 
-    // ── Write report doc ──────────────────────────────────────────────────────
-    const reportRef = db.collection('reports').doc();
-    await reportRef.set({
-      reportId: reportRef.id,
-      reporterUid: uid,          // only moderators/DPO can read this
-      reportedUid,               // target of the report
-      eventId: eventId ?? null,
-      reason,
-      freeText,
-      severity,
-      status: 'open',
-      createdAt: FieldValue.serverTimestamp(),
+    await db.runTransaction(async (tx) => {
+      const rateLimitSnap = await tx.get(rateLimitRef);
+      const rateLimitData = rateLimitSnap.data() ?? {};
+      const todayCount: number = (rateLimitData[today] as number | undefined) ?? 0;
+
+      if (todayCount >= RATE_LIMIT_PER_DAY) {
+        throw new HttpsError(
+          'resource-exhausted',
+          'RATE_LIMIT_EXCEEDED: Maximum 5 reports per day',
+        );
+      }
+
+      // Write report doc inside the same transaction.
+      tx.set(reportRef, {
+        reportId: reportRef.id,
+        reporterUid: uid,          // only moderators/DPO can read this
+        reportedUid,               // target of the report
+        eventId: eventId ?? null,
+        reason,
+        freeText,
+        severity,
+        status: 'open',
+        createdAt: FieldValue.serverTimestamp(),
+      });
+
+      // Atomic increment of the rate-limit counter.
+      tx.set(
+        rateLimitRef,
+        { [today]: todayCount + 1 },
+        { merge: true },
+      );
     });
 
-    // ── Audit log ─────────────────────────────────────────────────────────────
+    // ── Audit log (post-transaction; duplicates on rare retry are tolerable) ──
     await db.collection('auditLog').doc().set({
       action: 'report_user',
       actorUid: uid,
@@ -105,12 +117,6 @@ export const reportUser = onCall(
       severity,
       timestamp: FieldValue.serverTimestamp(),
     });
-
-    // ── Update rate limit counter ─────────────────────────────────────────────
-    await rateLimitRef.set(
-      { [today]: FieldValue.increment(1) },
-      { merge: true },
-    );
 
     // ── Critical severity: escalation chain ──────────────────────────────────
     if (severity === 'critical') {
