@@ -1,14 +1,30 @@
-// TODO(Plan 02-07 CHLG): Bronce/Plata/Oro tier challenges, manual + wearable progress entry.
+/**
+ * functions/challenges/src/index.ts — Challenge Cloud Functions entry point.
+ *
+ * Cloud Functions (Plan 02-08):
+ *   - createChallenge:       Admin-only callable to create a challenge doc
+ *   - enrollChallenge:       User callable to enroll in a challenge tier
+ *   - logProgress:           Single write path for manual/pedometer/wearable/photo progress
+ *   - recomputeLeaderboards: Scheduled every 15 min to build aggregate leaderboard docs
+ *   - seasonRollover:        Quarterly cleanup + archive of completed season challenges
+ *
+ * Plan 02-03 (Discord bot read endpoints):
+ *   - botListEnrollments:    Read-only endpoint for the Discord bot
+ */
 import { initializeApp, getApps } from 'firebase-admin/app';
-import { onRequest } from 'firebase-functions/v2/https';
 
 if (getApps().length === 0) {
   initializeApp();
 }
 
-export const ping = onRequest({ region: 'southamerica-east1' }, (_req, res) => {
-  res.status(200).send('ok');
-});
+// Challenge CRUD + progress logging
+export { createChallenge } from './createChallenge.js';
+export { enrollChallenge } from './enrollChallenge.js';
+export { logProgress } from './logProgress.js';
 
-// Plan 02-03: bot-callable endpoint
+// Scheduled aggregation
+export { recomputeLeaderboards } from './leaderboardCompute.js';
+export { seasonRollover } from './seasonRollover.js';
+
+// Discord bot read endpoint (Plan 02-03)
 export { botListEnrollments } from './botListEnrollments.js';

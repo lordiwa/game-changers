@@ -113,10 +113,92 @@ export interface ContentCompletedMessage {
 export type XpEventMessage =
   | { type: 'event_attended'; uid: string; eventId: string; walkIn?: boolean }
   | { type: 'challenge_progress'; uid: string; challengeId: string; value: number; metric?: string }
+  | { type: 'challenge_completed'; uid: string; challengeId: string; tier: ChallengeTier; xpReward: number; badgeId: string }
   | { type: 'content_completed'; uid: string; contentId: string; durationSec: number }
   | { type: 'club_leadership'; uid: string; clubId: string }     // Phase 3 — dormant in Phase 2
   | { type: 'referral'; uid: string; referredUid: string }
   | { type: 'wellness_survey_completed'; uid: string; surveyId: string };
+
+// ── Challenge domain types (Plan 02-08) ─────────────────────────────────────
+export type ChallengeType = 'movement' | 'streak' | 'social' | 'mental' | 'hybrid';
+export type ChallengeTier = 'bronce' | 'plata' | 'oro';
+export type ChallengeMetric =
+  | 'steps'
+  | 'minutes_meditated'
+  | 'events_attended'
+  | 'sleep_hours'
+  | 'days_active'
+  | 'social_interactions'
+  | 'custom';
+export type ChallengeSource = 'manual' | 'pedometer' | 'wearable' | 'photo';
+
+export interface ChallengeTierConfig {
+  target: number;
+  reward: { xp: number; badgeId: string };
+}
+
+export interface Challenge {
+  id: string;
+  type: ChallengeType;
+  name: { es: string; en: string };
+  description: { es: string; en: string };
+  tier: Record<ChallengeTier, ChallengeTierConfig>;
+  metric: ChallengeMetric;
+  unit: string;
+  startsAt: unknown;   // Firestore Timestamp
+  endsAt: unknown;     // Firestore Timestamp
+  season: string;      // e.g. '2026-q2'
+  visibility: 'public' | 'club_only' | 'sponsored';
+  cluster?: 'free-fire' | 'dota' | 'minecraft' | 'lol' | 'general';
+  acceptablePhotoEvidence: boolean;
+}
+
+export interface ChallengeEnrollment {
+  uid: string;
+  challengeId: string;
+  tier: ChallengeTier;
+  enrolledAt: unknown;        // Firestore Timestamp
+  optInLeaderboard: boolean;
+  anonymousLeaderboard: boolean;  // CHLG-08
+  progress: number;               // accumulated metric value
+  completedAt?: unknown;          // Firestore Timestamp — set on completion
+}
+
+export interface ChallengeProgressEntry {
+  challengeId: string;
+  source: ChallengeSource;
+  value: number;
+  unit: string;
+  recordedAt: unknown;   // Firestore Timestamp
+  evidence?: string;     // Storage path for photo
+  status: 'ok' | 'flagged' | 'rejected';
+}
+
+export interface LeaderboardRow {
+  uid: string;
+  displayName: string;
+  anonymous: boolean;
+  rank: number;
+  value: number;
+  tier: string;
+}
+
+export interface LeaderboardAggregate {
+  period: 'weekly' | 'monthly' | 'season';
+  cohort: 'global' | 'quito' | 'guayaquil' | 'cuenca';
+  updatedAt: unknown;  // Firestore Timestamp
+  rows: LeaderboardRow[];
+  rowCount: number;
+}
+
+// Source → Consent category mapping (RESEARCH §7)
+// Duplicated here for PWA composables; server canonical in functions/challenges/src/logProgress.ts.
+export const SOURCE_TO_CONSENT: Record<ChallengeSource, string> = {
+  manual: 'health_self_reports',
+  pedometer: 'health_self_reports',
+  wearable: 'wearable_data',
+  photo: 'event_participation',
+};
 
 export type ConsentCategory = z.infer<typeof ConsentCategorySchema>;
 export type ConsentDoc = z.infer<typeof ConsentDocSchema>;

@@ -1,0 +1,152 @@
+{
+  "movement": {
+    "name": { "es": "Movimiento", "en": "Movement" },
+    "description": {
+      "es": "Acumula pasos y distancia para demostrar que los gamers también se mueven.",
+      "en": "Accumulate steps and distance to prove gamers move too."
+    },
+    "metric": "steps",
+    "unit": "steps",
+    "acceptablePhotoEvidence": true,
+    "tiers": {
+      "bronce": {
+        "target": 50000,
+        "durationDays": 7,
+        "xp": 200,
+        "badgeId": "movement-bronce-7d"
+      },
+      "plata": {
+        "target": 200000,
+        "durationDays": 14,
+        "xp": 600,
+        "badgeId": "movement-plata-14d"
+      },
+      "oro": {
+        "target": 500000,
+        "durationDays": 30,
+        "xp": 1500,
+        "badgeId": "movement-oro-30d"
+      }
+    }
+  },
+  "streak": {
+    "name": { "es": "Racha", "en": "Streak" },
+    "description": {
+      "es": "Mantén actividad diaria consistente. Un día perdido no rompe tu historia.",
+      "en": "Keep consistent daily activity. One missed day doesn't break your story."
+    },
+    "metric": "days_active",
+    "unit": "days",
+    "acceptablePhotoEvidence": false,
+    "tiers": {
+      "bronce": {
+        "target": 7,
+        "durationDays": 7,
+        "xp": 150,
+        "badgeId": "streak-bronce-7d"
+      },
+      "plata": {
+        "target": 21,
+        "durationDays": 21,
+        "xp": 500,
+        "badgeId": "streak-plata-21d"
+      },
+      "oro": {
+        "target": 60,
+        "durationDays": 60,
+        "xp": 1200,
+        "badgeId": "streak-oro-60d"
+      }
+    }
+  },
+  "social": {
+    "name": { "es": "Social", "en": "Social" },
+    "description": {
+      "es": "Asiste a eventos y conecta con otros gamers de la comunidad.",
+      "en": "Attend events and connect with other gamers in the community."
+    },
+    "metric": "events_attended",
+    "unit": "count",
+    "acceptablePhotoEvidence": true,
+    "tiers": {
+      "bronce": {
+        "target": 2,
+        "durationDays": 30,
+        "xp": 300,
+        "badgeId": "social-bronce-2events"
+      },
+      "plata": {
+        "target": 5,
+        "durationDays": 60,
+        "xp": 800,
+        "badgeId": "social-plata-5events"
+      },
+      "oro": {
+        "target": 10,
+        "durationDays": 90,
+        "xp": 2000,
+        "badgeId": "social-oro-10events"
+      }
+    }
+  },
+  "mental": {
+    "name": { "es": "Mente", "en": "Mental" },
+    "description": {
+      "es": "Practica mindfulness y meditación para mantener tu mente en forma.",
+      "en": "Practice mindfulness and meditation to keep your mind sharp."
+    },
+    "metric": "minutes_meditated",
+    "unit": "min",
+    "acceptablePhotoEvidence": false,
+    "tiers": {
+      "bronce": {
+        "target": 70,
+        "durationDays": 7,
+        "xp": 180,
+        "badgeId": "mental-bronce-7d"
+      },
+      "plata": {
+        "target": 300,
+        "durationDays": 30,
+        "xp": 550,
+        "badgeId": "mental-plata-30d"
+      },
+      "oro": {
+        "target": 900,
+        "durationDays": 90,
+        "xp": 1400,
+        "badgeId": "mental-oro-90d"
+      }
+    }
+  },
+  "hybrid": {
+    "name": { "es": "Hybrid", "en": "Hybrid" },
+    "description": {
+      "es": "Combina movimiento, mente y social para lograr el máximo desarrollo.",
+      "en": "Combine movement, mental, and social for maximum development."
+    },
+    "metric": "custom",
+    "unit": "points",
+    "acceptablePhotoEvidence": true,
+    "tiers": {
+      "bronce": {
+        "target": 100,
+        "durationDays": 14,
+        "xp": 250,
+        "badgeId": "hybrid-bronce-14d"
+      },
+      "plata": {
+        "target": 350,
+        "durationDays": 30,
+        "xp": 700,
+        "badgeId": "hybrid-plata-30d"
+      },
+      "oro": {
+        "target": 1000,
+        "durationDays": 60,
+        "xp": 1800,
+        "badgeId": "hybrid-oro-60d"
+      }
+    }
+  }
+}

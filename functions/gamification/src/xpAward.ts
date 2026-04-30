@@ -34,6 +34,8 @@ import { withinAntiCheatBounds } from './antiCheat.js';
 const XpEventMessageSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('event_attended'), uid: z.string(), eventId: z.string(), walkIn: z.boolean().optional() }),
   z.object({ type: z.literal('challenge_progress'), uid: z.string(), challengeId: z.string(), value: z.number(), metric: z.string().optional() }),
+  // Plan 02-08: challenge_completed carries the exact XP reward from the tier config.
+  z.object({ type: z.literal('challenge_completed'), uid: z.string(), challengeId: z.string(), tier: z.enum(['bronce', 'plata', 'oro']), xpReward: z.number().positive(), badgeId: z.string() }),
   z.object({ type: z.literal('content_completed'), uid: z.string(), contentId: z.string(), durationSec: z.number() }),
   z.object({ type: z.literal('club_leadership'), uid: z.string(), clubId: z.string() }),
   z.object({ type: z.literal('referral'), uid: z.string(), referredUid: z.string() }),
@@ -50,6 +52,10 @@ function computeXpDelta(msg: XpEventMessage): number {
     case 'challenge_progress':
       // 10 XP per 1000 units of progress, capped at 100/day
       return Math.min(100, 10 * Math.floor(msg.value / 1000));
+    case 'challenge_completed':
+      // Plan 02-08: xpReward is the exact amount defined in the tier config
+      // (Bronce: 200, Plata: 600, Oro: 1500 for movement; varies by type)
+      return msg.xpReward;
     case 'content_completed':
       // 1 XP per 10 seconds, capped at 50
       return Math.min(50, Math.floor(msg.durationSec / 10));

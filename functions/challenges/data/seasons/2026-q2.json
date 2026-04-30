@@ -1,0 +1,127 @@
+{
+  "id": "2026-q2",
+  "name": { "es": "Temporada Awakening Q2 2026", "en": "Awakening Season Q2 2026" },
+  "theme": "awakening",
+  "startsAt": "2026-04-01T00:00:00Z",
+  "endsAt": "2026-06-30T23:59:59Z",
+  "battlePass": {
+    "levels": 40,
+    "freeRewards": [
+      { "level": 5, "type": "badge", "badgeId": "awakening-q2-explorer", "label": { "es": "Explorador del Awakening", "en": "Awakening Explorer" } },
+      { "level": 10, "type": "badge", "badgeId": "awakening-q2-challenger", "label": { "es": "Challenger del Awakening", "en": "Awakening Challenger" } },
+      { "level": 20, "type": "badge", "badgeId": "awakening-q2-veteran", "label": { "es": "Veterano del Awakening", "en": "Awakening Veteran" } },
+      { "level": 30, "type": "badge", "badgeId": "awakening-q2-elite", "label": { "es": "Élite del Awakening", "en": "Awakening Elite" } },
+      { "level": 40, "type": "badge", "badgeId": "awakening-q2-legend", "label": { "es": "Leyenda del Awakening", "en": "Awakening Legend" } }
+    ],
+    "xpPerLevel": 500
+  },
+  "challenges": [
+    {
+      "typeKey": "movement",
+      "tier": "bronce",
+      "visibility": "public",
+      "cluster": "general",
+      "challengeId": "2026-q2-movement-bronce-general"
+    },
+    {
+      "typeKey": "movement",
+      "tier": "plata",
+      "visibility": "public",
+      "cluster": "general",
+      "challengeId": "2026-q2-movement-plata-general"
+    },
+    {
+      "typeKey": "movement",
+      "tier": "oro",
+      "visibility": "public",
+      "cluster": "general",
+      "challengeId": "2026-q2-movement-oro-general"
+    },
+    {
+      "typeKey": "movement",
+      "tier": "bronce",
+      "visibility": "public",
+      "cluster": "lol",
+      "challengeId": "2026-q2-movement-bronce-lol"
+    },
+    {
+      "typeKey": "movement",
+      "tier": "bronce",
+      "visibility": "public",
+      "cluster": "free-fire",
+      "challengeId": "2026-q2-movement-bronce-free-fire"
+    },
+    {
+      "typeKey": "streak",
+      "tier": "bronce",
+      "visibility": "public",
+      "cluster": "general",
+      "challengeId": "2026-q2-streak-bronce-general"
+    },
+    {
+      "typeKey": "streak",
+      "tier": "plata",
+      "visibility": "public",
+      "cluster": "general",
+      "challengeId": "2026-q2-streak-plata-general"
+    },
+    {
+      "typeKey": "social",
+      "tier": "bronce",
+      "visibility": "public",
+      "cluster": "general",
+      "challengeId": "2026-q2-social-bronce-general"
+    },
+    {
+      "typeKey": "social",
+      "tier": "plata",
+      "visibility": "public",
+      "cluster": "general",
+      "challengeId": "2026-q2-social-plata-general"
+    },
+    {
+      "typeKey": "mental",
+      "tier": "bronce",
+      "visibility": "public",
+      "cluster": "general",
+      "challengeId": "2026-q2-mental-bronce-general"
+    },
+    {
+      "typeKey": "mental",
+      "tier": "plata",
+      "visibility": "public",
+      "cluster": "general",
+      "challengeId": "2026-q2-mental-plata-general"
+    },
+    {
+      "typeKey": "hybrid",
+      "tier": "bronce",
+      "visibility": "public",
+      "cluster": "general",
+      "challengeId": "2026-q2-hybrid-bronce-general"
+    }
+  ],
+  "exclusiveBadges": [
+    {
+      "id": "awakening-q2-explorer",
+      "name": { "es": "Explorador del Awakening", "en": "Awakening Explorer" },
+      "description": { "es": "Nivel 5 de temporada Q2 2026", "en": "Season Q2 2026 Level 5" },
+      "cosmetic": true,
+      "p2w": false
+    },
+    {
+      "id": "awakening-q2-veteran",
+      "name": { "es": "Veterano del Awakening", "en": "Awakening Veteran" },
+      "description": { "es": "Nivel 20 de temporada Q2 2026", "en": "Season Q2 2026 Level 20" },
+      "cosmetic": true,
+      "p2w": false
+    },
+    {
+      "id": "awakening-q2-legend",
+      "name": { "es": "Leyenda del Awakening", "en": "Awakening Legend" },
+      "description": { "es": "Completó la temporada Q2 2026 al 100%", "en": "Completed season Q2 2026 at 100%" },
+      "cosmetic": true,
+      "p2w": false
+    }
+  ]
+}
