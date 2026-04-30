@@ -1,5 +1,5 @@
 {
-  "name": "@gamechangers/functions-events",
+  "name": "@gamechangers/functions-trustsafety",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -16,9 +16,8 @@
     "firebase-functions": "7.2.5",
     "firebase-admin": "13.8.0",
     "zod": "4.3.6",
-    "jose": "^5.10.0",
     "@google-cloud/pubsub": "^4.9.0",
-    "@napi-rs/canvas": "^0.1.68",
+    "@sentry/node": "10.50.0",
     "@gamechangers/shared": "workspace:*",
     "@gamechangers/functions-shared": "workspace:*"
   },

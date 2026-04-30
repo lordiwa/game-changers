@@ -1,14 +1,23 @@
-// TODO(Plan 02-06 EVNT): RSVP, QR check-in, waitlist promotion via events-capacity-changed Pub/Sub.
+/*
+ * Plan 02-07 — events codebase entry point.
+ * Exports all events Cloud Functions (10 + 1 bot endpoint from Plan 03).
+ */
 import { initializeApp, getApps } from 'firebase-admin/app';
-import { onRequest } from 'firebase-functions/v2/https';
 
 if (getApps().length === 0) {
   initializeApp();
 }
 
-export const ping = onRequest({ region: 'southamerica-east1' }, (_req, res) => {
-  res.status(200).send('ok');
-});
-
 // Plan 02-03: bot-callable endpoint
 export { botListUpcoming } from './botListUpcoming.js';
+
+// Plan 02-07: CRUD + RSVP + waitlist + QR check-in + walk-in + feedback + card + reminders + recap
+export { createEvent } from './createEvent.js';
+export { rsvp, cancelRsvp } from './rsvp.js';
+export { waitlistPromote } from './waitlistPromote.js';
+export { checkIn } from './checkIn.js';
+export { walkInCapture } from './walkInCapture.js';
+export { postEventFeedback } from './postEventFeedback.js';
+export { generatePostEventCard } from './postEventCard.js';
+export { eventReminders } from './eventReminders.js';
+export { postRecapToDiscord } from './postRecapToDiscord.js';

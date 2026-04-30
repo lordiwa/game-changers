@@ -41,6 +41,12 @@
       "source": "functions/b2b",
       "runtime": "nodejs22",
       "region": "southamerica-east1"
+    },
+    {
+      "codebase": "trustsafety",
+      "source": "functions/trustsafety",
+      "runtime": "nodejs22",
+      "region": "southamerica-east1"
     }
   ],
   "firestore": {
