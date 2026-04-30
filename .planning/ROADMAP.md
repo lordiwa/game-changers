@@ -71,7 +71,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 02-03-PLAN.md — Discord bot: discord.js 14.26 on Compute Engine e2-micro, intents Guilds+GuildMembers+GuildMessageReactions ONLY, 6 slash commands, HMAC bot↔Function, quarterly TOS audit
 - [x] 02-04-PLAN.md — Consent engine: 10 categories, granular UI, progressive Layers 0-4, hash-chained ledger, two-layer enforcement, DSAR + 72h erasure, expiry sweeper (LOPDP gate)
 - [x] 02-05-PLAN.md — Profiles + gamification: XP logarithmic curve, streaks + shield, multi-progression tracks (HP/Stamina/Mente/Social), badges with provenance, character sheet for ALL users (Pitfall #9), app shell, Discord role sync
-- [ ] 02-06-PLAN.md — Content hub with SEO: vite-ssg, 5 wellness pillars, embedded YouTube/TikTok lazy, wellness assessments (PSS-4), CMS via Markdown commits
+- [x] 02-06-PLAN.md — Content hub with SEO: vite-ssg, 5 wellness pillars, embedded YouTube/TikTok lazy, wellness assessments (PSS-4), CMS via Markdown commits
 - [ ] 02-07-PLAN.md — Events + QR check-in + accessibility: 3-tier events, RSVP + waitlist auto-promote, signed-JWT QR with offline IDB queue + Background Sync, anonymous report-user, WCAG 2.1 AA via axe-playwright
 - [ ] 02-08-PLAN.md — Manual-first wellness challenges: 5 types × Bronce/Plata/Oro, Web Sensor pedometer, photo + vouching, gaming narratives, leaderboard via aggregate doc (Pitfall #2), seasonal battle pass
 - [ ] 02-09-PLAN.md — Wearables + B2B BigQuery anonymized layer: Open Wearables webhook (HMAC + consent), monthly bucket time-series + daily rollups, 5 BigQuery k≥50 + ε-DP views, Metabase service account scoping (raw access REVOKED)
