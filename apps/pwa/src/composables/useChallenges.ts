@@ -18,11 +18,14 @@ import type { Challenge, ChallengeEnrollment } from '@gamechangers/shared';
 export function useChallenges() {
   const now = new Date();
 
-  // Active challenges (endsAt > now), sorted by end date ascending
+  // Active challenges (endsAt > now), sorted by end date ascending.
+  // NOTE: Firestore allows inequality on only ONE field per query, so we filter
+  // archived with == false instead of != true. createChallenge writes
+  // archived: false at creation; seasonRollover flips it to true on archival.
   const challengesQuery = query(
     collection(db, 'challenges'),
+    where('archived', '==', false),
     where('endsAt', '>', now),
-    where('archived', '!=', true),
     orderBy('endsAt', 'asc'),
   );
 

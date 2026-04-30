@@ -67,6 +67,7 @@ export const createChallengeHandler = async (
 
   await challengeRef.set({
     ...parsed,
+    archived: false, // PWA list query filters archived == false (CR-08)
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
   });
