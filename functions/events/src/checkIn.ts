@@ -81,6 +81,14 @@ export const checkIn = onCall(
       throw new HttpsError('invalid-argument', 'QR_MISSING_CLAIMS');
     }
 
+    // Identity-binding (T-02-07-01 hardening, WR-04): the QR is a bearer token
+    // for the user it was issued to. Reject if a different authenticated caller
+    // is presenting it; staff-assisted scanning should be gated by an explicit
+    // organizer role check (not implemented in Phase 02).
+    if (callerUid !== claims.uid) {
+      throw new HttpsError('permission-denied', 'QR_UID_MISMATCH');
+    }
+
     const db = getFirestore();
     const eventRef = db.doc(`events/${claims.eventId}`);
     const eventSnap = await eventRef.get();
