@@ -15,9 +15,49 @@
  *   T-02-08-06 (direct write to enrollments doc from client)
  */
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue, Timestamp } from 'firebase-admin/firestore';
 import { z } from 'zod';
 import { consentGate } from '@gamechangers/functions-shared';
+
+/**
+ * Robustly coerce a Firestore-stored `endsAt` field into a JS Date.
+ * Handles Timestamp instances, plain serialized timestamps ({seconds,nanoseconds}),
+ * and ISO strings. Returns null if no valid date can be parsed — the caller is
+ * expected to treat null as a hard error (WR-17).
+ */
+function coerceFirestoreDate(value: unknown): Date | null {
+  if (value instanceof Timestamp) return value.toDate();
+  if (
+    value &&
+    typeof value === 'object' &&
+    typeof (value as { toDate?: unknown }).toDate === 'function'
+  ) {
+    try {
+      const d = (value as { toDate: () => Date }).toDate();
+      if (d instanceof Date && !isNaN(d.getTime())) return d;
+    } catch {
+      /* fall through */
+    }
+  }
+  if (
+    value &&
+    typeof value === 'object' &&
+    typeof (value as { seconds?: number }).seconds === 'number'
+  ) {
+    const seconds = (value as { seconds: number }).seconds;
+    const nanos = (value as { nanoseconds?: number }).nanoseconds ?? 0;
+    return new Date(seconds * 1000 + Math.floor(nanos / 1e6));
+  }
+  if (typeof value === 'string') {
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  if (typeof value === 'number') {
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  return null;
+}
 
 const EnrollSchema = z.object({
   challengeId: z.string().min(1),
@@ -68,7 +108,14 @@ export const enrollChallengeHandler = async (
 
     const challenge = challengeSnap.data()!;
     const now = new Date();
-    const endsAt = (challenge['endsAt'] as { toDate: () => Date }).toDate?.() ?? new Date(challenge['endsAt'] as string);
+    // WR-17: previous parsing fell through to `new Date({seconds,...})` which
+    // produces Invalid Date — `Invalid Date < now` is `false`, so an expired
+    // challenge would silently pass the gate. coerceFirestoreDate handles all
+    // shapes Firestore may return and forces a clean error on garbage input.
+    const endsAt = coerceFirestoreDate(challenge['endsAt']);
+    if (!endsAt) {
+      throw new HttpsError('internal', 'Challenge endsAt is invalid');
+    }
 
     if (endsAt < now) {
       throw new HttpsError('failed-precondition', 'Challenge has already ended');
