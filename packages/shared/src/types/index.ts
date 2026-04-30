@@ -55,6 +55,60 @@ export interface Badge {
   signedClaim: string;     // HMAC-SHA256 of {badgeId, uid, source, earnedAt}
 }
 
+// ── ContentArticle — CMS-managed article document at /content/{id} ────────────
+// Authored in Markdown, synced to Firestore by scripts/cms-publish.ts.
+// Public read allowed (Firestore Rules); no auth required to read articles.
+export interface WellnessAssessmentQuestion {
+  id: string;
+  text: { es: string; en: string };
+  scale: number[];                  // e.g. [0, 1, 2, 3, 4] for PSS-4 Likert
+}
+
+export interface WellnessAssessmentScoringBand {
+  range: [number, number];
+  message_es: string;
+  message_en: string;
+}
+
+export interface WellnessAssessmentSchema {
+  type: 'pss4' | 'custom';
+  questions: WellnessAssessmentQuestion[];
+  scoring: {
+    low: WellnessAssessmentScoringBand;
+    moderate: WellnessAssessmentScoringBand;
+    high: WellnessAssessmentScoringBand;
+  };
+}
+
+export interface ContentArticle {
+  id: string;                                     // slug, e.g. 'movimiento-stretching-gamer'
+  title: { es: string; en: string };
+  slug: { es: string; en: string };
+  body: { es: string; en: string };               // Markdown content
+  pillar: 'movimiento' | 'mente' | 'nutricion' | 'comunidad' | 'data';
+  contentType: 'article' | 'video' | 'quiz';
+  gameClusters: ('free-fire' | 'dota' | 'minecraft' | 'lol' | 'valorant' | 'general')[];
+  estReadMinutes: number;                          // for XP estimation
+  embeddedMedia?: { provider: 'youtube' | 'tiktok'; videoId: string };
+  publishedAt: unknown;                            // Firestore Timestamp (unknown for portability)
+  status: 'draft' | 'published' | 'archived';
+  authorName: string;
+  coverImage?: string;
+  assessment?: {
+    schema: WellnessAssessmentSchema;
+    requiresConsent: 'health_self_reports';
+  };
+}
+
+// Pub/Sub message published to xp-events when a user completes an article (CONT-05).
+// Consumed by xpAward Cloud Function (Plan 05).
+export interface ContentCompletedMessage {
+  type: 'content_completed';
+  uid: string;
+  contentId: string;
+  durationSec: number;   // total time spent or video watched seconds
+}
+
 // ── XpEventMessage — Pub/Sub message shapes published to xp-events topic ──
 export type XpEventMessage =
   | { type: 'event_attended'; uid: string; eventId: string; walkIn?: boolean }
