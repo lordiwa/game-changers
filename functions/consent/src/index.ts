@@ -19,3 +19,4 @@ export { consentExpirySweeper } from './expirySweeper.js';
 export { dsarExport, dsarRunner } from './dsarExport.js';
 export { accountErasure, erasureHardDelete } from './erasure.js';
 export { seedConsentTexts } from './seedConsentTexts.js';
+export { wearableRevokeHandler } from './wearableRevokeHandler.js';

@@ -96,13 +96,44 @@ async function recomputeUserStats(
     .get();
   const contentCompletedCount = contentSnap.size;
 
-  // ── 4. Compute stats (with Pitfall #9 floor of 1) ────────────────────────
-  const stats = computeStats({
+  // ── 4. Read healthDaily last 7 days (Plan 09 additive extension) ──────────
+  // If the user has wearable_data connected, healthDaily contributes additive
+  // HP increments. This is NEVER required — Pitfall #9 floor of 1 still applies.
+  // Non-wearable users see the same full-color character sheet (Pitfall #9).
+  let wearableHpBonus = 0;
+  try {
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    // Query last 7 healthDaily docs (date-keyed strings sort lexicographically)
+    const sevenDaysAgoStr = sevenDaysAgo.toISOString().slice(0, 10);
+    const healthDailySnap = await db
+      .collection(`users/${uid}/healthDaily`)
+      .where('date', '>=', sevenDaysAgoStr)
+      .limit(7)
+      .get();
+    for (const doc of healthDailySnap.docs) {
+      const d = doc.data();
+      const steps: number = (d['stepsTotal'] as number) ?? 0;
+      // Each day with ≥5000 steps adds 1 HP bonus (additive, capped at 7)
+      if (steps >= 5000) wearableHpBonus += 1;
+    }
+  } catch {
+    // Non-fatal: healthDaily may not exist for non-wearable users
+    wearableHpBonus = 0;
+  }
+
+  // ── 5. Compute stats (with Pitfall #9 floor of 1) ────────────────────────
+  const baseStats = computeStats({
     eventAttendedCount,
     maxStreakDays,
     socialStreakDays,
     contentCompletedCount,
   });
+  // Apply wearable HP bonus additively (capped at 100); Pitfall #9 floor always applies
+  const stats = {
+    ...baseStats,
+    hp: Math.min(100, Math.max(1, baseStats.hp + wearableHpBonus)),
+  };
 
   // Verify Pitfall #9 constraint — all stats must be >= 1
   if (stats.hp < 1 || stats.stamina < 1 || stats.mente < 1 || stats.social < 1) {
