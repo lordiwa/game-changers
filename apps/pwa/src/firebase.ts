@@ -1,4 +1,6 @@
 import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 // All Firebase config flows through Vite env vars. apps/pwa/.env.example documents the
 // required keys; production values are injected at build time via Firebase Hosting GitHub Action.
@@ -12,3 +14,5 @@ const firebaseConfig = {
 };
 
 export const firebaseApp = initializeApp(firebaseConfig);
+export const db = getFirestore(firebaseApp);
+export const auth = getAuth(firebaseApp);
