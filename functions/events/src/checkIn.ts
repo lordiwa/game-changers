@@ -107,8 +107,16 @@ export const checkIn = onCall(
       }
     }
 
-    // ── 3. Idempotent write (jti as doc ID prevents double-XP on replay) ──────
-    const attendanceRef = db.doc(`events/${claims.eventId}/attendance/${claims.jti}`);
+    // ── 3. Idempotent write — single doc per user across the RSVP→check-in
+    // lifecycle (WR-15). The jti is captured on the same doc so a re-scan with
+    // the same QR is a no-op (and we suppress the xp-events publish below).
+    const attendanceRef = db.doc(`events/${claims.eventId}/attendance/${claims.uid}`);
+    const existingSnap = await attendanceRef.get();
+    const existingData = existingSnap.exists ? existingSnap.data() : undefined;
+    const alreadyCheckedIn =
+      existingData?.['status'] === 'checked_in' &&
+      existingData?.['qrJti'] === claims.jti;
+
     await attendanceRef.set(
       {
         uid: claims.uid,
@@ -120,20 +128,23 @@ export const checkIn = onCall(
       { merge: true },
     );
 
-    // ── 4. Publish to xp-events (consumed by gamification/xpAward) ────────────
-    try {
-      const pubsub = new PubSub();
-      await pubsub.topic('xp-events').publishMessage({
-        data: Buffer.from(
-          JSON.stringify({
-            type: 'event_attended',
-            uid: claims.uid,
-            eventId: claims.eventId,
-          }),
-        ),
-      });
-    } catch (err) {
-      console.error('[checkIn] xp-events publish failed (non-fatal):', err);
+    // ── 4. Publish to xp-events ONLY on first check-in for this jti.
+    // Re-scanning the same QR must not re-award XP (idempotency).
+    if (!alreadyCheckedIn) {
+      try {
+        const pubsub = new PubSub();
+        await pubsub.topic('xp-events').publishMessage({
+          data: Buffer.from(
+            JSON.stringify({
+              type: 'event_attended',
+              uid: claims.uid,
+              eventId: claims.eventId,
+            }),
+          ),
+        });
+      } catch (err) {
+        console.error('[checkIn] xp-events publish failed (non-fatal):', err);
+      }
     }
 
     return { ok: true };
