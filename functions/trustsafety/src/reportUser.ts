@@ -100,12 +100,21 @@ export const reportUser = onCall(
         createdAt: FieldValue.serverTimestamp(),
       });
 
-      // Atomic increment of the rate-limit counter.
-      tx.set(
-        rateLimitRef,
-        { [today]: todayCount + 1 },
-        { merge: true },
-      );
+      // Atomic increment of the rate-limit counter for today, and prune any
+      // day-keys older than 7 days so the doc cannot grow unbounded over time
+      // (WR-02). We only keep date-shaped keys (YYYY-MM-DD) within the window.
+      const cutoff = new Date();
+      cutoff.setUTCDate(cutoff.getUTCDate() - 7);
+      const cutoffIso = cutoff.toISOString().slice(0, 10);
+
+      const updatePayload: Record<string, unknown> = { [today]: todayCount + 1 };
+      for (const key of Object.keys(rateLimitData)) {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(key) && key < cutoffIso) {
+          updatePayload[key] = FieldValue.delete();
+        }
+      }
+
+      tx.set(rateLimitRef, updatePayload, { merge: true });
     });
 
     // ── Audit log (post-transaction; duplicates on rare retry are tolerable) ──
