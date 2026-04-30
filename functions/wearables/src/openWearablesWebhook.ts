@@ -197,6 +197,23 @@ export const openWearablesWebhook = onRequest(
       return;
     }
 
+    // ── 5b. Belt-and-braces disabled flag (WR-10). disconnectDevice and
+    // wearableRevokeHandler write users/{uid}/private/wearable.disabled = true
+    // to close the propagation gap between consent revoke and custom-claim
+    // refresh. Honoring that flag here makes the documented invariant real.
+    const wearableDoc = await db.doc(`users/${uid}/private/wearable`).get();
+    if (wearableDoc.exists && wearableDoc.data()?.['disabled'] === true) {
+      await db.collection('auditLog').doc().set({
+        action: 'wearable_sample_dropped_disabled_flag',
+        uid,
+        provider,
+        sampleCount: payload.samples.length,
+        timestamp: FieldValue.serverTimestamp(),
+      });
+      res.status(403).json({ error: 'Wearable ingestion disabled' });
+      return;
+    }
+
     // ── 6. Write samples to monthly bucket ──────────────────────────────────
     const touchedDays = await writeSamples(db, uid, payload);
 
