@@ -218,6 +218,37 @@
       }
     }
   },
+  "content": {
+    "hub": {
+      "heading": "Content for conscious gamers",
+      "heading_short": "Content",
+      "subheading": "Movement, mental health, nutrition, community and data — no lectures."
+    },
+    "pillar": {
+      "movimiento": "Movement",
+      "mente": "Mental Health",
+      "nutricion": "Nutrition",
+      "comunidad": "Community",
+      "data": "Data"
+    },
+    "cta": {
+      "read": "Read now",
+      "watch": "Watch now",
+      "quiz": "Take the quiz"
+    },
+    "completion": {
+      "cta": "Mark as read"
+    },
+    "consent": {
+      "required": "Enable Layer 1 consent to earn XP for reading."
+    },
+    "assessment": {
+      "consent": {
+        "required": "Enable Layer 2 (self-reported health data) to answer this quiz."
+      },
+      "disclaimer": "This quiz is a self-awareness tool. It does not replace professional care. If you need to talk to someone, use Need help?"
+    }
+  },
   "events": {
     "cta": {
       "rsvp": "Confirm attendance"

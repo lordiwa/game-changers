@@ -218,6 +218,37 @@
       }
     }
   },
+  "content": {
+    "hub": {
+      "heading": "Contenido para gamers conscientes",
+      "heading_short": "Contenido",
+      "subheading": "Movimiento, mente, nutrición, comunidad y data — sin sermones."
+    },
+    "pillar": {
+      "movimiento": "Movimiento",
+      "mente": "Mente",
+      "nutricion": "Nutrición",
+      "comunidad": "Comunidad",
+      "data": "Data"
+    },
+    "cta": {
+      "read": "Leer ahora",
+      "watch": "Ver ahora",
+      "quiz": "Hacer el test"
+    },
+    "completion": {
+      "cta": "Marcar como leído"
+    },
+    "consent": {
+      "required": "Activá tu consentimiento Layer 1 para sumar XP por leer."
+    },
+    "assessment": {
+      "consent": {
+        "required": "Activá Layer 2 (datos de salud autoinformados) para responder este test."
+      },
+      "disclaimer": "Este test es una herramienta de autoconocimiento. No reemplaza atención profesional. Si necesitas hablar con alguien, usá ¿Necesitas ayuda?"
+    }
+  },
   "events": {
     "cta": {
       "rsvp": "Confirmar asistencia"

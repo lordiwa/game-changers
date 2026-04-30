@@ -1,6 +1,12 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { getAuth } from 'firebase/auth';
 
+// Plan 02-06 — Public content hub (no auth required; pre-rendered for SEO).
+const ContentHub = () => import('../views/content/ContentHub.vue');
+const ContentCategory = () => import('../views/content/ContentCategory.vue');
+const ContentArticle = () => import('../views/content/ContentArticle.vue');
+const WellnessAssessmentRoute = () => import('../views/content/WellnessAssessment.vue');
+
 // Lazy-load auth views so the router chunk is split from the main bundle.
 const Boot = () => import('../views/auth/Boot.vue');
 const SignIn = () => import('../views/auth/SignIn.vue');
@@ -39,6 +45,32 @@ declare module 'vue-router' {
 }
 
 const routes: RouteRecordRaw[] = [
+  // Plan 02-06 — Public content hub (unauthenticated access allowed; pre-rendered for SEO).
+  // /contenido is the canonical Spanish URL; /content is an alias.
+  {
+    path: '/contenido',
+    alias: '/content',
+    component: ContentHub,
+    // No auth meta — public route
+  },
+  {
+    path: '/contenido/categoria/:cat',
+    alias: '/content/categoria/:cat',
+    component: ContentCategory,
+    // No auth meta — public route
+  },
+  {
+    path: '/contenido/:slug',
+    alias: '/content/article/:slug',
+    component: ContentArticle,
+    // No auth meta — public route
+  },
+  {
+    path: '/quiz/:id',
+    component: WellnessAssessmentRoute,
+    // Consent gate enforced inside component (health_self_reports)
+  },
+
   // Default landing — Boot (anonymous auth sufficient; expanded in Plan 05).
   {
     path: '/',

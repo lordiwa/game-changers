@@ -25,7 +25,6 @@
       <!-- Pillar badge + content type -->
       <div class="flex items-center gap-2 flex-wrap">
         <span
-          data-pillar
           :data-pillar="article.pillar"
           class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
           :class="pillarBadgeClass"
