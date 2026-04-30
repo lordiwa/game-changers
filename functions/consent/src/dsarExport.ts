@@ -132,9 +132,17 @@ async function runDsarExport(uid: string, requestId: string): Promise<void> {
   };
 
   // Create ZIP archive.
-  const projectId = process.env['GCLOUD_PROJECT'] ?? process.env['FIREBASE_CONFIG']
-    ? JSON.parse(process.env['FIREBASE_CONFIG'] ?? '{}').projectId
-    : 'gamechangers-prod';
+  // Resolve projectId from env. Prefer the explicit GCLOUD_PROJECT (set by the
+  // Cloud Functions runtime); fall back to FIREBASE_CONFIG.projectId, then to a
+  // hardcoded default. NOTE: the previous expression had an operator-precedence
+  // bug that resolved to `undefined.appspot.com` whenever GCLOUD_PROJECT was set
+  // but FIREBASE_CONFIG was absent — silently breaking every DSAR upload.
+  const fbConfigRaw = process.env['FIREBASE_CONFIG'];
+  const fbConfig = fbConfigRaw
+    ? (JSON.parse(fbConfigRaw) as { projectId?: string })
+    : null;
+  const projectId =
+    process.env['GCLOUD_PROJECT'] ?? fbConfig?.projectId ?? 'gamechangers-prod';
 
   const bucket = storage.bucket(`${projectId}.appspot.com`);
   const filePath = `dsar-exports/${uid}/${requestId}.zip`;
