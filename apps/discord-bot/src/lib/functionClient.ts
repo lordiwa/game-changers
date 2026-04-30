@@ -17,6 +17,16 @@
  */
 import * as crypto from 'node:crypto';
 
+// WR-13: validate the HMAC secret at module load. If it's missing the bot
+// must fail fast at startup instead of TypeError'ing mid-command on the first
+// signed call (which would clobber the catch path in callFunction).
+const HMAC_SECRET = process.env['BOT_TO_FUNCTION_HMAC'];
+if (!HMAC_SECRET) {
+  throw new Error(
+    '[functionClient] BOT_TO_FUNCTION_HMAC env var is not set. Configure it in /etc/gamechangers/bot.env (mode 0400) or your secret manager before starting the bot.',
+  );
+}
+
 type FunctionResult<T> = { ok: true; data: T } | { ok: false; error: string };
 
 /**
@@ -34,7 +44,7 @@ export async function callFunction<T = unknown>(
   const body = JSON.stringify({ botTimestamp: ts, payload });
 
   const sig = crypto
-    .createHmac('sha256', process.env['BOT_TO_FUNCTION_HMAC']!)
+    .createHmac('sha256', HMAC_SECRET)
     .update(body)
     .digest('hex');
 
