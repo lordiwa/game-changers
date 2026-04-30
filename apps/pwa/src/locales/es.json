@@ -298,7 +298,71 @@
   },
   "challenges": {
     "cta": {
-      "accept": "Acepto el desafío"
+      "accept": "Acepto el desafío",
+      "log": "Registrar mi avance"
+    },
+    "list": {
+      "heading": "Desafíos abiertos"
+    },
+    "empty": {
+      "heading": "¿Listo para tu primer desafío?",
+      "body": "Empieza con un Bronce de 7 días — no necesitas ningún dispositivo.",
+      "cta": "Ver desafíos disponibles"
+    },
+    "tier": {
+      "bronce": "Bronce",
+      "plata": "Plata",
+      "oro": "Oro"
+    },
+    "progress": {
+      "source": {
+        "manual": "Manual",
+        "pedometer": "Pedómetro del teléfono",
+        "wearable": "Mi pulsera",
+        "photo": "Foto + vouching"
+      }
+    },
+    "evidence": {
+      "required": "Para Plata u Oro necesitamos foto. Subila acá."
+    },
+    "anti_cheat": {
+      "flagged": "Revisaremos este registro",
+      "flagged_body": "El número parece alto comparado con tus registros previos. Tu participación sigue activa, lo confirma un mod en 24h."
+    },
+    "leaderboard": {
+      "heading": "Tabla de líderes",
+      "tab_weekly": "Semanal",
+      "tab_monthly": "Mensual",
+      "tab_season": "Temporada",
+      "cohort": {
+        "global": "Global",
+        "quito": "Quito",
+        "guayaquil": "Guayaquil",
+        "cuenca": "Cuenca"
+      },
+      "anon_template": "Anónimo #{n}",
+      "recompute_explainer": "Se actualiza cada 15 minutos.",
+      "opt_in_label": "Aparecer en el ranking",
+      "anonymous_label": "Participar anónimamente"
+    },
+    "narrative": {
+      "steps_template": "Caminaste {km}km — equivalente a {comparison}.",
+      "cluster": {
+        "lol": {
+          "summoner_rift_template": "cruzar Summoner's Rift {n} veces"
+        },
+        "general": {
+          "city_block_template": "{n} manzanas de ciudad"
+        },
+        "free_fire": {
+          "map_template": "cruzar el mapa de Free Fire {n} veces"
+        }
+      }
+    },
+    "wearable_stub": {
+      "heading": "Conecta tu pulsera primero",
+      "body": "Esta opción estará disponible cuando conectes un wearable.",
+      "cta": "Ir a pulseras"
     }
   },
   "wearables": {

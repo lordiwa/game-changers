@@ -335,7 +335,71 @@
   },
   "challenges": {
     "cta": {
-      "accept": "I accept the challenge"
+      "accept": "I accept the challenge",
+      "log": "Log my progress"
+    },
+    "list": {
+      "heading": "Open challenges"
+    },
+    "empty": {
+      "heading": "Ready for your first challenge?",
+      "body": "Start with a 7-day Bronze — no device needed.",
+      "cta": "See available challenges"
+    },
+    "tier": {
+      "bronce": "Bronze",
+      "plata": "Silver",
+      "oro": "Gold"
+    },
+    "progress": {
+      "source": {
+        "manual": "Manual",
+        "pedometer": "Phone pedometer",
+        "wearable": "My wearable",
+        "photo": "Photo + vouching"
+      }
+    },
+    "evidence": {
+      "required": "Silver and Gold tiers require photo evidence. Upload it here."
+    },
+    "anti_cheat": {
+      "flagged": "We'll review this entry",
+      "flagged_body": "The number looks high compared to your previous logs. Your participation stays active — a mod will confirm within 24h."
+    },
+    "leaderboard": {
+      "heading": "Leaderboard",
+      "tab_weekly": "Weekly",
+      "tab_monthly": "Monthly",
+      "tab_season": "Season",
+      "cohort": {
+        "global": "Global",
+        "quito": "Quito",
+        "guayaquil": "Guayaquil",
+        "cuenca": "Cuenca"
+      },
+      "anon_template": "Anonymous #{n}",
+      "recompute_explainer": "Updates every 15 minutes.",
+      "opt_in_label": "Appear on the leaderboard",
+      "anonymous_label": "Participate anonymously"
+    },
+    "narrative": {
+      "steps_template": "You walked {km}km — equivalent to {comparison}.",
+      "cluster": {
+        "lol": {
+          "summoner_rift_template": "crossing Summoner's Rift {n} times"
+        },
+        "general": {
+          "city_block_template": "{n} city blocks"
+        },
+        "free_fire": {
+          "map_template": "crossing the Free Fire map {n} times"
+        }
+      }
+    },
+    "wearable_stub": {
+      "heading": "Connect your wearable first",
+      "body": "This option will be available once you connect a wearable device.",
+      "cta": "Go to wearables"
     }
   },
   "wearables": {

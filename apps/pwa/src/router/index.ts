@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { getAuth } from 'firebase/auth';
 
+// Plan 02-08 — Challenges surfaces.
+const ChallengeList = () => import('../views/challenges/ChallengeList.vue');
+const ChallengeDetail = () => import('../views/challenges/ChallengeDetail.vue');
+const Leaderboard = () => import('../views/challenges/Leaderboard.vue');
+
 // Plan 02-07 — Events surfaces.
 const EventList = () => import('../views/events/EventList.vue');
 const EventDetail = () => import('../views/events/EventDetail.vue');
@@ -51,6 +56,23 @@ declare module 'vue-router' {
 }
 
 const routes: RouteRecordRaw[] = [
+  // Plan 02-08 — Challenges (public list; detail + leaderboard require auth).
+  {
+    path: '/challenges',
+    component: ChallengeList,
+    // Public — enrollment gates auth inside component
+  },
+  {
+    path: '/challenges/:id',
+    component: ChallengeDetail,
+    // Auth gated for enrollment; reading challenge detail is public
+  },
+  {
+    path: '/challenges/leaderboard',
+    component: Leaderboard,
+    meta: { requiresAuth: true },
+  },
+
   // Plan 02-07 — Events (public list + detail; check-in gated by auth + organizer).
   {
     path: '/events',
