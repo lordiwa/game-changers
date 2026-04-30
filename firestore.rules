@@ -150,6 +150,17 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // /users/{uid}/notifications/{notifId} — owner read; client may flip
+    // `read`/`readAt` to mark a notification as read. Functions service account
+    // (expirySweeper, waitlistPromote) is the only writer that creates docs.
+    match /users/{uid}/notifications/{notifId} {
+      allow read: if isOwner(uid);
+      allow update: if isOwner(uid)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['read', 'readAt']);
+      allow create, delete: if false;
+    }
+
     // ──────────────────────────────────────────────────────────────────────
     // Public + cross-user collections
     // ──────────────────────────────────────────────────────────────────────
