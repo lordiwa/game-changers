@@ -100,6 +100,9 @@ export const accountErasure = onCall({ region: REGION }, async (request) => {
       timestampMs,
       source: 'erasure',
     };
+    // Snapshot the chain head BEFORE advancing — this entry's prevHash must
+    // point at the previous ledger entry (or genesis on the first iteration).
+    const entryPrevHash = prevHash;
     const ledgerHash = buildLedgerHash(prevHash, payload, uid, timestampMs);
     prevHash = ledgerHash;
 
@@ -113,7 +116,7 @@ export const accountErasure = onCall({ region: REGION }, async (request) => {
         textHash,
         timestamp: FieldValue.serverTimestamp(),
         hash: ledgerHash,
-        prevHash: payload.timestampMs === now.getTime() ? '0'.repeat(64) : prevHash,
+        prevHash: entryPrevHash,
         reason: 'account_erasure',
         source: 'erasure',
       },
@@ -171,6 +174,18 @@ export const accountErasure = onCall({ region: REGION }, async (request) => {
       source: 'erasure',
     });
   });
+
+  // Delete the discordId → uid reverse-index lookup (WR-09): the reverse-index
+  // would otherwise leak deletion timing to anyone who knew the discordId.
+  try {
+    const discordSnap = await db.doc(`users/${uid}/private/discord`).get();
+    const discordId = discordSnap.data()?.['discordId'] as string | undefined;
+    if (discordId) {
+      await db.doc(`users/_lookup/discord/${discordId}`).delete();
+    }
+  } catch (err) {
+    console.warn('[accountErasure] failed to clear discord reverse-index:', err);
+  }
 
   // Revoke ALL Firebase Auth sessions immediately.
   await auth.revokeRefreshTokens(uid);
@@ -230,6 +245,18 @@ export async function performHardDelete(uid: string): Promise<void> {
   const db = getFirestore();
   const auth = getAuth();
   const pseudoUid = pseudonymizeUid(uid);
+
+  // Defensive: ensure the discordId reverse-index is gone even if soft-delete
+  // didn't clear it (WR-09).
+  try {
+    const discordSnap = await db.doc(`users/${uid}/private/discord`).get();
+    const discordId = discordSnap.data()?.['discordId'] as string | undefined;
+    if (discordId) {
+      await db.doc(`users/_lookup/discord/${discordId}`).delete();
+    }
+  } catch (err) {
+    console.warn('[performHardDelete] failed to clear discord reverse-index:', err);
+  }
 
   // Collections to hard-delete under /users/{uid}/.
   const subcollections = [
