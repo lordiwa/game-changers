@@ -16,7 +16,9 @@
     "emulators": "firebase emulators:start --only auth,firestore,functions,storage,hosting"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@eslint/js": "^10.0.0",
+    "@playwright/test": "^1.59.1",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^10.2.1",

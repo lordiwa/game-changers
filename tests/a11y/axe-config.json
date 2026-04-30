@@ -1,0 +1,27 @@
+{
+  "description": "axe-core configuration for GameChangers WCAG 2.1 AA audits (T-02-07-12).",
+  "runOnly": {
+    "type": "tag",
+    "values": ["wcag2a", "wcag2aa", "wcag21aa", "best-practice"]
+  },
+  "rules": {
+    "color-contrast": { "enabled": true },
+    "button-name": { "enabled": true },
+    "label": { "enabled": true },
+    "landmark-one-main": { "enabled": true },
+    "region": { "enabled": true },
+    "aria-required-attr": { "enabled": true },
+    "aria-valid-attr-value": { "enabled": true },
+    "image-alt": { "enabled": true },
+    "link-name": { "enabled": true },
+    "duplicate-id-active": { "enabled": true },
+    "focus-order-semantics": { "enabled": true }
+  },
+  "resultTypes": ["violations", "incomplete"],
+  "elementRef": true,
+  "notes": {
+    "T-02-07-12": "Capacity bar must convey information via text/aria-label, not color alone.",
+    "T-02-07-13": "All interactive controls min 44×44 CSS pixels (WCAG 2.5.5 Target Size).",
+    "scope": "Events surfaces: EventList, EventDetail, EventCheckIn, PostEventRecap, QrScanner, ReportUserModal."
+  }
+}

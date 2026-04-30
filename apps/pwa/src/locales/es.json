@@ -1,4 +1,46 @@
 {
+  "events": {
+    "list": {
+      "heading": "Próximos eventos"
+    },
+    "empty": {
+      "heading": "No hay eventos cerca todavía",
+      "body": "Estamos organizando los próximos. Te avisamos cuando se abran inscripciones.",
+      "cta": "Activar avisos por WhatsApp"
+    },
+    "detail": {
+      "what_to_bring": "Qué llevar",
+      "difficulty": {
+        "chill": "Chill",
+        "activo": "Activo",
+        "intenso": "Intenso"
+      },
+      "cta_rsvp": "Confirmar asistencia",
+      "cta_waitlist": "Lista de espera",
+      "cta_walkin": "Apuntarme al evento"
+    },
+    "checkin": {
+      "heading": "Check-in del evento",
+      "scan_cta": "Escanear código QR",
+      "manual_cta": "Buscar por nombre",
+      "success": "Check-in exitoso",
+      "error": {
+        "invalid": "Este código QR no es válido",
+        "invalid_body": "Pídele al organizador que muestre el QR del evento de hoy. Mientras, te buscan por nombre.",
+        "offline": "Sin señal — guardamos tu check-in",
+        "offline_body": "Tu asistencia se sincroniza cuando vuelva la conexión. Quédate tranquilo."
+      }
+    },
+    "report": {
+      "cta": "Reportar a alguien",
+      "modal": {
+        "title_template": "Reportar a {display_name}",
+        "body": "Tu reporte llega solo a moderación, anónimo para la persona reportada. Describe brevemente lo que pasó (mín. 20 caracteres):"
+      },
+      "cta_send": "Enviar reporte",
+      "success": "Tu reporte llega solo a moderación. Gracias por cuidar la comunidad."
+    }
+  },
   "app": {
     "brand": "GameChangers",
     "tagline": "Gamers que se mueven, se cuidan y se encuentran.",

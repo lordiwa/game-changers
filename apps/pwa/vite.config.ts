@@ -114,13 +114,36 @@ export default defineConfig({
         lang: 'es-EC',
       },
       workbox: {
+        // PWA offline shells for /events, /me, /challenges
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/\/api\//],
         runtimeCaching: [
+          // Network-only for sensitive paths (consent, health, auth)
           {
             urlPattern: /\/(consent|health|auth)\//,
             handler: 'NetworkOnly',
           },
+          // QR check-in: Background Sync queue (offline-first event check-in)
+          // T-02-07-10: maxRetentionTime: 24*60 minutes (entries auto-dropped after 24h)
+          {
+            urlPattern: /\/api\/events\/.+\/checkin$/,
+            handler: 'NetworkOnly',
+            method: 'POST',
+            options: {
+              backgroundSync: {
+                name: 'checkin-queue',
+                options: { maxRetentionTime: 24 * 60 },
+              },
+            },
+          },
+          // Content: Stale-while-revalidate (articles, CMS)
           {
             urlPattern: /\/content\//,
+            handler: 'StaleWhileRevalidate',
+          },
+          // Events list: Stale-while-revalidate for offline shell
+          {
+            urlPattern: /\/events\//,
             handler: 'StaleWhileRevalidate',
           },
         ],

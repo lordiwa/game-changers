@@ -1,6 +1,12 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { getAuth } from 'firebase/auth';
 
+// Plan 02-07 — Events surfaces.
+const EventList = () => import('../views/events/EventList.vue');
+const EventDetail = () => import('../views/events/EventDetail.vue');
+const EventCheckIn = () => import('../views/events/EventCheckIn.vue');
+const PostEventRecap = () => import('../views/events/PostEventRecap.vue');
+
 // Plan 02-06 — Public content hub (no auth required; pre-rendered for SEO).
 const ContentHub = () => import('../views/content/ContentHub.vue');
 const ContentCategory = () => import('../views/content/ContentCategory.vue');
@@ -45,6 +51,28 @@ declare module 'vue-router' {
 }
 
 const routes: RouteRecordRaw[] = [
+  // Plan 02-07 — Events (public list + detail; check-in gated by auth + organizer).
+  {
+    path: '/events',
+    component: EventList,
+    // Public — unauthenticated access allowed; RSVP gates auth inside component
+  },
+  {
+    path: '/events/:id',
+    component: EventDetail,
+    // Public — RSVP gates auth; walk-in modal for unauthenticated
+  },
+  {
+    path: '/events/:id/checkin',
+    component: EventCheckIn,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+  {
+    path: '/events/:id/recap',
+    component: PostEventRecap,
+    meta: { requiresAuth: true, requiresFullAuth: true, requiresAge: true },
+  },
+
   // Plan 02-06 — Public content hub (unauthenticated access allowed; pre-rendered for SEO).
   // /contenido is the canonical Spanish URL; /content is an alias.
   {

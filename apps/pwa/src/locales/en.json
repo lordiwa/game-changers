@@ -250,6 +250,85 @@
     }
   },
   "events": {
+    "list": {
+      "heading": "Upcoming events"
+    },
+    "empty": {
+      "heading": "No events near you yet",
+      "body": "We're working on bringing GameChangers IRL to your city. Follow us on Discord for announcements.",
+      "cta": "Get WhatsApp alerts"
+    },
+    "detail": {
+      "what_to_bring": "What to bring",
+      "difficulty": {
+        "label": "Level",
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced"
+      },
+      "cta_rsvp": "Confirm attendance",
+      "cta_waitlist": "Join waitlist",
+      "cta_cancel": "Cancel attendance",
+      "cta_walkin": "Walk-in (no prior registration)",
+      "status": {
+        "rsvp": "You're in! Show your QR at the door.",
+        "waitlist": "You're on the waitlist. We'll notify you if a spot opens.",
+        "cancelled": "Your attendance was cancelled.",
+        "attending": "See you there!"
+      },
+      "capacity": "{current} / {max} spots taken",
+      "sold_out": "Full — join the waitlist",
+      "safety_contact": {
+        "label": "Safety contact",
+        "missing": "This event requires a designated safety contact to allow registrations."
+      },
+      "consent_gate": "Enable event participation permission to RSVP.",
+      "walk_in": {
+        "heading": "Walk-in registration",
+        "name_label": "Your name",
+        "name_placeholder": "How should we call you?",
+        "cta": "Register as walk-in",
+        "success": "Done! Your walk-in was recorded. GG"
+      }
+    },
+    "checkin": {
+      "heading": "Event Check-In",
+      "manual_cta": "Manual search",
+      "scanner": {
+        "start": "Start camera scanner",
+        "stop": "Stop scanner",
+        "status": {
+          "idle": "Point the camera at an attendee's QR code",
+          "scanning": "Scanning...",
+          "success": "Check-in confirmed!",
+          "error": "Could not verify QR"
+        }
+      },
+      "error": {
+        "expired": "QR expired — attendee needs a new code",
+        "venue": "Attendee is too far from the venue",
+        "offline": "No signal — check-in queued",
+        "offline_body": "Attendance will sync when the connection is restored. Don't worry.",
+        "generic": "Check-in error — try manual search"
+      }
+    },
+    "report": {
+      "cta": "Report someone",
+      "modal": {
+        "heading": "Report a community member",
+        "reason": {
+          "label": "Reason",
+          "harassment": "Harassment or hate speech",
+          "spam": "Spam or impersonation",
+          "self_harm": "Concern for safety or self-harm",
+          "other": "Other"
+        },
+        "detail_label": "Details (required, min 20 characters)",
+        "detail_placeholder": "Describe what happened..."
+      },
+      "cta_send": "Submit report",
+      "success": "Your report was received. Our team will review it shortly. GG"
+    },
     "cta": {
       "rsvp": "Confirm attendance"
     }
