@@ -57,6 +57,10 @@ ui-debug.log
 functions/*/lib/
 packages/*/lib/
 
+# isolate-package output (generated per-codebase during firebase deploy)
+functions/*/isolate/
+packages/*/isolate/
+
 # Claude Code agent worktrees and external tool data
 .claude/worktrees/
 .claire/
