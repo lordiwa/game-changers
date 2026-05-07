@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "index.ts",
-  "types": "index.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "engines": {
     "node": "22"
   },
   "scripts": {
+    "build": "tsc",
     "test": "echo 'shared module — no tests at this layer; rules-unit-testing covers consent helpers' && exit 0",
     "typecheck": "tsc --noEmit"
   },
@@ -23,12 +24,12 @@
     "typescript": "5.9.3"
   },
   "exports": {
-    ".": "./index.ts",
-    "./ConsentEnforcement": "./ConsentEnforcement.ts",
-    "./hmac": "./hmac.ts",
-    "./kms": "./kms.ts",
-    "./sentry": "./sentry.ts",
-    "./types": "./types.ts",
-    "./botAuth": "./botAuth.ts"
+    ".": { "types": "./lib/index.d.ts", "default": "./lib/index.js" },
+    "./ConsentEnforcement": { "types": "./lib/ConsentEnforcement.d.ts", "default": "./lib/ConsentEnforcement.js" },
+    "./hmac": { "types": "./lib/hmac.d.ts", "default": "./lib/hmac.js" },
+    "./kms": { "types": "./lib/kms.d.ts", "default": "./lib/kms.js" },
+    "./sentry": { "types": "./lib/sentry.d.ts", "default": "./lib/sentry.js" },
+    "./types": { "types": "./lib/types.d.ts", "default": "./lib/types.js" },
+    "./botAuth": { "types": "./lib/botAuth.d.ts", "default": "./lib/botAuth.js" }
   }
 }
