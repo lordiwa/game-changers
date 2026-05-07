@@ -16,7 +16,8 @@
  *     // payload = req.body.payload, authenticated
  *   }));
  */
-import type { Request, Response } from 'firebase-functions/v2/https';
+import type { Request } from 'firebase-functions/v2/https';
+import type { Response } from 'express';
 import { verifyHmacSha256 } from './hmac.js';
 
 type BotPayload = Record<string, unknown>;
