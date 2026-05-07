@@ -87,7 +87,12 @@
       "WebFetch",
       "TodoWrite",
       "Task",
-      "Skill(gsd-progress)"
+      "Skill(gsd-progress)",
+      "Bash(where pnpm.cmd)",
+      "Bash(cmd.exe //c \"pnpm --filter @gamechangers/shared build\")",
+      "Bash(cmd.exe //c \"pnpm --filter \\\\\"@gamechangers/shared\\\\\" build\")",
+      "Bash(cmd.exe //c \"pnpm -F @gamechangers/shared build\")",
+      "Bash(cmd.exe //c \"pnpm --filter ./packages/shared build\")"
     ]
   }
 }
