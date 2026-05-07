@@ -229,6 +229,9 @@ importers:
       '@gamechangers/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@google-cloud/functions-framework':
+        specifier: ^4.0.0
+        version: 4.0.0
       firebase-admin:
         specifier: 13.8.0
         version: 13.8.0
@@ -254,6 +257,9 @@ importers:
       '@gamechangers/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@google-cloud/functions-framework':
+        specifier: ^4.0.0
+        version: 4.0.0
       '@google-cloud/pubsub':
         specifier: ^4.0.0
         version: 4.11.0
@@ -285,6 +291,9 @@ importers:
       '@gamechangers/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@google-cloud/functions-framework':
+        specifier: ^4.0.0
+        version: 4.0.0
       '@google-cloud/storage':
         specifier: ^7.15.0
         version: 7.19.0
@@ -322,6 +331,9 @@ importers:
       '@gamechangers/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@google-cloud/functions-framework':
+        specifier: ^4.0.0
+        version: 4.0.0
       '@google-cloud/pubsub':
         specifier: ^4.9.0
         version: 4.11.0
@@ -359,6 +371,9 @@ importers:
       '@gamechangers/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@google-cloud/functions-framework':
+        specifier: ^4.0.0
+        version: 4.0.0
       '@google-cloud/pubsub':
         specifier: ^4.9.0
         version: 4.11.0
@@ -412,6 +427,9 @@ importers:
       '@gamechangers/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@google-cloud/functions-framework':
+        specifier: ^4.0.0
+        version: 4.0.0
       '@google-cloud/pubsub':
         specifier: ^4.9.0
         version: 4.11.0
@@ -446,6 +464,9 @@ importers:
       '@gamechangers/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@google-cloud/functions-framework':
+        specifier: ^4.0.0
+        version: 4.0.0
       '@google-cloud/tasks':
         specifier: ^5.5.0
         version: 5.5.2
