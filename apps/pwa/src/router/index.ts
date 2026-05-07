@@ -266,6 +266,14 @@ router.beforeEach(async (to) => {
 
   // Route requires age verification — check custom claims.
   if (to.meta.requiresAge && user) {
+    // DEV-only bypass: verifyAge Cloud Function is not deployable until the
+    // pnpm workspace-protocol blocker is resolved (Camino B). In dev builds
+    // we skip the claim check so /me and downstream routes are reachable.
+    // Production builds (`vite build`) keep the guard intact.
+    if (import.meta.env.DEV) {
+      console.warn('[router] DEV: skipping requiresAge guard — re-enable after verifyAge is deployed');
+      return;
+    }
     const idTokenResult = await user.getIdTokenResult();
     if (!idTokenResult.claims['ageVerified']) {
       return { path: '/auth/age-gate' };
