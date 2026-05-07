@@ -52,3 +52,11 @@ ui-debug.log
 
 # Fonts: do NOT ignore .woff2 in apps/pwa/public/fonts/ — they are committed
 !apps/pwa/public/fonts/*.woff2
+
+# TypeScript build artifacts (functions and packages)
+functions/*/lib/
+packages/*/lib/
+
+# Claude Code agent worktrees and external tool data
+.claude/worktrees/
+.claire/
