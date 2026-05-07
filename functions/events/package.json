@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "main": "lib/index.js",
+  "files": ["lib"],
   "engines": {
     "node": "22"
   },

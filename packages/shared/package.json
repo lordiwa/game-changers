@@ -5,6 +5,7 @@
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "files": ["lib"],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "test": "node ../../node_modules/vitest/vitest.mjs run",
