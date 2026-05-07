@@ -4,49 +4,97 @@
       "codebase": "auth",
       "source": "functions/auth",
       "runtime": "nodejs22",
-      "region": "southamerica-east1"
+      "region": "southamerica-east1",
+      "isolate": true,
+      "predeploy": [
+        "pnpm --filter @gamechangers/shared build",
+        "pnpm --filter @gamechangers/functions-shared build",
+        "pnpm --filter @gamechangers/functions-auth build"
+      ]
     },
     {
       "codebase": "consent",
       "source": "functions/consent",
       "runtime": "nodejs22",
-      "region": "southamerica-east1"
+      "region": "southamerica-east1",
+      "isolate": true,
+      "predeploy": [
+        "pnpm --filter @gamechangers/shared build",
+        "pnpm --filter @gamechangers/functions-shared build",
+        "pnpm --filter @gamechangers/functions-consent build"
+      ]
     },
     {
       "codebase": "events",
       "source": "functions/events",
       "runtime": "nodejs22",
-      "region": "southamerica-east1"
+      "region": "southamerica-east1",
+      "isolate": true,
+      "predeploy": [
+        "pnpm --filter @gamechangers/shared build",
+        "pnpm --filter @gamechangers/functions-shared build",
+        "pnpm --filter @gamechangers/functions-events build"
+      ]
     },
     {
       "codebase": "challenges",
       "source": "functions/challenges",
       "runtime": "nodejs22",
-      "region": "southamerica-east1"
+      "region": "southamerica-east1",
+      "isolate": true,
+      "predeploy": [
+        "pnpm --filter @gamechangers/shared build",
+        "pnpm --filter @gamechangers/functions-shared build",
+        "pnpm --filter @gamechangers/functions-challenges build"
+      ]
     },
     {
       "codebase": "wearables",
       "source": "functions/wearables",
       "runtime": "nodejs22",
-      "region": "southamerica-east1"
+      "region": "southamerica-east1",
+      "isolate": true,
+      "predeploy": [
+        "pnpm --filter @gamechangers/shared build",
+        "pnpm --filter @gamechangers/functions-shared build",
+        "pnpm --filter @gamechangers/functions-wearables build"
+      ]
     },
     {
       "codebase": "gamification",
       "source": "functions/gamification",
       "runtime": "nodejs22",
-      "region": "southamerica-east1"
+      "region": "southamerica-east1",
+      "isolate": true,
+      "predeploy": [
+        "pnpm --filter @gamechangers/shared build",
+        "pnpm --filter @gamechangers/functions-shared build",
+        "pnpm --filter @gamechangers/functions-gamification build"
+      ]
     },
     {
       "codebase": "b2b",
       "source": "functions/b2b",
       "runtime": "nodejs22",
-      "region": "southamerica-east1"
+      "region": "southamerica-east1",
+      "isolate": true,
+      "predeploy": [
+        "pnpm --filter @gamechangers/shared build",
+        "pnpm --filter @gamechangers/functions-shared build",
+        "pnpm --filter @gamechangers/functions-b2b build"
+      ]
     },
     {
       "codebase": "trustsafety",
       "source": "functions/trustsafety",
       "runtime": "nodejs22",
-      "region": "southamerica-east1"
+      "region": "southamerica-east1",
+      "isolate": true,
+      "predeploy": [
+        "pnpm --filter @gamechangers/shared build",
+        "pnpm --filter @gamechangers/functions-shared build",
+        "pnpm --filter @gamechangers/functions-trustsafety build"
+      ]
     }
   ],
   "firestore": {
