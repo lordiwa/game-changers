@@ -7,9 +7,9 @@
       "region": "southamerica-east1",
       "isolate": true,
       "predeploy": [
-        "pnpm --filter @gamechangers/shared build",
-        "pnpm --filter @gamechangers/functions-shared build",
-        "pnpm --filter @gamechangers/functions-auth build"
+        "pnpm --filter ./packages/shared build",
+        "pnpm --filter ./functions/shared build",
+        "pnpm --filter ./functions/auth build"
       ]
     },
     {
@@ -19,9 +19,9 @@
       "region": "southamerica-east1",
       "isolate": true,
       "predeploy": [
-        "pnpm --filter @gamechangers/shared build",
-        "pnpm --filter @gamechangers/functions-shared build",
-        "pnpm --filter @gamechangers/functions-consent build"
+        "pnpm --filter ./packages/shared build",
+        "pnpm --filter ./functions/shared build",
+        "pnpm --filter ./functions/consent build"
       ]
     },
     {
@@ -31,9 +31,9 @@
       "region": "southamerica-east1",
       "isolate": true,
       "predeploy": [
-        "pnpm --filter @gamechangers/shared build",
-        "pnpm --filter @gamechangers/functions-shared build",
-        "pnpm --filter @gamechangers/functions-events build"
+        "pnpm --filter ./packages/shared build",
+        "pnpm --filter ./functions/shared build",
+        "pnpm --filter ./functions/events build"
       ]
     },
     {
@@ -43,9 +43,9 @@
       "region": "southamerica-east1",
       "isolate": true,
       "predeploy": [
-        "pnpm --filter @gamechangers/shared build",
-        "pnpm --filter @gamechangers/functions-shared build",
-        "pnpm --filter @gamechangers/functions-challenges build"
+        "pnpm --filter ./packages/shared build",
+        "pnpm --filter ./functions/shared build",
+        "pnpm --filter ./functions/challenges build"
       ]
     },
     {
@@ -55,9 +55,9 @@
       "region": "southamerica-east1",
       "isolate": true,
       "predeploy": [
-        "pnpm --filter @gamechangers/shared build",
-        "pnpm --filter @gamechangers/functions-shared build",
-        "pnpm --filter @gamechangers/functions-wearables build"
+        "pnpm --filter ./packages/shared build",
+        "pnpm --filter ./functions/shared build",
+        "pnpm --filter ./functions/wearables build"
       ]
     },
     {
@@ -67,9 +67,9 @@
       "region": "southamerica-east1",
       "isolate": true,
       "predeploy": [
-        "pnpm --filter @gamechangers/shared build",
-        "pnpm --filter @gamechangers/functions-shared build",
-        "pnpm --filter @gamechangers/functions-gamification build"
+        "pnpm --filter ./packages/shared build",
+        "pnpm --filter ./functions/shared build",
+        "pnpm --filter ./functions/gamification build"
       ]
     },
     {
@@ -79,9 +79,9 @@
       "region": "southamerica-east1",
       "isolate": true,
       "predeploy": [
-        "pnpm --filter @gamechangers/shared build",
-        "pnpm --filter @gamechangers/functions-shared build",
-        "pnpm --filter @gamechangers/functions-b2b build"
+        "pnpm --filter ./packages/shared build",
+        "pnpm --filter ./functions/shared build",
+        "pnpm --filter ./functions/b2b build"
       ]
     },
     {
@@ -91,9 +91,9 @@
       "region": "southamerica-east1",
       "isolate": true,
       "predeploy": [
-        "pnpm --filter @gamechangers/shared build",
-        "pnpm --filter @gamechangers/functions-shared build",
-        "pnpm --filter @gamechangers/functions-trustsafety build"
+        "pnpm --filter ./packages/shared build",
+        "pnpm --filter ./functions/shared build",
+        "pnpm --filter ./functions/trustsafety build"
       ]
     }
   ],
