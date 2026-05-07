@@ -60,7 +60,7 @@ async function onSubmit() {
   loading.value = true;
   try {
     await signInWithEmail(email.value, password.value);
-    await router.push('/');
+    await router.push('/me');
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     errorMsg.value = msg.includes('invalid-credential') || msg.includes('wrong-password')

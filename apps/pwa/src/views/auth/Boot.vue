@@ -17,6 +17,26 @@
 </template>
 
 <script setup lang="ts">
-// Boot.vue — default landing after anonymous sign-in (AUTH-01).
-// Expanded in Plan 05 with the /me dashboard. For now, surfaces sign-up CTA.
+// Boot.vue - default landing.
+// - Unauthenticated or anonymous Firebase users: render brand + sign-up CTA (template).
+// - Authenticated non-anonymous users: redirect to /me dashboard.
+import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
+const router = useRouter();
+
+onMounted(() => {
+  const auth = getAuth();
+  // Use onAuthStateChanged (not just currentUser) because Firebase Auth may
+  // still be hydrating from IndexedDB on first paint after a hard refresh.
+  // We unsubscribe immediately after the first emission - single-shot check.
+  const unsub = onAuthStateChanged(auth, (user) => {
+    unsub();
+    if (user && !user.isAnonymous) {
+      router.replace('/me');
+    }
+    // else: stay on Boot - template renders brand + sign-up CTAs.
+  });
+});
 </script>
