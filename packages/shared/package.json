@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": ["lib"],
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "test": "node ../../node_modules/vitest/vitest.mjs run",
     "typecheck": "tsc --noEmit"
   },
@@ -17,9 +19,9 @@
     "vitest": "4.1.5"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./schemas": "./src/schemas/index.ts",
-    "./types": "./src/types/index.ts",
-    "./xp": "./src/xp.ts"
+    ".":         { "types": "./lib/index.d.ts",         "default": "./lib/index.js" },
+    "./schemas": { "types": "./lib/schemas/index.d.ts", "default": "./lib/schemas/index.js" },
+    "./types":   { "types": "./lib/types/index.d.ts",   "default": "./lib/types/index.js" },
+    "./xp":      { "types": "./lib/xp.d.ts",            "default": "./lib/xp.js" }
   }
 }
