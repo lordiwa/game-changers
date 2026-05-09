@@ -172,7 +172,7 @@ export const recomputeStats = onSchedule(
       const snap = await query.get();
       if (snap.empty) break;
 
-      lastDoc = snap.docs[snap.docs.length - 1];
+      lastDoc = snap.docs[snap.docs.length - 1] ?? null;
 
       // Process each user in parallel (up to 500)
       const results = await Promise.allSettled(
