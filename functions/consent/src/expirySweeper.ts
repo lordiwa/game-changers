@@ -50,7 +50,7 @@ export async function sweepPage(now: Date): Promise<void> {
 
   for (const doc of expiredQuery.docs) {
     const data = doc.data();
-    const uid: string = doc.ref.path.split('/')[1]; // users/{uid}/consents/{category}
+    const uid: string = doc.ref.path.split('/')[1]!; // users/{uid}/consents/{category}
     const category = data['category'] as ConsentCategory;
     const version = data['version'] as string;
     const textHash = data['textHash'] as string;
@@ -64,7 +64,7 @@ export async function sweepPage(now: Date): Promise<void> {
       .get();
     const prevHash = ledgerQuery.empty
       ? '0'.repeat(64)
-      : (ledgerQuery.docs[0].data()['hash'] as string);
+      : (ledgerQuery.docs[0]!.data()['hash'] as string);
 
     const ledgerRef = db.collection('consentLedger').doc();
     const auditRef = db.collection('auditLog').doc();

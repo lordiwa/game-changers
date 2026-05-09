@@ -8,25 +8,11 @@ import { onCall, onRequest, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import crypto from 'node:crypto';
-// archiver is typed via inline declaration below to avoid @types/archiver pulling @types/node@25
-// which breaks pnpm's vitest resolution on Windows (ERR_PACKAGE_IMPORT_NOT_DEFINED #module-evaluator).
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// archiver is typed via local ambient declaration in `./archiver.d.ts` to avoid
+// pulling @types/archiver (which transitively pulls @types/node@25, breaking
+// pnpm + vitest resolution on Windows: ERR_PACKAGE_IMPORT_NOT_DEFINED).
 import archiver from 'archiver';
 import { Writable } from 'node:stream';
-
-// Minimal inline type for archiver to satisfy TypeScript without @types/archiver.
-declare module 'archiver' {
-  interface ArchiverOptions { zlib?: { level?: number } }
-  interface Archiver {
-    pipe(dest: NodeJS.WritableStream): NodeJS.WritableStream;
-    append(source: string | NodeJS.ReadableStream, data: { name: string }): this;
-    finalize(): Promise<void>;
-    on(event: 'error', listener: (err: Error) => void): this;
-    on(event: string, listener: (...args: unknown[]) => void): this;
-  }
-  function archiver(format: 'zip', options?: ArchiverOptions): Archiver;
-  export = archiver;
-}
 
 const REGION = 'southamerica-east1';
 

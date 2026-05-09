@@ -73,7 +73,7 @@ export const accountErasure = onCall({ region: REGION }, async (request) => {
     .get();
   let prevHash = ledgerQuery.empty
     ? '0'.repeat(64)
-    : (ledgerQuery.docs[0].data()['hash'] as string);
+    : (ledgerQuery.docs[0]!.data()['hash'] as string);
 
   const now = new Date();
 
