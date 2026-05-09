@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-27)
 Phase: 3
 Plan: Not started
 Status: Executing Phase 02
-Last activity: 2026-05-07 - Completed quick task 260507-i16: Workspace-protocol deploy fix; 6 functions live in southamerica-east1
+Last activity: 2026-05-09 - Completed quick task 260509-nmk: 38 functions live across 7 codebases; consent runtime failure tracked as followup
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -91,12 +91,13 @@ None yet.
 
 ### Quick Tasks Completed
 
-| # | Description | Date | Commit | Directory |
-|---|-------------|------|--------|-----------|
-| 260507-gsx | Fix post-login redirect to /me dashboard and Boot.vue auto-redirect when authenticated | 2026-05-07 | 95554ec | [260507-gsx-fix-post-login-redirect-to-me-dashboard-](./quick/260507-gsx-fix-post-login-redirect-to-me-dashboard-/) |
-| 260507-hag | Fix Response import in functions/shared/botAuth.ts (firebase-functions v7 sources Response from express) | 2026-05-07 | 3b534e0 | [260507-hag-fix-response-import-in-functions-shared-](./quick/260507-hag-fix-response-import-in-functions-shared-/) |
-| 260507-hvf | Skip requiresAge route guard in dev mode to unblock /me access without verifyAge function | 2026-05-07 | acca9b4 | [260507-hvf-skip-requiresage-route-guard-in-dev-mode](./quick/260507-hvf-skip-requiresage-route-guard-in-dev-mode/) |
-| 260507-i16 | Resolve EUNSUPPORTEDPROTOCOL workspace:* via firebase-tools-with-isolate; deploy auth + trustsafety codebases (6 functions live in southamerica-east1) | 2026-05-07 | 5948959 | [260507-i16-resolve-eunsupportedprotocol-workspace-e](./quick/260507-i16-resolve-eunsupportedprotocol-workspace-e/) |
+| # | Description | Date | Commit | Status | Directory |
+|---|-------------|------|--------|--------|-----------|
+| 260507-gsx | Fix post-login redirect to /me dashboard and Boot.vue auto-redirect when authenticated | 2026-05-07 | 95554ec | | [260507-gsx-fix-post-login-redirect-to-me-dashboard-](./quick/260507-gsx-fix-post-login-redirect-to-me-dashboard-/) |
+| 260507-hag | Fix Response import in functions/shared/botAuth.ts (firebase-functions v7 sources Response from express) | 2026-05-07 | 3b534e0 | | [260507-hag-fix-response-import-in-functions-shared-](./quick/260507-hag-fix-response-import-in-functions-shared-/) |
+| 260507-hvf | Skip requiresAge route guard in dev mode to unblock /me access without verifyAge function | 2026-05-07 | acca9b4 | | [260507-hvf-skip-requiresage-route-guard-in-dev-mode](./quick/260507-hvf-skip-requiresage-route-guard-in-dev-mode/) |
+| 260507-i16 | Resolve EUNSUPPORTEDPROTOCOL workspace:* via firebase-tools-with-isolate; deploy auth + trustsafety codebases (6 functions live in southamerica-east1) | 2026-05-07 | 5948959 | | [260507-i16-resolve-eunsupportedprotocol-workspace-e](./quick/260507-i16-resolve-eunsupportedprotocol-workspace-e/) |
+| 260509-nmk | Fix remaining 6 function codebases (consent challenges wearables gamification events b2b); 38 functions live, 9 consent failing healthcheck | 2026-05-09 | 605347f | Verified | [260509-nmk-fix-remaining-6-function-codebases-conse](./quick/260509-nmk-fix-remaining-6-function-codebases-conse/) |
 
 ## Session Continuity
 
