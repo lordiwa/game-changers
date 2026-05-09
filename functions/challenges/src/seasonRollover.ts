@@ -30,6 +30,9 @@ function getCurrentSeasonId(): string {
 
 function getNextSeasonId(currentSeasonId: string): string {
   const [year, qPart] = currentSeasonId.split('-q');
+  if (!year || !qPart) {
+    throw new Error(`Invalid season id format: ${currentSeasonId}`);
+  }
   const q = parseInt(qPart, 10);
   if (q >= 4) {
     return `${parseInt(year, 10) + 1}-q1`;
@@ -76,7 +79,7 @@ export const seasonRolloverHandler = async (_event: unknown): Promise<void> => {
   }
 
   // 2. Reset season leaderboard aggregate docs
-  const leaderboardResets: Array<Promise<void>> = [];
+  const leaderboardResets: Array<Promise<unknown>> = [];
   for (const cohort of ['global', 'quito', 'guayaquil', 'cuenca']) {
     const docId = `season_${cohort}`;
     leaderboardResets.push(

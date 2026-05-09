@@ -7,7 +7,7 @@
  * Zod validates the full Challenge schema before writing.
  * Idempotent: if challengeId already exists, returns { created: false, id }.
  */
-import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { onCall, HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { z } from 'zod';
 
@@ -42,10 +42,12 @@ const ChallengeSchema = z.object({
 export type ChallengeInput = z.infer<typeof ChallengeSchema>;
 
 export const createChallengeHandler = async (
-  request: { data: unknown; auth?: { token?: { admin?: boolean } } },
+  request: CallableRequest<unknown>,
 ) => {
-  // Admin-only gate
-  if (!request.auth?.token?.['admin']) {
+  // Admin-only gate — admin custom claim is set on the user record.
+  const isAdmin =
+    (request.auth?.token as Record<string, unknown> | undefined)?.['admin'] === true;
+  if (!isAdmin) {
     throw new HttpsError('permission-denied', 'Admin role required to create challenges');
   }
 
