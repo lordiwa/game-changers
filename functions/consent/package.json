@@ -19,6 +19,7 @@
     "@gamechangers/functions-shared": "workspace:*",
     "@gamechangers/shared": "workspace:*",
     "@google-cloud/functions-framework": "^4.0.0",
+    "@google-cloud/pubsub": "^4.9.0",
     "@google-cloud/storage": "^7.15.0",
     "@google-cloud/tasks": "^5.5.0",
     "archiver": "^7.0.1",
