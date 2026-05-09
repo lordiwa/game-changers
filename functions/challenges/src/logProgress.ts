@@ -76,6 +76,9 @@ export const logProgressHandler = async (
 
   // 2. Consent gate (source-specific)
   const requiredConsent = SOURCE_TO_CONSENT[parsed.source];
+  if (!requiredConsent) {
+    throw new HttpsError('invalid-argument', `Unknown progress source: ${parsed.source}`);
+  }
   await consentGate(uid, requiredConsent);
 
   // 3. Anti-cheat: quick rejection BEFORE Firestore reads (fail fast)

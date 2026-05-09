@@ -45,7 +45,6 @@ async function stopWearableIngestion(uid: string): Promise<void> {
   if (OPEN_WEARABLES_BASE_URL) {
     for (const provider of WEARABLE_PROVIDERS) {
       try {
-        const fetch = (await import('node-fetch')).default;
         await fetch(`${OPEN_WEARABLES_BASE_URL}/disconnect/${uid}/${provider}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

@@ -106,7 +106,7 @@ export const consentGrant = onCall(
       .get();
     const prevHash = ledgerQuery.empty
       ? '0'.repeat(64)
-      : (ledgerQuery.docs[0].data()['hash'] as string);
+      : (ledgerQuery.docs[0]!.data()['hash'] as string);
 
     // Prepare doc references.
     const consentDocRef = db.doc(`users/${uid}/consents/${category}`);

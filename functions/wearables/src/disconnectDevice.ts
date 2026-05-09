@@ -34,7 +34,6 @@ export async function disconnectDeviceCore(
   // 1. POST to Open Wearables server to stop sample stream (idempotent)
   if (OPEN_WEARABLES_BASE_URL) {
     try {
-      const fetch = (await import('node-fetch')).default;
       await fetch(`${OPEN_WEARABLES_BASE_URL}/disconnect/${uid}/${provider}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

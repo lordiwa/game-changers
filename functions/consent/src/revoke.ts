@@ -57,7 +57,7 @@ export const consentRevoke = onCall(
       .get();
     const prevHash = ledgerQuery.empty
       ? '0'.repeat(64)
-      : (ledgerQuery.docs[0].data()['hash'] as string);
+      : (ledgerQuery.docs[0]!.data()['hash'] as string);
 
     const ledgerRef = db.collection('consentLedger').doc();
     const auditRef = db.collection('auditLog').doc();
