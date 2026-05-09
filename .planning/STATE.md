@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-27)
 Phase: 3
 Plan: Not started
 Status: Executing Phase 02
-Last activity: 2026-05-09 - Completed quick task 260509-nmk: 38 functions live across 7 codebases; consent runtime failure tracked as followup
+Last activity: 2026-05-09 - Resolved consent-cloud-run-startup debug session; 47 consent + non-consent functions all healthy in southamerica-east1
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -98,6 +98,12 @@ None yet.
 | 260507-hvf | Skip requiresAge route guard in dev mode to unblock /me access without verifyAge function | 2026-05-07 | acca9b4 | | [260507-hvf-skip-requiresage-route-guard-in-dev-mode](./quick/260507-hvf-skip-requiresage-route-guard-in-dev-mode/) |
 | 260507-i16 | Resolve EUNSUPPORTEDPROTOCOL workspace:* via firebase-tools-with-isolate; deploy auth + trustsafety codebases (6 functions live in southamerica-east1) | 2026-05-07 | 5948959 | | [260507-i16-resolve-eunsupportedprotocol-workspace-e](./quick/260507-i16-resolve-eunsupportedprotocol-workspace-e/) |
 | 260509-nmk | Fix remaining 6 function codebases (consent challenges wearables gamification events b2b); 38 functions live, 9 consent failing healthcheck | 2026-05-09 | 605347f | Verified | [260509-nmk-fix-remaining-6-function-codebases-conse](./quick/260509-nmk-fix-remaining-6-function-codebases-conse/) |
+
+### Debug Sessions Resolved
+
+| Slug | Description | Date | Commit | Root Cause |
+|------|-------------|------|--------|------------|
+| consent-cloud-run-startup | All 9 consent functions failed Cloud Run Container Healthcheck on startup | 2026-05-09 | a9f0b4e | `@google-cloud/pubsub` imported in revoke.ts but missing from functions/consent/package.json — isolate-package only ships declared deps; ERR_MODULE_NOT_FOUND at module load. Fix: 1-line dep addition. ([resolved](./debug/resolved/consent-cloud-run-startup.md)) |
 
 ## Session Continuity
 
