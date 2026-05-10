@@ -1,0 +1,24 @@
+{
+  "name": "@gamechangers/scripts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "One-shot operational scripts (CMS publish, backfill, seeders) — emulator-tested.",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "backfill-counters": "tsx backfill-counters.ts",
+    "cms-publish": "tsx cms-publish.ts",
+    "seed-challenges": "tsx seed-challenges.ts"
+  },
+  "dependencies": {
+    "@firebase/rules-unit-testing": "5.0.0",
+    "firebase-admin": "13.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.17",
+    "tsx": "^4.20.0",
+    "typescript": "5.9.3",
+    "vitest": "4.1.5"
+  }
+}
