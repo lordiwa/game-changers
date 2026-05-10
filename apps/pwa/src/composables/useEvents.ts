@@ -58,14 +58,14 @@ export function useUpcomingEvents(maxEvents = 20) {
     limit(maxEvents),
   );
 
-  const { data: events, pending, error } = useCollection(eventsQuery);
+  const { data: events, pending, error } = useCollection<EventData>(eventsQuery);
   return { events, pending, error };
 }
 
 /** Get a single event by ID. */
 export function useEvent(eventId: string) {
   const db = getFirestore();
-  const { data: event, pending, error } = useDocument(doc(db, 'events', eventId));
+  const { data: event, pending, error } = useDocument<EventData>(doc(db, 'events', eventId));
   return { event, pending, error };
 }
 
