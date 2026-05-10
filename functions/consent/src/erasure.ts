@@ -45,7 +45,7 @@ const ErasureInputSchema = z.object({
 /**
  * accountErasure — HTTPS callable. Immediately soft-deletes and schedules hard-delete in 72h.
  */
-export const accountErasure = onCall({ region: REGION }, async (request) => {
+export const accountErasure = onCall({ region: REGION, cors: true }, async (request) => {
   if (!request.auth) {
     throw new HttpsError('unauthenticated', 'Must be signed in.');
   }

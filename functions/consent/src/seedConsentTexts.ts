@@ -2,7 +2,8 @@
  * seedConsentTexts.ts — Admin-only idempotent HTTP function to seed consent text docs.
  *
  * Reads functions/consent/data/consentTexts/v3/{category}.json and writes each to
- * /consentTexts/{category}/v3 in Firestore if not already present.
+ * /consentTexts/{category}_v3 in Firestore if not already present (composite key —
+ * 3-segment paths are invalid in Firestore).
  *
  * Security: HMAC + admin secret header gate. Run once after deploy.
  */
@@ -83,7 +84,7 @@ export const seedConsentTexts = onRequest(
         // Compute textHash from the ES purpose text (canonical hash for grant verification).
         const textHash = sha256(data.es.purpose);
 
-        const docRef = db.doc(`consentTexts/${category}/v3`);
+        const docRef = db.doc(`consentTexts/${category}_v3`);
         const existing = await docRef.get();
 
         if (existing.exists) {

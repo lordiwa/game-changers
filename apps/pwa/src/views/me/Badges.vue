@@ -10,7 +10,6 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { useCurrentUser } from 'vuefire';
 import { firebaseApp } from '../../firebase';
 import Badge from '../../components/Badge.vue';
-import AppShell from '../../components/AppShell.vue';
 
 interface BadgeDoc {
   badgeId: string;
@@ -57,8 +56,7 @@ const filteredBadges = computed(() => {
 </script>
 
 <template>
-  <AppShell>
-    <div class="badges-view p-4">
+  <div class="badges-view p-4">
       <h1 class="text-xl font-bold text-text-primary mb-4">Mis Badges</h1>
 
       <!-- Filter tabs -->
@@ -94,7 +92,6 @@ const filteredBadges = computed(() => {
         />
       </div>
     </div>
-  </AppShell>
 </template>
 
 <style scoped>

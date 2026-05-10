@@ -85,6 +85,13 @@
           </button>
 
           <p v-if="enrollError" class="error-msg" role="alert">{{ enrollError }}</p>
+          <router-link
+            v-if="needsConsent"
+            :to="`/consent/layer-1?return=${encodeURIComponent('/challenges/' + challengeId)}`"
+            class="consent-link"
+          >
+            Otorgar consentimiento de eventos →
+          </router-link>
         </div>
       </template>
     </template>
@@ -93,7 +100,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useChallenge, useChallengeEnrollment } from '../../composables/useChallenges.js';
@@ -104,6 +111,7 @@ import type { ChallengeTier } from '@gamechangers/shared';
 
 const { t, locale } = useI18n();
 const route = useRoute();
+const router = useRouter();
 const challengeId = route.params.id as string;
 
 const { challenge } = useChallenge(challengeId);
@@ -116,6 +124,7 @@ const optInLeaderboard = ref(false);
 const anonymousLeaderboard = ref(false);
 const enrolling = ref(false);
 const enrollError = ref<string | null>(null);
+const needsConsent = ref(false);
 
 const tierTarget = computed(() => {
   if (!challenge.value || !enrollment.value) return 0;
@@ -142,6 +151,7 @@ async function enroll() {
   if (!challenge.value) return;
   enrolling.value = true;
   enrollError.value = null;
+  needsConsent.value = false;
 
   try {
     const functions = getFunctions(undefined, 'southamerica-east1');
@@ -153,7 +163,16 @@ async function enroll() {
       anonymousLeaderboard: anonymousLeaderboard.value,
     });
   } catch (err) {
-    enrollError.value = err instanceof Error ? err.message : 'Error al inscribirte';
+    const msg = err instanceof Error ? err.message : String(err);
+    if (msg.includes('AGE_NOT_VERIFIED')) {
+      enrollError.value = 'Verifica tu edad para inscribirte.';
+      router.push({ path: '/auth/age-gate', query: { return: `/challenges/${challengeId}` } });
+    } else if (msg.includes('permission-denied') || msg.includes('event_participation') || msg.includes('Consent not granted')) {
+      enrollError.value = 'Necesitas otorgar el consentimiento de participación en eventos.';
+      needsConsent.value = true;
+    } else {
+      enrollError.value = msg.length > 0 ? msg : 'Error al inscribirte';
+    }
   } finally {
     enrolling.value = false;
   }
@@ -295,5 +314,16 @@ function onProgressSubmitted() {
   color: #ef4444;
   margin-top: 0.75rem;
   font-size: 0.875rem;
+}
+
+.consent-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: var(--color-accent-xp, #f59e0b);
+  font-weight: 600;
+  text-decoration: underline;
+  font-size: 0.875rem;
+  min-height: 44px;
+  line-height: 44px;
 }
 </style>

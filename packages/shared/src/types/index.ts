@@ -15,6 +15,7 @@ import {
 export interface ProfileMain {
   displayName: string;
   avatar?: string;
+  bio?: string;            // free-text up to ~140 chars; optional
   pronouns?: string;       // free-text per D-17; NEVER required
   city: 'quito' | 'guayaquil' | 'cuenca' | 'other';
   favGames: string[];

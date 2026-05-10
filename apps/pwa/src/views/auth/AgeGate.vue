@@ -121,8 +121,10 @@ async function onSubmit() {
     if (result.isMinor) {
       showMinorBanner.value = true;
     }
-    // Age verified — redirect to profile landing (Plan 05 will expand this).
-    await router.push('/me');
+    // Age verified — route to Layer 0 consent so the user can grant basic_profile.
+    // Without this step, every action (RSVP, challenge enroll, profile save) is
+    // rejected by consentGate even though the user is age-verified.
+    await router.push('/consent/layer-0');
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     if (msg.includes('AGE_UNDER_16')) {

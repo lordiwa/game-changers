@@ -3,7 +3,7 @@
     <h1 class="heading">{{ t('challenges.list.heading') }}</h1>
 
     <!-- Loading state -->
-    <div v-if="challenges.pending.value" class="loading" role="status" aria-live="polite">
+    <div v-if="pending" class="loading" role="status" aria-live="polite">
       <span class="sr-only">Cargando desafíos...</span>
     </div>
 
@@ -35,10 +35,11 @@ import ChallengeCard from '../../components/ChallengeCard.vue';
 import type { Challenge, ChallengeEnrollment } from '@gamechangers/shared';
 
 const { t } = useI18n();
-const challenges = useChallenges();
+const { challenges } = useChallenges();
 const { enrollments } = useUserEnrollments();
 
-const challengeList = computed(() => (challenges.challenges.value ?? []) as Challenge[]);
+const pending = computed(() => challenges.pending?.value === true);
+const challengeList = computed(() => (challenges.value ?? []) as Challenge[]);
 
 const enrollmentMap = computed(() => {
   const map: Record<string, ChallengeEnrollment> = {};

@@ -126,7 +126,7 @@ async function submitFeedback() {
   isSubmitting.value = true;
 
   try {
-    const fns = getFunctions();
+    const fns = getFunctions(undefined, 'southamerica-east1');
     const fn = httpsCallable(fns, 'postEventFeedback');
     await fn({
       eventId: eventId.value,

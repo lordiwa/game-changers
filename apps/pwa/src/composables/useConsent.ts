@@ -8,6 +8,7 @@
  * as per Pitfall #4 — PostHog must not fire before basic_profile consent.
  */
 import { computed, type ComputedRef } from 'vue';
+import { getAuth } from 'firebase/auth';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { getFirestore, collection, doc, getDoc, query, where, orderBy } from 'firebase/firestore';
 import { useCollection, useCurrentUser } from 'vuefire';
@@ -96,19 +97,20 @@ export function useConsent() {
     version = 'v3',
     textHash?: string,
   ): Promise<void> {
-    // WR-07 fix: compute the textHash from the canonical Spanish purpose text in
-    // /consentTexts/{category}/{version}.es.purpose. The previous placeholder
-    // string would fail server-side equality once seedConsentTexts has run.
+    // Compute the textHash from the canonical Spanish purpose text in
+    // /consentTexts/{category}_{version}.es.purpose. Composite-key schema:
+    // a 3-segment path is invalid in Firestore (doc paths require even segments),
+    // so the version is concatenated into the doc ID with an underscore.
     let hash = textHash;
     if (!hash) {
-      const textsRef = doc(db, 'consentTexts', category, version);
+      const textsRef = doc(db, 'consentTexts', `${category}_${version}`);
       const textsSnap = await getDoc(textsRef);
       const purpose = (
         textsSnap.data() as { es?: { purpose?: string } } | undefined
       )?.es?.purpose;
       if (!purpose) {
         throw new Error(
-          `useConsent.grant: missing consentTexts/${category}/${version}.es.purpose; cannot compute textHash`,
+          `useConsent.grant: missing consentTexts/${category}_${version}.es.purpose; cannot compute textHash`,
         );
       }
       hash = await sha256Hex(purpose);
@@ -116,6 +118,16 @@ export function useConsent() {
 
     const callable = getGrantCallable();
     await callable({ category, version, textHash: hash, layer });
+
+    // Force-refresh the ID token so the new `consents.<key>` custom claim
+    // propagates to the client immediately. Without this, downstream Firestore
+    // rules and consentGate() calls keep seeing the pre-grant token and
+    // continue rejecting reads/writes with permission-denied — even though
+    // the consents collection has been updated.
+    const auth = getAuth(firebaseApp);
+    if (auth.currentUser) {
+      await auth.currentUser.getIdToken(true);
+    }
 
     // PostHog opt-in gate: only enable tracking after basic_profile consent.
     if (category === 'basic_profile') {

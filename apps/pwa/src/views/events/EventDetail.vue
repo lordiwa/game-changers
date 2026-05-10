@@ -136,6 +136,14 @@
       >
         Hacer check-in
       </RouterLink>
+      <p v-if="rsvpError" class="event-detail__cta-error" role="alert">{{ rsvpError }}</p>
+      <RouterLink
+        v-if="needsConsent"
+        :to="`/consent/layer-1?return=${encodeURIComponent('/events/' + eventId)}`"
+        class="event-detail__cta-link"
+      >
+        Otorgar consentimiento de eventos →
+      </RouterLink>
     </div>
   </main>
 
@@ -202,6 +210,8 @@ const walkInName = ref('');
 const walkInPhone = ref('');
 const walkInSubmitting = ref(false);
 const isRsvping = ref(false);
+const rsvpError = ref<string | null>(null);
+const needsConsent = ref(false);
 const userQrPayload = ref<string | null>(null);
 const qrCanvas = ref<HTMLCanvasElement | null>(null);
 
@@ -254,6 +264,8 @@ async function handleRsvp() {
   }
 
   isRsvping.value = true;
+  rsvpError.value = null;
+  needsConsent.value = false;
   try {
     const result = await callRsvp(eventId.value);
     if (result.data.qrPayload) {
@@ -266,6 +278,19 @@ async function handleRsvp() {
       }
     }
   } catch (err) {
+    // Surface error — never let the click be silent.
+    const msg = err instanceof Error ? err.message : String(err);
+    if (msg.includes('SAFETY_CONTACT_REQUIRED')) {
+      rsvpError.value = 'Este evento aún no tiene contacto de seguridad.';
+    } else if (msg.includes('AGE_NOT_VERIFIED')) {
+      rsvpError.value = 'Verifica tu edad para inscribirte.';
+      router.push({ path: '/auth/age-gate', query: { return: `/events/${eventId.value}` } });
+    } else if (msg.includes('permission-denied') || msg.includes('event_participation') || msg.includes('Consent not granted')) {
+      rsvpError.value = 'Necesitas otorgar el consentimiento de participación en eventos.';
+      needsConsent.value = true;
+    } else {
+      rsvpError.value = 'No se pudo completar la inscripción. Inténtalo de nuevo.';
+    }
     console.error('[EventDetail] RSVP failed:', err);
   } finally {
     isRsvping.value = false;
@@ -469,6 +494,18 @@ async function handleWalkIn() {
 .event-detail__cta:disabled { opacity: 0.5; cursor: not-allowed; }
 .event-detail__cta:focus-visible { outline: 3px solid #51ff66; outline-offset: 2px; }
 .event-detail__cta--checkin { display: block; text-align: center; text-decoration: none; line-height: 52px; }
+.event-detail__cta-error { color: #ff6b6b; font-size: 0.875rem; margin: 8px 0 0; text-align: center; }
+.event-detail__cta-link {
+  display: block;
+  margin-top: 8px;
+  text-align: center;
+  color: var(--color-accent-xp, #51ff66);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: underline;
+  min-height: 44px;
+  line-height: 44px;
+}
 
 .walkin-modal-overlay {
   position: fixed;

@@ -13,7 +13,6 @@ import { useXp } from '../../composables/useXp';
 import Avatar from '../../components/Avatar.vue';
 import XpBar from '../../components/XpBar.vue';
 import StatRow from '../../components/StatRow.vue';
-import AppShell from '../../components/AppShell.vue';
 
 const { t } = useI18n();
 const currentUser = useCurrentUser();
@@ -33,8 +32,7 @@ const { level, xpForNextLevel, xpInCurrentLevel } = useXp(profile);
 </script>
 
 <template>
-  <AppShell>
-    <div class="me-view p-4">
+  <div class="me-view p-4">
       <!-- Greeting -->
       <div class="me-view__greeting mb-4 flex items-center gap-3">
         <Avatar :display-name="displayName" size="md" />
@@ -83,14 +81,13 @@ const { level, xpForNextLevel, xpInCurrentLevel } = useXp(profile);
       <!-- Quick CTAs -->
       <div class="me-view__quick-ctas flex gap-3">
         <RouterLink to="/events" class="quick-cta-btn">
-          {{ t('events.cta.rsvp') }}
+          {{ t('events.detail.cta_rsvp') }}
         </RouterLink>
         <RouterLink to="/challenges" class="quick-cta-btn quick-cta-btn--secondary">
           {{ t('challenges.cta.accept') }}
         </RouterLink>
       </div>
     </div>
-  </AppShell>
 </template>
 
 <style scoped>

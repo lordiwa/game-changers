@@ -134,8 +134,14 @@ service cloud.firestore {
     }
 
     // /users/{uid}/challengeEnrollments/{id} — owner R/W if event_participation.
+    // /users/{uid}/challengeEnrollments/{id} — owner read (no consent required:
+    // your own enrollment list is core to the UX). Writes are Functions-only
+    // (enrollChallenge), where event_participation consent is enforced server-side
+    // via consentGate(). Splitting read from write avoids blocking ChallengeList
+    // for users who haven't yet granted event_participation.
     match /users/{uid}/challengeEnrollments/{id} {
-      allow read, write: if isOwner(uid) && hasConsentClaim('event_participation');
+      allow read: if isOwner(uid);
+      allow write: if false;
     }
 
     // /users/{uid}/challengeProgress/{id} — owner read; Functions only writes.
@@ -171,6 +177,12 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // /challenges/{challengeId} — public read; Functions (createChallenge / seasonRollover) write only.
+    match /challenges/{challengeId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     // /events/{eventId}/attendance/{uid} — owner reads own attendance; no client writes.
     match /events/{eventId}/attendance/{uid} {
       allow read: if isOwner(uid);
@@ -196,9 +208,10 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // /consentTexts/{category}/{version} — public read (consent UI renders these);
-    // client write DENIED.
-    match /consentTexts/{category}/{version} {
+    // /consentTexts/{categoryVersion} — public read (consent UI renders these);
+    // client write DENIED. Composite-key schema: doc IDs are `{category}_{version}`
+    // (e.g. `basic_profile_v3`) because 3-segment doc paths are invalid in Firestore.
+    match /consentTexts/{categoryVersion} {
       allow read: if true;
       allow write: if false;
     }

@@ -20,7 +20,7 @@ const REGION = 'southamerica-east1';
  * dsarExport — initiates an async DSAR export request.
  * Returns immediately with { ok: true, requestId } — actual processing is async.
  */
-export const dsarExport = onCall({ region: REGION }, async (request) => {
+export const dsarExport = onCall({ region: REGION, cors: true }, async (request) => {
   if (!request.auth) {
     throw new HttpsError('unauthenticated', 'Must be signed in.');
   }

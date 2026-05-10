@@ -86,14 +86,14 @@ export function useEventAttendance(eventId: string) {
 
 /** Call the rsvp Cloud Function. */
 export async function callRsvp(eventId: string) {
-  const fns = getFunctions();
+  const fns = getFunctions(undefined, 'southamerica-east1');
   const fn = httpsCallable<{ eventId: string }, { ok: boolean; status: string; qrPayload: string }>(fns, 'rsvp');
   return fn({ eventId });
 }
 
 /** Call the cancelRsvp Cloud Function. */
 export async function callCancelRsvp(eventId: string) {
-  const fns = getFunctions();
+  const fns = getFunctions(undefined, 'southamerica-east1');
   const fn = httpsCallable<{ eventId: string }, { ok: boolean }>(fns, 'cancelRsvp');
   return fn({ eventId });
 }
@@ -105,7 +105,7 @@ export async function callReportUser(data: {
   reason: string;
   freeText: string;
 }) {
-  const fns = getFunctions();
+  const fns = getFunctions(undefined, 'southamerica-east1');
   const fn = httpsCallable<typeof data, { ok: boolean; reportId: string }>(fns, 'reportUser');
   return fn(data);
 }

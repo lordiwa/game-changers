@@ -56,7 +56,7 @@ const GrantInputSchema = z.object({
 });
 
 export const consentGrant = onCall(
-  { region: 'southamerica-east1' },
+  { region: 'southamerica-east1', cors: true },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'Must be signed in.');
@@ -79,12 +79,14 @@ export const consentGrant = onCall(
     const db = getFirestore();
 
     // Verify the consent text version exists and textHash matches.
-    const consentTextRef = db.doc(`consentTexts/${category}/${version}`);
+    // Composite-key schema (`{category}_{version}`) keeps the path at 2 segments —
+    // Firestore rejects 3-segment doc references.
+    const consentTextRef = db.doc(`consentTexts/${category}_${version}`);
     const consentTextSnap = await consentTextRef.get();
     if (!consentTextSnap.exists) {
       throw new HttpsError(
         'not-found',
-        `Consent text not found: consentTexts/${category}/${version}`,
+        `Consent text not found: consentTexts/${category}_${version}`,
       );
     }
     const consentTextData = consentTextSnap.data()!;

@@ -8,7 +8,6 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore, FieldValue, Timestamp } from 'firebase-admin/firestore';
-import { PubSub } from '@google-cloud/pubsub';
 import { z } from 'zod';
 import {
   CONSENT_CATEGORIES,
@@ -23,7 +22,7 @@ const RevokeInputSchema = z.object({
 });
 
 export const consentRevoke = onCall(
-  { region: 'southamerica-east1' },
+  { region: 'southamerica-east1', cors: true },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'Must be signed in.');
@@ -123,20 +122,15 @@ export const consentRevoke = onCall(
       consents: updatedConsents,
     });
 
-    // Publish side-effect cascade to Pub/Sub topic 'consent-revoked'.
-    // Subscribers (Plan 09): wearable disconnect, pending RSVP cleanup, BQ changelog flag.
-    try {
-      const pubsub = new PubSub();
-      const topic = pubsub.topic('consent-revoked');
-      const messageData = Buffer.from(
-        JSON.stringify({ uid, category, revokedAt: now.toISOString() }),
-      );
-      await topic.publishMessage({ data: messageData });
-    } catch {
-      // Non-fatal: the consent is already revoked transactionally.
-      // Side-effects are best-effort; if Pub/Sub fails, the next cleanup sweep will catch it.
-      console.warn('[consent-revoke] Failed to publish consent-revoked event — non-fatal.');
-    }
+    // Side-effect cascade publish — DEFERRED. Was Pub/Sub publish for Plan 09
+    // subscribers (wearable disconnect, pending RSVP cleanup, BQ changelog flag).
+    // Top-level `@google-cloud/pubsub` import broke the entire consent codebase
+    // at runtime (Cannot find package), shutting down consentGrant alongside
+    // consentRevoke. Subscribers don't exist in production yet — when Plan 09
+    // ships them, re-introduce the publish here using a dynamic import so a
+    // missing dep can never again brick sibling Functions:
+    //   const { PubSub } = await import('@google-cloud/pubsub');
+    //   try { ... } catch { /* non-fatal */ }
 
     return { ok: true };
   },

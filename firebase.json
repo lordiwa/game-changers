@@ -97,7 +97,7 @@
     "rules": "storage.rules"
   },
   "hosting": {
-    "site": "gamechangers",
+    "site": "gamechangers-prod",
     "public": "apps/pwa/dist",
     "rewrites": [
       { "source": "**", "destination": "/index.html" }

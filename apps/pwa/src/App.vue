@@ -1,8 +1,22 @@
 <script setup lang="ts">
-// Minimal app shell. Downstream plans expand this into AppShell with header,
-// nav, and content areas per UI-SPEC.
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import AppShell from './components/AppShell.vue';
+
+// Routes that render their own full-bleed layout and should NOT be wrapped in AppShell:
+// the Boot landing, auth screens, and progressive consent funnel layers.
+const NO_SHELL_PREFIXES = ['/auth', '/consent/layer'];
+
+const route = useRoute();
+const useShell = computed(() => {
+  if (route.path === '/') return false;
+  return !NO_SHELL_PREFIXES.some((p) => route.path.startsWith(p));
+});
 </script>
 
 <template>
-  <RouterView />
+  <AppShell v-if="useShell">
+    <RouterView />
+  </AppShell>
+  <RouterView v-else />
 </template>

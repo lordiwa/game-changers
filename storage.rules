@@ -9,9 +9,15 @@ service firebase.storage {
       allow read, write: if false;
     }
 
-    // Avatars (Plan 02 will scope this when AUTH ships).
+    // Avatars: public read (avatars surface in PublicProfile / cards / leaderboard);
+    // owner-only write, max 2MB, image MIME only. Path convention is
+    // /avatars/{uid}/main.{ext} (one canonical avatar per user, overwritten on update).
     match /avatars/{uid}/{file} {
-      allow read, write: if false;
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.size < 2 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
     }
 
     // Default deny.

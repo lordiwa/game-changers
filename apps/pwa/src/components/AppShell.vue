@@ -13,6 +13,7 @@
  */
 import { onMounted, computed } from 'vue';
 import { useMediaQuery } from '@vueuse/core';
+import { useRoute } from 'vue-router';
 import { useCurrentUser } from 'vuefire';
 import { useI18n } from 'vue-i18n';
 import { useProfileStore } from '../stores/profile';
@@ -23,6 +24,7 @@ import Avatar from './Avatar.vue';
 import XpBar from './XpBar.vue';
 
 const { t } = useI18n();
+const route = useRoute();
 const currentUser = useCurrentUser();
 const profileStore = useProfileStore();
 const isDesktop = useMediaQuery('(min-width: 768px)');
@@ -43,8 +45,17 @@ const navItems = [
   { to: '/me', icon: '🏠', labelKey: 'app.nav.home' },
   { to: '/events', icon: '🎮', labelKey: 'app.nav.events' },
   { to: '/challenges', icon: '⚔️', labelKey: 'app.nav.challenges' },
-  { to: '/me', icon: '👤', labelKey: 'app.nav.me' },
+  { to: '/me/profile', icon: '👤', labelKey: 'app.nav.me' },
 ];
+
+// Custom active matcher: /me must match EXACTLY (otherwise /me/profile would
+// also activate Inicio). All other tabs match path prefix so /events/{id}
+// keeps the Eventos tab highlighted.
+function isNavActive(target: string): boolean {
+  const path = route.path;
+  if (target === '/me') return path === '/me';
+  return path === target || path.startsWith(target + '/');
+}
 </script>
 
 <template>
@@ -72,7 +83,8 @@ const navItems = [
           :key="item.to + item.labelKey"
           :to="item.to"
           class="app-shell__tab"
-          active-class="app-shell__tab--active"
+          :class="{ 'app-shell__tab--active': isNavActive(item.to) }"
+          active-class=""
         >
           <span class="app-shell__tab-icon" aria-hidden="true">{{ item.icon }}</span>
           <span class="app-shell__tab-label">{{ t(item.labelKey) }}</span>
@@ -93,6 +105,7 @@ const navItems = [
           <!-- Avatar + level + XP bar at top -->
           <div class="app-shell__rail-profile">
             <Avatar
+              :image-url="profile?.avatar"
               :display-name="profile?.displayName"
               size="lg"
             />
@@ -117,7 +130,8 @@ const navItems = [
               :key="item.to + item.labelKey"
               :to="item.to"
               class="app-shell__rail-item"
-              active-class="app-shell__rail-item--active"
+              :class="{ 'app-shell__rail-item--active': isNavActive(item.to) }"
+              active-class=""
             >
               <span aria-hidden="true">{{ item.icon }}</span>
               <span>{{ t(item.labelKey) }}</span>

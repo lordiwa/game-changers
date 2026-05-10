@@ -15,7 +15,7 @@
 
       <!-- Switch toggle -->
       <SwitchRoot
-        v-model:checked="isEnabled"
+        v-model="isEnabled"
         :disabled="isDisabledForMinor"
         class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full
                transition-colors focus-visible:outline-none focus-visible:ring-2
@@ -75,6 +75,15 @@
     <p class="ml-9 text-xs text-muted">
       {{ t('consent.row.version_stamp', { version: 'v3', date: '2026-04-29' }) }}
     </p>
+
+    <!-- Toggle error surface — never let a failed grant/revoke be silent -->
+    <p
+      v-if="toggleError"
+      class="ml-9 text-xs text-red-400"
+      role="alert"
+    >
+      {{ toggleError }}
+    </p>
   </div>
 </template>
 
@@ -128,6 +137,7 @@ const isDisabledForMinor = computed(() => Boolean(props.isMinor) && props.layer 
 // Current grant state (reactive)
 const grantedRef = hasGranted(props.category);
 const isEnabled = ref(grantedRef.value);
+const toggleError = ref<string | null>(null);
 
 // Sync external state changes into local ref
 watch(grantedRef, (val) => {
@@ -148,15 +158,28 @@ watch(isEnabled, async (newVal) => {
 
   if (debounceTimer) clearTimeout(debounceTimer);
   debounceTimer = setTimeout(async () => {
+    toggleError.value = null;
     try {
       if (newVal) {
         await grant(props.category, props.layer);
       } else {
         await revoke(props.category);
       }
-    } catch {
-      // Revert on error
+    } catch (err) {
+      // Revert on error AND surface the failure — silent reverts hide
+      // misconfigurations (missing consent texts, age-not-verified, etc.).
+      console.error('[ConsentRow] grant/revoke failed for', props.category, err);
       isEnabled.value = grantedRef.value;
+      const msg = err instanceof Error ? err.message : String(err);
+      if (msg.includes('AGE_NOT_VERIFIED') || msg.includes('age-not-verified')) {
+        toggleError.value = 'Verifica tu edad antes de otorgar consentimientos.';
+      } else if (msg.includes('Consent text not found') || msg.includes('missing consentTexts')) {
+        toggleError.value = 'Configuración pendiente: textos de consentimiento aún no publicados.';
+      } else if (msg.includes('MINOR_CANNOT_GRANT_LAYER_4')) {
+        toggleError.value = 'Esta categoría requiere mayoría de edad.';
+      } else {
+        toggleError.value = `No se pudo guardar el consentimiento: ${msg}`;
+      }
     }
   }, 500);
 });

@@ -291,11 +291,6 @@
       "disclaimer": "Este test es una herramienta de autoconocimiento. No reemplaza atención profesional. Si necesitas hablar con alguien, usá ¿Necesitas ayuda?"
     }
   },
-  "events": {
-    "cta": {
-      "rsvp": "Confirmar asistencia"
-    }
-  },
   "challenges": {
     "cta": {
       "accept": "Acepto el desafío",
