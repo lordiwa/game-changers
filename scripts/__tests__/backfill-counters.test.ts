@@ -53,6 +53,40 @@ async function emulatorReachable(): Promise<boolean> {
   }
 }
 
+describe('aggregateAuditLog (pure function — no emulator needed)', () => {
+  it('counts only xp_awarded entries with the expected types', async () => {
+    const mod = await import('../backfill-counters.ts');
+    const result = mod.aggregateAuditLog([
+      { action: 'xp_awarded', uid: 'a', type: 'event_attended' },
+      { action: 'xp_awarded', uid: 'a', type: 'event_attended' },
+      { action: 'xp_awarded', uid: 'a', type: 'content_completed' },
+      { action: 'xp_awarded', uid: 'a', type: 'challenge_progress' }, // ignored
+      { action: 'consent_granted', uid: 'a', type: 'event_attended' }, // ignored
+      { action: 'xp_dropped_no_consent', uid: 'a', type: 'event_attended' }, // ignored
+    ]);
+    expect(result.events).toBe(2);
+    expect(result.content).toBe(1);
+  });
+
+  it('returns 0/0 for empty input', async () => {
+    const mod = await import('../backfill-counters.ts');
+    const result = mod.aggregateAuditLog([]);
+    expect(result.events).toBe(0);
+    expect(result.content).toBe(0);
+  });
+
+  it('handles malformed entries gracefully (missing fields)', async () => {
+    const mod = await import('../backfill-counters.ts');
+    const result = mod.aggregateAuditLog([
+      {},
+      { action: 'xp_awarded' },
+      { action: 'xp_awarded', type: 'event_attended' }, // counts (no uid filter at this layer)
+    ]);
+    expect(result.events).toBe(1);
+    expect(result.content).toBe(0);
+  });
+});
+
 describe('backfill-counters script', () => {
   let testEnv: RulesTestEnvironment | null = null;
   let skipAll = false;
