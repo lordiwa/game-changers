@@ -93,7 +93,9 @@
       "Bash(cmd.exe //c \"pnpm --filter \\\\\"@gamechangers/shared\\\\\" build\")",
       "Bash(cmd.exe //c \"pnpm -F @gamechangers/shared build\")",
       "Bash(cmd.exe //c \"pnpm --filter ./packages/shared build\")",
-      "Skill(gsd-debug)"
+      "Skill(gsd-debug)",
+      "Skill(gsd-verify-work)",
+      "Skill(gsd-plan-phase)"
     ]
   }
 }

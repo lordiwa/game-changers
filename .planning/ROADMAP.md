@@ -65,7 +65,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A user without any wearable device can view a full-color character sheet (HP/Stamina/Mental/Social), join a Bronce/Plata/Oro challenge, log progress manually with native phone pedometer or photo verification, see opt-in leaderboard ranking, and earn badges with provenance — wearable adoption is tracked but never gates a feature
   4. An organizer can run a meetup with 50+ attendees on poor venue connectivity using offline QR check-in (IndexedDB queue + Background Sync), one-tap report-user is available, and a post-event recap card auto-generates while only aggregate stats post to Discord #fotos-y-recaps via the read-only bot
   5. **Platform success gate met**: 1,500+ app users with active consent, 40%+ Discord-to-App conversion (kill criterion if Layer 1 grant rate <60%), 200+ challenge participants, two-tier B2B data architecture (firestore-raw DPO-only → bigquery-anonymized with k≥50 + ε-DP) is deployed and tested even though no B2B partner is connected yet
-**Plans**: 9 plans
+**Plans**: 16 plans (9 original + 7 gap-closure from UAT diagnosis)
 - [x] 02-01-PLAN.md — Architecture lockdown: Firebase project (southamerica-east1), 7 Cloud Function codebases, ConsentEnforcement.ts, deny-all Rules + 90% rules-unit-testing CI, BigQuery export, Sentry/PostHog/UptimeRobot, Budget alerts
 - [x] 02-02-PLAN.md — Auth + Discord OAuth bridge: Anonymous Auth on boot, email/password, Discord OAuth via custom-token (KMS-encrypted refresh tokens), age gate 16+, anonymous→full preserves uid
 - [x] 02-03-PLAN.md — Discord bot: discord.js 14.26 on Compute Engine e2-micro, intents Guilds+GuildMembers+GuildMessageReactions ONLY, 6 slash commands, HMAC bot↔Function, quarterly TOS audit
@@ -75,6 +75,13 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 02-07-PLAN.md — Events + QR check-in + accessibility: 3-tier events, RSVP + waitlist auto-promote, signed-JWT QR with offline IDB queue + Background Sync, anonymous report-user, WCAG 2.1 AA via axe-playwright
 - [x] 02-08-PLAN.md — Manual-first wellness challenges: 5 types × Bronce/Plata/Oro, Web Sensor pedometer, photo + vouching, gaming narratives, leaderboard via aggregate doc (Pitfall #2), seasonal battle pass
 - [x] 02-09-PLAN.md — Wearables + B2B BigQuery anonymized layer: Open Wearables webhook (HMAC + consent), monthly bucket time-series + daily rollups, 5 BigQuery k≥50 + ε-DP views, Metabase service account scoping (raw access REVOKED)
+- [ ] 02-10-PLAN.md — Gap closure G1+G6: KMS keyring `gc` + cryptoKey `discord-tokens` provisioned in southamerica-east1; 5 Pub/Sub topics explicitly created
+- [ ] 02-11-PLAN.md — Gap closure G2: BigQuery two-tier architecture executed live — 8 firestore-bigquery-export extensions installed, gw_analytics + gw_b2b_views datasets created, 5 anonymized views deployed, metabase-readonly SA scoped (raw access verified by negative probe)
+- [ ] 02-12-PLAN.md — Gap closure G7: Discord bot GCE e2-micro VM provisioned; DISCORD_BOT_TOKEN/GUILD_ID/CHANNEL_ID placeholders replaced; BOT_STATIC_IPS populated on bot-callable Functions (IP allow-list defense-in-depth restored)
+- [ ] 02-13-PLAN.md — Gap closure G4: PWA build hygiene — install @types/qrcode, fix EventList DocumentData cast, fix Badges null guards, decide Vite 8 vs ^7.4 in ADR-012 with bundle evidence
+- [ ] 02-14-PLAN.md — Gap closure G3: WR-06 historical counter backfill script (eventAttendedTotal + contentCompletedTotal from auditLog) — idempotent, emulator-tested
+- [ ] 02-15-PLAN.md — Gap closure G5: migrate erasure.ts + dsarExport.ts from sweeper-doc fallback to @google-cloud/tasks; provision erasure-hard-delete + dsar-export queues; preserve sweeper-doc as audit-trail backup
+- [ ] 02-16-PLAN.md — Gap closure G8 (deferred-friendly): Hetzner CX22 VPS + Open Wearables 0.4.3 deploy; OW_HMAC_SECRET placeholder replaced; end-to-end smoke test with one real wearable sample
 **UI hint**: yes
 
 ### Phase 3: Revenue + Data

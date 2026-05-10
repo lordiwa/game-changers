@@ -57,6 +57,15 @@ ui-debug.log
 functions/*/lib/
 packages/*/lib/
 
+# vue-tsc leaks .vue.d.ts/.js/.js.map files into src on failed builds — gitignore them
+apps/pwa/src/**/*.vue.d.ts
+apps/pwa/src/**/*.vue.js
+apps/pwa/src/**/*.vue.js.map
+
+# isolate-package output (per-codebase, regenerated each deploy)
+functions/*/isolate/
+packages/*/isolate/
+
 # isolate-package output (generated per-codebase during firebase deploy)
 functions/*/isolate/
 packages/*/isolate/
