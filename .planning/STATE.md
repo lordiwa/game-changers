@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-27)
 Phase: 3
 Plan: Not started
 Status: Executing Phase 02
-Last activity: 2026-05-09 - Resolved consent-cloud-run-startup debug session; 47 consent + non-consent functions all healthy in southamerica-east1
+Last activity: 2026-05-09 - Phase 02 gap closure Wave 8 partial: 02-13 + 02-14 complete; 02-10 partial; 02-11 blocked on gcloud auth refresh
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -88,6 +88,10 @@ None yet.
 - Project naming (8 candidates pending — resolved in Phase 0 via LEGAL-08)
 - Open Wearables long-term maintenance (pre-1.0); plan a fork at Phase 2 launch
 - Capacitor mobile shell decision deferred to Phase 2 mid-point (only if PWA install rate < 30%)
+
+**Active blockers (manual operator action required):**
+
+- `gcloud auth` refresh token expired for `srparca@gmail.com` against `gamechangers-prod` — blocks Phase 02 plans 02-10, 02-11, 02-12, 02-15, 02-16. User must run `gcloud auth login` + `gcloud auth application-default login` + `gcloud config set project gamechangers-prod` + `gcloud components install bq` in their shell. After auth refresh, resume blocked plans via `/gsd-execute-phase 02 --gaps-only`.
 
 ### Quick Tasks Completed
 

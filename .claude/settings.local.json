@@ -95,7 +95,8 @@
       "Bash(cmd.exe //c \"pnpm --filter ./packages/shared build\")",
       "Skill(gsd-debug)",
       "Skill(gsd-verify-work)",
-      "Skill(gsd-plan-phase)"
+      "Skill(gsd-plan-phase)",
+      "Skill(gsd-execute-phase)"
     ]
   }
 }
