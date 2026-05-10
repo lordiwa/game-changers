@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-27)
 Phase: 3
 Plan: Not started
 Status: Executing Phase 02
-Last activity: 2026-05-09 - Phase 02 gap closure Wave 8 partial: 02-13 + 02-14 complete; 02-10 partial; 02-11 blocked on gcloud auth refresh
+Last activity: 2026-05-09 - PIVOT: paused Phase 02 infrastructure gap closure; refocusing on PWA functionality (broken UI buttons). See HANDOFF.md.
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -91,7 +91,19 @@ None yet.
 
 **Active blockers (manual operator action required):**
 
-- `gcloud auth` refresh token expired for `srparca@gmail.com` against `gamechangers-prod` — blocks Phase 02 plans 02-10, 02-11, 02-12, 02-15, 02-16. User must run `gcloud auth login` + `gcloud auth application-default login` + `gcloud config set project gamechangers-prod` + `gcloud components install bq` in their shell. After auth refresh, resume blocked plans via `/gsd-execute-phase 02 --gaps-only`.
+- `gcloud auth` refresh token expired for `srparca@gmail.com` against `gamechangers-prod` — blocks Phase 02 plans 02-10, 02-11, 02-12, 02-15, 02-16. User must run `gcloud auth login` + `gcloud auth application-default login` + `gcloud config set project gamechangers-prod` + `gcloud components install bq` in their shell. **DEFERRED — these are infrastructure plans; user explicitly paused them in favor of PWA functionality work.**
+
+## Current Focus (P0)
+
+**🔴 PWA buttons not functional** — user reported 2026-05-09 that despite Phase 02 being marked "complete" with infrastructure deployed, the actual UI doesn't work for users beyond login. All Phase 02 gap-closure infrastructure plans (02-10, 02-11, 02-12, 02-15, 02-16) are PAUSED. See `.planning/HANDOFF.md` for the next session's context.
+
+**Next command after `/clear`:**
+
+```
+/gsd-debug "PWA buttons don't work after login — RSVP, challenge enrollment, profile actions, etc. are all broken or untested"
+```
+
+Plans 02-13 (PWA build hygiene + ADR-012) and 02-14 (counter backfill) are COMPLETE — the only Phase 02 gap closure work that touched user-facing surface area.
 
 ### Quick Tasks Completed
 
