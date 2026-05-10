@@ -62,11 +62,15 @@ apps/pwa/src/**/*.vue.d.ts
 apps/pwa/src/**/*.vue.js
 apps/pwa/src/**/*.vue.js.map
 
-# isolate-package output (per-codebase, regenerated each deploy)
-functions/*/isolate/
-packages/*/isolate/
+# vue-tsc -b emits .d.ts/.js/.js.map alongside .ts sources in apps/pwa (composite project).
+# Treat these as build output, not source.
+apps/pwa/src/**/*.d.ts
+apps/pwa/src/**/*.js
+apps/pwa/src/**/*.js.map
+# But keep hand-authored declaration files (none today; add allowlist if introduced)
+!apps/pwa/src/vite-env.d.ts
 
-# isolate-package output (generated per-codebase during firebase deploy)
+# isolate-package output (per-codebase, regenerated each deploy)
 functions/*/isolate/
 packages/*/isolate/
 

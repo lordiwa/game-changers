@@ -41,9 +41,13 @@ onMounted(async () => {
   }
 });
 
-const sourceFilters = computed(() => {
-  const sources = new Set(['all', ...badges.value.map((b) => b.source.split(':')[0])]);
-  return Array.from(sources);
+const sourceFilters = computed<string[]>(() => {
+  // `b.source.split(':')[0]` is `string | undefined` under noUncheckedIndexedAccess;
+  // filter to ensure `sourceFilters` exposes a defined-string list to the template.
+  const prefixes = badges.value
+    .map((b) => b.source.split(':')[0])
+    .filter((s): s is string => typeof s === 'string' && s.length > 0);
+  return Array.from(new Set(['all', ...prefixes]));
 });
 
 const filteredBadges = computed(() => {

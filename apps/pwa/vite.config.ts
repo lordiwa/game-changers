@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 import tailwind from '@tailwindcss/vite';
 import { fileURLToPath, URL } from 'node:url';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Plugin } from 'vite';
 
@@ -58,7 +58,6 @@ function contentPreRenderPlugin(): Plugin {
       }
 
       const indexHtml = readFileSync(indexPath, 'utf-8');
-      const { mkdirSync, writeFileSync } = require('node:fs') as typeof import('node:fs');
 
       let generated = 0;
       for (const article of articles) {
